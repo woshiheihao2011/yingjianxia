@@ -1,0 +1,755 @@
+{
+  "data": [
+    {
+      "id": "page-index",
+      "title": "硬件侠 - 电脑配件二手交易平台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 2642,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-216fd531",
+          "measuredAt": 1787899423051
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/index.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-browse",
+      "title": "浏览商品 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 480,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1244,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-5d7b5958",
+          "measuredAt": 1787899423051
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/browse.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-product",
+      "title": "商品详情 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 960,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 2075,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-968bad36",
+          "measuredAt": 1787899423051
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/product.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sell",
+      "title": "发布商品 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 1440,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1618,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-c444fbd0",
+          "measuredAt": 1787899423051
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/sell.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-profile",
+      "title": "个人中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 1920,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1318,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-58e4ad6c",
+          "measuredAt": 1787899423051
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/profile.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "image-001",
+      "title": "Hero 工作站",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 0,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/hero-workstation.jpg"
+      }
+    },
+    {
+      "id": "image-002",
+      "title": "RTX 4070 显卡",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 480,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-gpu-rtx4070.jpg"
+      }
+    },
+    {
+      "id": "image-003",
+      "title": "i5-13600K 处理器",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 960,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-cpu-13600k.jpg"
+      }
+    },
+    {
+      "id": "image-004",
+      "title": "DDR5 内存",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 1440,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-ram-ddr5.jpg"
+      }
+    },
+    {
+      "id": "image-005",
+      "title": "980 Pro 固态硬盘",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 1920,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-ssd-980pro.jpg"
+      }
+    },
+    {
+      "id": "image-006",
+      "title": "B760 主板",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 2400,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-motherboard-b760.jpg"
+      }
+    },
+    {
+      "id": "image-007",
+      "title": "NH-D15 散热器",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 2880,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/product-cooler-nh-d15.jpg"
+      }
+    },
+    {
+      "id": "image-008",
+      "title": "用户头像",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 3360,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/avatar-user.jpg"
+      }
+    },
+    {
+      "id": "image-009",
+      "title": "卖家头像",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 3840,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/avatar-seller.jpg"
+      }
+    },
+    {
+      "id": "image-010",
+      "title": "显卡品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 4320,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-gpu.svg"
+      }
+    },
+    {
+      "id": "image-011",
+      "title": "CPU 品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 4800,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-cpu.svg"
+      }
+    },
+    {
+      "id": "image-012",
+      "title": "主板品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 5280,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-motherboard.svg"
+      }
+    },
+    {
+      "id": "image-013",
+      "title": "内存品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 5760,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-ram.svg"
+      }
+    },
+    {
+      "id": "image-014",
+      "title": "硬盘品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 6240,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-ssd.svg"
+      }
+    },
+    {
+      "id": "image-015",
+      "title": "散热器品类图标",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 6720,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/category-cooler.svg"
+      }
+    },
+    {
+      "id": "image-016",
+      "title": "上传占位图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1787897160000,
+      "canvasData": {
+        "x": 7200,
+        "y": 881
+      },
+      "devMetadata": {
+        "imageSrc": "assets/upload-placeholder.svg"
+      }
+    },
+    {
+      "id": "page-cart",
+      "title": "购物车 / 结算 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787903463282,
+      "canvasData": {
+        "x": 2400,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1307,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-8716e4b7",
+          "measuredAt": 1787904910588
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/cart.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-seller",
+      "title": "卖家店铺 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787903463282,
+      "canvasData": {
+        "x": 2880,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/seller.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-messages",
+      "title": "消息 / 私聊 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787903463282,
+      "canvasData": {
+        "x": 3360,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/messages.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-orders",
+      "title": "订单中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787903463282,
+      "canvasData": {
+        "x": 3840,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/orders.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-auth",
+      "title": "登录 / 注册 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787905407048,
+      "canvasData": {
+        "x": 4260,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/auth.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-search",
+      "title": "搜索结果 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787905407048,
+      "canvasData": {
+        "x": 4800,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/search.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-trust",
+      "title": "平台信任中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787905407048,
+      "canvasData": {
+        "x": 5280,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/trust.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-help",
+      "title": "帮助中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787905407048,
+      "canvasData": {
+        "x": 5760,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/help.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-logistics",
+      "title": "物流跟踪 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787907586066,
+      "canvasData": {
+        "x": 6240,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/logistics.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-aftersales",
+      "title": "售后 / 退款 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787907586066,
+      "canvasData": {
+        "x": 6720,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/aftersales.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-reviews",
+      "title": "评价管理 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787907586066,
+      "canvasData": {
+        "x": 7200,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/reviews.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-listings",
+      "title": "我的发布 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787968152380,
+      "canvasData": {
+        "x": 7680,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/listings.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-analytics",
+      "title": "卖家数据中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787968152380,
+      "canvasData": {
+        "x": 8160,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/analytics.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-store-settings",
+      "title": "店铺装修 / 设置 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787968152380,
+      "canvasData": {
+        "x": 8640,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/store-settings.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-wallet",
+      "title": "钱包 / 余额 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787969372942,
+      "canvasData": {
+        "x": 9120,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/wallet.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-transactions",
+      "title": "收支明细 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787969372942,
+      "canvasData": {
+        "x": 9600,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/transactions.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-coupons",
+      "title": "优惠券 / 积分 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787969372942,
+      "canvasData": {
+        "x": 10080,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/coupons.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-shipping",
+      "title": "发货管理 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787971192985,
+      "devMetadata": {
+        "htmlSrc": "pages/shipping.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 0,
+        "y": 4160,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-inventory",
+      "title": "库存预警 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787971192985,
+      "devMetadata": {
+        "htmlSrc": "pages/inventory.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 420,
+        "y": 4160,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-chatbot",
+      "title": "客服快捷回复 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787971192985,
+      "devMetadata": {
+        "htmlSrc": "pages/chatbot.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 840,
+        "y": 4160,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-promotions",
+      "title": "营销活动 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787971192985,
+      "devMetadata": {
+        "htmlSrc": "pages/promotions.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 1260,
+        "y": 4160,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-announcements",
+      "title": "公告通知 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787972514064,
+      "devMetadata": {
+        "htmlSrc": "pages/announcements.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 0,
+        "y": 4640,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-community",
+      "title": "硬件社区 / 攻略 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787972514064,
+      "devMetadata": {
+        "htmlSrc": "pages/community.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 420,
+        "y": 4640,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-tickets",
+      "title": "客服工单 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787972514064,
+      "devMetadata": {
+        "htmlSrc": "pages/tickets.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 840,
+        "y": 4640,
+        "group": 0
+      }
+    },
+    {
+      "id": "page-reports",
+      "title": "举报中心 - 硬件侠",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787972514064,
+      "devMetadata": {
+        "htmlSrc": "pages/reports.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 1260,
+        "y": 4640,
+        "group": 0
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": false,
+    "deviceType": "desktop",
+    "projectName": "硬件侠"
+  }
+}

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后 / 退款 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .aftersales-shell { padding-top: 64px; }
+            @media (max-width: 768px) { .aftersales-shell { padding-top: 56px; } }
+            .section-tab {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                height: 40px;
+                padding: 0 18px;
+                border-radius: var(--brand-radius-md);
+                font-size: 14px;
+                font-weight: 500;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .section-tab.active {
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+            }
+            .section-tab:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .section-tab:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .role-tab {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                height: 36px;
+                padding: 0 16px;
+                border-radius: var(--brand-radius-md);
+                font-size: 14px;
+                font-weight: 500;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .role-tab.active {
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+            }
+            .role-tab:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .role-tab:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .status-pill {
+                display: inline-flex;
+                align-items: center;
+                height: 32px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-pill);
+                font-size: 13px;
+                font-weight: 500;
+                white-space: nowrap;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .status-pill.active {
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+                border-color: rgba(0, 212, 170, 0.25);
+            }
+            .status-pill:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .status-pill:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .card-surface {
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+            }
+            .card-surface-hover {
+                transition: border-color .2s, box-shadow .2s;
+            }
+            .card-surface-hover:hover {
+                border-color: var(--brand-primary);
+                box-shadow: var(--brand-shadow-2);
+            }
+            .btn-sm-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+                font-size: 13px;
+                font-weight: 600;
+                transition: background .2s;
+            }
+            .btn-sm-primary:hover { background: var(--brand-primary-hover); }
+            .btn-sm-secondary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: transparent;
+                color: var(--brand-ink);
+                border: 1px solid var(--brand-line);
+                font-size: 13px;
+                font-weight: 500;
+                transition: background .2s, border-color .2s;
+            }
+            .btn-sm-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 44px;
+                padding: 0 24px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+                font-weight: 600;
+                transition: background .2s;
+            }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-secondary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 44px;
+                padding: 0 24px;
+                border-radius: var(--brand-radius-md);
+                background: transparent;
+                color: var(--brand-ink);
+                border: 1px solid var(--brand-line);
+                font-weight: 600;
+                transition: background .2s, border-color .2s;
+            }
+            .btn-secondary:hover { background: var(--brand-surface-2); }
+            .timeline-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--brand-primary);
+                box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.15);
+            }
+            .timeline-dot-muted {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: var(--brand-line);
+            }
+            .form-input {
+                width: 100%;
+                min-height: 44px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-surface-2);
+                border: 1px solid var(--brand-line);
+                color: var(--brand-ink);
+                font-size: 14px;
+                outline: none;
+                transition: border-color .2s, box-shadow .2s;
+            }
+            .form-input::placeholder { color: var(--brand-ink-3); }
+            .form-input:focus {
+                border-color: var(--brand-primary);
+                box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.15);
+            }
+            textarea.form-input { padding: 12px 14px; min-height: 120px; resize: vertical; }
+            .select-wrap { position: relative; }
+            .select-wrap select { appearance: none; padding-right: 38px; }
+            .select-wrap i {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: var(--brand-ink-3);
+            }
+            .upload-slot {
+                width: 96px;
+                height: 96px;
+                border-radius: var(--brand-radius-md);
+                border: 1px dashed var(--brand-line);
+                background: var(--brand-surface-2);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--brand-ink-3);
+                transition: border-color .2s, color .2s;
+                cursor: pointer;
+            }
+            .upload-slot:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+            .product-option {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                border-radius: var(--brand-radius-md);
+                border: 1px solid var(--brand-line);
+                background: var(--brand-surface-2);
+                cursor: pointer;
+                transition: border-color .2s, background .2s;
+            }
+            .product-option:hover { border-color: var(--brand-primary); }
+            .product-option input { accent-color: var(--brand-primary); }
+            .radio-card {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 10px 14px;
+                border-radius: var(--brand-radius-md);
+                border: 1px solid var(--brand-line);
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: border-color .2s, background .2s, color .2s;
+            }
+            .radio-card input { accent-color: var(--brand-primary); }
+            .radio-card:has(input:checked) {
+                border-color: var(--brand-primary);
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+            }
+            .radio-card:hover { border-color: var(--brand-primary); }
+        </style>
+
+        <a href="#aftersales-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground">跳到主要内容</a>
+
+        <!-- 顶部固定导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <!-- 售后主体 -->
+        <div id="aftersales-content" class="aftersales-shell mx-auto max-w-7xl px-4 pb-24 pt-6 md:px-6 md:pt-8">
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-[var(--brand-ink)]">售后 / 退款</h1>
+                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">提交售后申请、查看处理进度或与卖家协商</p>
+                </div>
+
+                <!-- 售后主标签切换 -->
+                <div class="inline-flex rounded-lg bg-[var(--brand-surface-2)] p-1 border border-[var(--brand-line)]" role="group" aria-label="售后类型切换">
+                    <button type="button" id="tab-apply" class="section-tab active" onclick="setSection('apply')">
+                        <i data-lucide="file-plus" class="h-4 w-4"></i>
+                        <span>申请售后</span>
+                    </button>
+                    <button type="button" id="tab-progress" class="section-tab" onclick="setSection('progress')">
+                        <i data-lucide="clock" class="h-4 w-4"></i>
+                        <span>售后进度</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 申请售后 -->
+            <section id="section-apply" class="aftersales-section">
+                <div class="grid gap-6 lg:grid-cols-[1fr_360px]">
+                    <!-- 左侧表单 -->
+                    <div class="card-surface p-4 md:p-6">
+                        <h2 class="mb-5 text-lg font-semibold text-[var(--brand-ink)]">填写售后申请</h2>
+
+                        <form id="aftersales-form" class="space-y-5" onsubmit="event.preventDefault(); submitAftersales();">
+                            <!-- 选择订单商品 -->
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">选择订单商品</label>
+                                <div class="space-y-3" role="radiogroup" aria-label="选择订单商品">
+                                    <label class="product-option">
+                                        <input type="radio" name="orderProduct" value="ORD20260820004" checked class="h-4 w-4" />
+                                        <img src="../assets/product-ssd-980pro.jpg" alt="三星 980 Pro" class="h-14 w-14 rounded-md object-cover" />
+                                        <div class="min-w-0 flex-1">
+                                            <p class="truncate text-sm font-medium text-[var(--brand-ink)]">三星 980 Pro 1TB NVMe</p>
+                                            <p class="text-xs text-[var(--brand-ink-2)]">订单号 ORD20260820004 · 2026-08-20</p>
+                                            <p class="mt-0.5 font-mono text-sm text-[var(--brand-primary)]">¥499</p>
+                                        </div>
+                                    </label>
+                                    <label class="product-option">
+                                        <input type="radio" name="orderProduct" value="ORD20260827002" class="h-4 w-4" />
+                                        <img src="../assets/product-cpu-13600k.jpg" alt="Intel i5-13600K" class="h-14 w-14 rounded-md object-cover" />
+                                        <div class="min-w-0 flex-1">
+                                            <p class="truncate text-sm font-medium text-[var(--brand-ink)]">Intel Core i5-13600K 盒装</p>
+                                            <p class="text-xs text-[var(--brand-ink-2)]">订单号 ORD20260827002 · 2026-08-27</p>
+                                            <p class="mt-0.5 font-mono text-sm text-[var(--brand-primary)]">¥1,250</p>
+                                        </div>
+                                    </label>
+                                    <label class="product-option">
+                                        <input type="radio" name="orderProduct" value="ORD20260826003" class="h-4 w-4" />
+                                        <img src="../assets/product-ram-ddr5.jpg" alt="芝奇 DDR5 内存" class="h-14 w-14 rounded-md object-cover" />
+                                        <div class="min-w-0 flex-1">
+                                            <p class="truncate text-sm font-medium text-[var(--brand-ink)]">芝奇 DDR5 6000 32GB(16×2) 套装</p>
+                                            <p class="text-xs text-[var(--brand-ink-2)]">订单号 ORD20260826003 · 2026-08-26</p>
+                                            <p class="mt-0.5 font-mono text-sm text-[var(--brand-primary)]">¥1,240</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 售后类型 -->
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">售后类型</label>
+                                <div class="flex flex-wrap gap-3" role="radiogroup" aria-label="售后类型">
+                                    <label class="radio-card">
+                                        <input type="radio" name="aftersalesType" value="refund" checked class="h-4 w-4" />
+                                        <span>仅退款</span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="aftersalesType" value="return" class="h-4 w-4" />
+                                        <span>退货退款</span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="aftersalesType" value="exchange" class="h-4 w-4" />
+                                        <span>换货</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 申请原因 -->
+                            <div>
+                                <label for="reason" class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">申请原因</label>
+                                <div class="select-wrap">
+                                    <select id="reason" name="reason" class="form-input">
+                                        <option value="">请选择原因</option>
+                                        <option value="not-match">商品与描述不符</option>
+                                        <option value="quality">商品存在质量问题</option>
+                                        <option value="missing">配件缺失 / 漏发</option>
+                                        <option value="fake">疑似假冒 / 非正品</option>
+                                        <option value="shipping-damage">运输途中损坏</option>
+                                        <option value="not-needed">买错了 / 不需要了</option>
+                                        <option value="other">其他原因</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                                </div>
+                            </div>
+
+                            <!-- 问题描述 -->
+                            <div>
+                                <label for="description" class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">问题描述</label>
+                                <textarea id="description" name="description" class="form-input" placeholder="请详细描述问题，例如故障现象、与卖家沟通情况等，方便平台快速审核"></textarea>
+                            </div>
+
+                            <!-- 上传凭证 -->
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">上传凭证</label>
+                                <div class="flex flex-wrap gap-3">
+                                    <button type="button" class="upload-slot" aria-label="上传凭证图片">
+                                        <i data-lucide="camera" class="h-6 w-6"></i>
+                                    </button>
+                                    <button type="button" class="upload-slot" aria-label="上传凭证图片">
+                                        <i data-lucide="plus" class="h-6 w-6"></i>
+                                    </button>
+                                    <button type="button" class="upload-slot" aria-label="上传凭证图片">
+                                        <i data-lucide="plus" class="h-6 w-6"></i>
+                                    </button>
+                                </div>
+                                <p class="mt-2 text-xs text-[var(--brand-ink-3)]">支持 JPG、PNG 格式，单张不超过 10MB，最多上传 6 张</p>
+                            </div>
+
+                            <!-- 退款金额 -->
+                            <div>
+                                <label for="refundAmount" class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">退款金额</label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--brand-ink-2)]">¥</span>
+                                    <input id="refundAmount" name="refundAmount" type="number" min="0" step="0.01" placeholder="0.00" class="form-input pl-9" />
+                                </div>
+                                <p class="mt-1 text-xs text-[var(--brand-ink-3)]">最高可退金额 ¥3,680，退款金额需与售后类型匹配</p>
+                            </div>
+
+                            <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+                                <button type="submit" class="btn-primary">
+                                    <i data-lucide="send" class="h-4 w-4"></i>
+                                    提交申请
+                                </button>
+                                <button type="button" class="btn-secondary" onclick="resetForm()">
+                                    <i data-lucide="rotate-ccw" class="h-4 w-4"></i>
+                                    重置
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 右侧提示 -->
+                    <aside class="h-fit space-y-5">
+                        <div class="card-surface p-5">
+                            <h3 class="mb-3 flex items-center gap-2 text-base font-semibold text-[var(--brand-ink)]">
+                                <i data-lucide="shield-check" class="h-5 w-5 text-[var(--brand-primary)]"></i>
+                                售后规则
+                            </h3>
+                            <ul class="space-y-3 text-sm text-[var(--brand-ink-2)]">
+                                <li class="flex gap-2">
+                                    <i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-primary)]"></i>
+                                    <span>收到货 7 天内可申请退换，未签收仅退款需说明原因。</span>
+                                </li>
+                                <li class="flex gap-2">
+                                    <i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-primary)]"></i>
+                                    <span>退货退款需保持商品完好，附件、SN 码标签齐全。</span>
+                                </li>
+                                <li class="flex gap-2">
+                                    <i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-primary)]"></i>
+                                    <span>平台将在 1-3 个工作日内完成审核，请留意消息通知。</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-surface p-5">
+                            <h3 class="mb-3 flex items-center gap-2 text-base font-semibold text-[var(--brand-ink)]">
+                                <i data-lucide="message-circle" class="h-5 w-5 text-[var(--brand-primary)]"></i>
+                                需要帮助？
+                            </h3>
+                            <p class="text-sm text-[var(--brand-ink-2)]">对售后流程有疑问，或卖家未响应，可联系平台客服介入。</p>
+                            <a href="help.html" class="btn-sm-secondary mt-4 w-full">
+                                <i data-lucide="help-circle" class="h-4 w-4"></i>
+                                查看帮助中心
+                            </a>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- 售后进度 -->
+            <section id="section-progress" class="aftersales-section hidden">
+                <!-- 角色切换 -->
+                <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="inline-flex rounded-lg bg-[var(--brand-surface-2)] p-1 border border-[var(--brand-line)]" role="group" aria-label="角色切换">
+                        <button type="button" id="role-buyer" class="role-tab active" onclick="setRole('buyer')">
+                            <i data-lucide="user" class="h-4 w-4"></i>
+                            <span>我是买家</span>
+                        </button>
+                        <button type="button" id="role-seller" class="role-tab" onclick="setRole('seller')">
+                            <i data-lucide="store" class="h-4 w-4"></i>
+                            <span>我是卖家</span>
+                        </button>
+                    </div>
+
+                    <!-- 状态筛选 -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" role="tablist" aria-label="售后状态筛选">
+                        <button type="button" class="status-pill active" data-status="all" onclick="setStatus('all')">全部</button>
+                        <button type="button" class="status-pill" data-status="reviewing" onclick="setStatus('reviewing')">审核中</button>
+                        <button type="button" class="status-pill" data-status="approved" onclick="setStatus('approved')">已通过</button>
+                        <button type="button" class="status-pill" data-status="rejected" onclick="setStatus('rejected')">已拒绝</button>
+                        <button type="button" class="status-pill" data-status="return-pending" onclick="setStatus('return-pending')">待退货</button>
+                        <button type="button" class="status-pill" data-status="completed" onclick="setStatus('completed')">已完成</button>
+                    </div>
+                </div>
+
+                <!-- 买家进度列表 -->
+                <div id="panel-buyer" class="role-panel space-y-4">
+                    <!-- 审核中 -->
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="reviewing">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260828001</span>
+                                <span>2026-08-28 11:05</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-warning-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-warning)]">审核中</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-cooler-nh-d15.jpg" alt="猫头鹰 NH-D15" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">猫头鹰 NH-D15 双塔散热器</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：静音党小王</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：退货退款 · 原因：商品与描述不符</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">退款金额 ¥480</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <button type="button" class="btn-sm-secondary" onclick="toggleTimeline(this)">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    查看进度
+                                </button>
+                                <a href="messages.html?user=seller-wang" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    联系卖家
+                                </a>
+                            </div>
+                        </div>
+                        <div class="timeline hidden border-t border-[var(--brand-line)] pt-4">
+                            <div class="relative pl-5">
+                                <div class="absolute left-[4px] top-1.5 bottom-2 w-px bg-[var(--brand-line)]"></div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">提交售后申请</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-28 11:05</p>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">平台审核中</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">预计 1-3 个工作日内完成</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot-muted"></div>
+                                    </div>
+                                    <p class="text-sm text-[var(--brand-ink-2)]">审核结果 / 退货地址</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 已通过 / 待退货 -->
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="return-pending">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260825002</span>
+                                <span>2026-08-25 16:30</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-info-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-info)]">待退货</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-motherboard-b760.jpg" alt="华硕 B760M" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">华硕 TUF GAMING B760M-PLUS WIFI</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：主板达人</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：换货 · 原因：商品存在质量问题</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">涉及金额 ¥699</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <button type="button" class="btn-sm-primary" onclick="alert('已复制退货地址')">
+                                    <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+                                    复制退货地址
+                                </button>
+                                <button type="button" class="btn-sm-secondary" onclick="toggleTimeline(this)">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    查看进度
+                                </button>
+                                <a href="messages.html?user=seller-mobo" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    联系卖家
+                                </a>
+                            </div>
+                        </div>
+                        <div class="timeline hidden border-t border-[var(--brand-line)] pt-4">
+                            <div class="relative pl-5">
+                                <div class="absolute left-[4px] top-1.5 bottom-2 w-px bg-[var(--brand-line)]"></div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">提交售后申请</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-25 16:30</p>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">平台审核通过</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-26 09:12</p>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">卖家同意换货，等待买家退货</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">退货地址：上海市浦东新区 XX 路 888 号</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot-muted"></div>
+                                    </div>
+                                    <p class="text-sm text-[var(--brand-ink-2)]">卖家确认收货并换货发出</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 已完成 -->
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="completed">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260810003</span>
+                                <span>2026-08-10 14:20</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-success)]">已完成</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-ram-ddr5.jpg" alt="芝奇 DDR5 内存" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">芝奇 DDR5 6000 32GB(16×2) 套装</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：装机小队</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：仅退款 · 原因：配件缺失 / 漏发</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">退款金额 ¥100</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <button type="button" class="btn-sm-secondary" onclick="toggleTimeline(this)">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    查看进度
+                                </button>
+                                <a href="messages.html?user=seller-ram" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    联系卖家
+                                </a>
+                            </div>
+                        </div>
+                        <div class="timeline hidden border-t border-[var(--brand-line)] pt-4">
+                            <div class="relative pl-5">
+                                <div class="absolute left-[4px] top-1.5 bottom-2 w-px bg-[var(--brand-line)]"></div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">提交售后申请</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-10 14:20</p>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">平台审核通过</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-11 10:08</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">退款成功</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-11 14:33 · 已原路退回</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 已拒绝 -->
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="rejected">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260805004</span>
+                                <span>2026-08-05 09:15</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-error-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-error)]">已拒绝</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-gpu-rtx4070.jpg" alt="七彩虹 RTX 4070" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">七彩虹 RTX 4070 战斧豪华版 12GB</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：数码老张</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：仅退款 · 原因：买错了 / 不需要了</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">退款金额 ¥3,680</p>
+                                    <p class="mt-2 text-sm text-[var(--brand-state-error)]">拒绝原因：已超过 7 天无理由退款期限</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <button type="button" class="btn-sm-primary" style="background:var(--brand-state-error);color:var(--brand-bg);">
+                                    <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i>
+                                    重新申请
+                                </button>
+                                <button type="button" class="btn-sm-secondary" onclick="toggleTimeline(this)">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    查看进度
+                                </button>
+                                <a href="messages.html?user=seller-gpu" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    联系卖家
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 卖家待处理列表 -->
+                <div id="panel-seller" class="role-panel hidden space-y-4">
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="reviewing">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260828091</span>
+                                <span>2026-08-28 11:05</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-warning-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-warning)]">审核中</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-cpu-13600k.jpg" alt="Intel i5-13600K" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">Intel Core i5-13600K 盒装</h3>
+                                    <div class="mt-1 flex items-center gap-2 text-sm text-[var(--brand-ink-2)]">
+                                        <img src="../assets/avatar-user.jpg" alt="买家头像" class="h-5 w-5 rounded-full object-cover" />
+                                        <span>买家：显卡发烧友</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：退货退款 · 原因：商品与描述不符</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">退款金额 ¥1,250</p>
+                                    <p class="mt-2 text-sm text-[var(--brand-ink-2)]">问题描述：CPU 表面有明显磕碰，影响散热接触。</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="btn-sm-primary" style="background:var(--brand-state-success);color:var(--brand-bg);" onclick="handleSellerAction('AS20260828091','agree')">
+                                        <i data-lucide="check" class="h-3.5 w-3.5"></i>
+                                        同意
+                                    </button>
+                                    <button type="button" class="btn-sm-primary" style="background:var(--brand-state-error);color:var(--brand-bg);" onclick="handleSellerAction('AS20260828091','reject')">
+                                        <i data-lucide="x" class="h-3.5 w-3.5"></i>
+                                        拒绝
+                                    </button>
+                                </div>
+                                <a href="messages.html?user=buyer-gpu" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    与买家沟通
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="return-pending">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260825092</span>
+                                <span>2026-08-25 16:30</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-info-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-info)]">待退货</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-motherboard-b760.jpg" alt="华硕 B760M" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">华硕 TUF GAMING B760M-PLUS WIFI</h3>
+                                    <div class="mt-1 flex items-center gap-2 text-sm text-[var(--brand-ink-2)]">
+                                        <img src="../assets/avatar-seller.jpg" alt="买家头像" class="h-5 w-5 rounded-full object-cover" />
+                                        <span>买家：小叶搞机</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：换货 · 原因：商品存在质量问题</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">涉及金额 ¥699</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="btn-sm-primary" onclick="alert('已确认收到退货')">
+                                        <i data-lucide="package-check" class="h-3.5 w-3.5"></i>
+                                        确认收货
+                                    </button>
+                                    <button type="button" class="btn-sm-secondary" onclick="alert('已提醒买家发货')">
+                                        <i data-lucide="bell" class="h-3.5 w-3.5"></i>
+                                        提醒发货
+                                    </button>
+                                </div>
+                                <a href="messages.html?user=buyer-mobo" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    与买家沟通
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card-surface card-surface-hover p-4 md:p-5" data-status="completed">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">
+                            <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span class="font-mono text-[var(--brand-ink)]">AS20260810093</span>
+                                <span>2026-08-10 14:20</span>
+                            </div>
+                            <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-state-success)]">已完成</span>
+                        </div>
+                        <div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-ssd-980pro.jpg" alt="三星 980 Pro" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">三星 980 Pro 1TB NVMe</h3>
+                                    <div class="mt-1 flex items-center gap-2 text-sm text-[var(--brand-ink-2)]">
+                                        <img src="../assets/avatar-user.jpg" alt="买家头像" class="h-5 w-5 rounded-full object-cover" />
+                                        <span>买家：硬盘收集者</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">类型：仅退款 · 原因：配件缺失 / 漏发</p>
+                                    <p class="mt-1 font-mono text-sm text-[var(--brand-primary)]">退款金额 ¥100</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <button type="button" class="btn-sm-secondary" onclick="toggleTimeline(this)">
+                                    <i data-lucide="clock" class="h-3.5 w-3.5"></i>
+                                    查看进度
+                                </button>
+                                <a href="messages.html?user=buyer-ssd" class="btn-sm-secondary">
+                                    <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                    与买家沟通
+                                </a>
+                            </div>
+                        </div>
+                        <div class="timeline hidden border-t border-[var(--brand-line)] pt-4">
+                            <div class="relative pl-5">
+                                <div class="absolute left-[4px] top-1.5 bottom-2 w-px bg-[var(--brand-line)]"></div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">买家提交售后申请</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-10 14:20</p>
+                                </div>
+                                <div class="relative mb-4">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">卖家同意退款</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-11 09:00</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[13px] top-1.5">
+                                        <div class="timeline-dot"></div>
+                                    </div>
+                                    <p class="text-sm font-medium text-[var(--brand-ink)]">退款完成</p>
+                                    <p class="text-xs text-[var(--brand-ink-3)]">2026-08-11 14:33</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 空状态 -->
+                <div id="aftersales-empty" class="hidden flex-col items-center justify-center rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-16 text-center">
+                    <i data-lucide="clipboard-x" class="h-16 w-16 text-[var(--brand-ink-3)]"></i>
+                    <h3 class="mt-4 text-lg font-medium text-[var(--brand-ink)]">暂无相关售后单</h3>
+                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">当前状态下还没有售后记录</p>
+                    <button type="button" class="btn-sm-primary mt-5" onclick="setSection('apply')">
+                        <i data-lucide="file-plus" class="h-3.5 w-3.5"></i>
+                        去申请售后
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+            <div class="mx-auto max-w-7xl px-4 md:px-6">
+                <div class="grid gap-8 md:grid-cols-4">
+                    <div>
+                        <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+                            <i data-lucide="cpu" class="h-6 w-6"></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+                            <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">验机服务</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">帮助中心</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">交易规则</a></li>
+                            <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">防骗指南</a></li>
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">常见问题</a></li>
+                            <li><a href="messages.html" class="transition-colors hover:text-[var(--brand-primary)]">联系客服</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">关注我们</h4>
+                        <div class="mt-3 flex gap-3">
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微信">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微博">
+                                <i data-lucide="at-sign" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="Bilibili">
+                                <i data-lucide="play-circle" class="h-4 w-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪 ICP 备 XXXXXXXX 号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            let currentSection = 'apply';
+            let currentRole = 'buyer';
+            let currentStatus = 'all';
+
+            function setSection(section) {
+                currentSection = section;
+                document.getElementById('tab-apply').classList.toggle('active', section === 'apply');
+                document.getElementById('tab-progress').classList.toggle('active', section === 'progress');
+                document.getElementById('section-apply').classList.toggle('hidden', section !== 'apply');
+                document.getElementById('section-progress').classList.toggle('hidden', section !== 'progress');
+                if (section === 'progress') {
+                    applyStatusFilter(currentStatus);
+                }
+            }
+
+            function setRole(role) {
+                currentRole = role;
+                document.getElementById('role-buyer').classList.toggle('active', role === 'buyer');
+                document.getElementById('role-seller').classList.toggle('active', role === 'seller');
+                document.getElementById('panel-buyer').classList.toggle('hidden', role !== 'buyer');
+                document.getElementById('panel-seller').classList.toggle('hidden', role !== 'seller');
+                applyStatusFilter(currentStatus);
+            }
+
+            function setStatus(status) {
+                currentStatus = status;
+                document.querySelectorAll('.status-pill').forEach(function(pill) {
+                    pill.classList.toggle('active', pill.dataset.status === status);
+                });
+                applyStatusFilter(status);
+            }
+
+            function applyStatusFilter(status) {
+                if (currentSection !== 'progress') return;
+                var activePanel = document.querySelector('.role-panel:not(.hidden)');
+                if (!activePanel) return;
+                var cards = activePanel.querySelectorAll('.card-surface');
+                var visibleCount = 0;
+                cards.forEach(function(card) {
+                    var show = status === 'all' || card.dataset.status === status;
+                    card.classList.toggle('hidden', !show);
+                    if (show) visibleCount++;
+                });
+                var empty = document.getElementById('aftersales-empty');
+                empty.classList.toggle('hidden', visibleCount > 0);
+                empty.classList.toggle('flex', visibleCount === 0);
+            }
+
+            function toggleTimeline(button) {
+                var card = button.closest('.card-surface');
+                var timeline = card.querySelector('.timeline');
+                if (!timeline) return;
+                timeline.classList.toggle('hidden');
+                var icon = button.querySelector('i');
+                if (icon) {
+                    var isHidden = timeline.classList.contains('hidden');
+                    icon.setAttribute('data-lucide', isHidden ? 'clock' : 'chevron-up');
+                    lucide.createIcons();
+                }
+            }
+
+            function handleSellerAction(id, action) {
+                var message = action === 'agree' ? '已同意售后申请，等待买家退货' : '已拒绝售后申请，请说明原因';
+                alert(message);
+            }
+
+            function submitAftersales() {
+                var reason = document.getElementById('reason').value;
+                var description = document.getElementById('description').value.trim();
+                if (!reason) {
+                    alert('请选择申请原因');
+                    return;
+                }
+                if (!description) {
+                    alert('请填写问题描述');
+                    return;
+                }
+                alert('售后申请已提交，平台将在 1-3 个工作日内审核');
+                setSection('progress');
+            }
+
+            function resetForm() {
+                document.getElementById('aftersales-form').reset();
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

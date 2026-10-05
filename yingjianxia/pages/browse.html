@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览商品 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .browse-shell {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .browse-frame {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            .filter-details > summary {
+                list-style: none;
+                cursor: pointer;
+            }
+            .filter-details > summary::-webkit-details-marker { display: none; }
+            .filter-details[open] > summary .details-chevron { transform: rotate(180deg); }
+            @media (min-width: 1024px) {
+                .filter-details { display: block; }
+                .filter-details > summary { display: none; }
+                .filter-details[open] .filter-panel,
+                .filter-details:not([open]) .filter-panel { display: block; }
+            }
+            .product-card {
+                transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+            }
+            .product-card:hover {
+                transform: translateY(-4px);
+                border-color: var(--brand-primary);
+                box-shadow: var(--brand-shadow-2);
+            }
+            .price-value { font-variant-numeric: tabular-nums; }
+        </style>
+
+        <div class="browse-shell">
+            <!-- top-nav -->
+                <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+            <!-- page-header -->
+            <section class="border-b" style="background-color: var(--brand-surface); border-color: var(--brand-line);">
+                <div class="mx-auto max-w-7xl px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold" style="color: var(--brand-ink);">逛硬件</h1>
+                        <p class="text-sm mt-1" style="color: var(--brand-ink-2);">共 128 件好物</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="sort-price" class="text-sm" style="color: var(--brand-ink-2);">排序</label>
+                        <select id="sort-price" data-dom-id="sort-price" class="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 transition cursor-pointer" style="background-color: var(--brand-surface-2); border-color: var(--brand-line); color: var(--brand-ink); --tw-ring-color: var(--brand-primary);">
+                            <option>价格从低到高</option>
+                            <option>价格从高到低</option>
+                            <option>最新发布</option>
+                            <option>热度优先</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- filter-bar + product-grid -->
+            <div class="browse-frame mx-auto max-w-7xl px-4 py-6">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <aside class="filter-sidebar lg:w-[240px] flex-shrink-0">
+                        <details class="filter-details lg:contents" open>
+                            <summary class="lg:hidden flex items-center justify-between w-full rounded-lg border px-4 py-3 text-sm font-medium select-none" style="background-color: var(--brand-surface); border-color: var(--brand-line); color: var(--brand-ink);">
+                                <span class="flex items-center gap-2"><i data-icon="sliders-horizontal" class="w-4 h-4"></i>筛选条件</span>
+                                <i data-icon="chevron-down" class="w-4 h-4 transition-transform details-chevron"></i>
+                            </summary>
+                            <div class="filter-panel mt-3 lg:mt-0 rounded-lg border p-4 space-y-6" style="background-color: var(--brand-surface); border-color: var(--brand-line);">
+                                <div id="filter-category" data-dom-id="filter-category">
+                                    <h3 class="text-sm font-semibold mb-3" style="color: var(--brand-ink);">分类</h3>
+                                    <div class="space-y-2">
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" checked class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>显卡</span>
+                                        </label>
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" checked class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>CPU</span>
+                                        </label>
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>主板</span>
+                                        </label>
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" checked class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>内存</span>
+                                        </label>
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>硬盘</span>
+                                        </label>
+                                        <label class="group flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="checkbox" class="w-4 h-4 rounded border focus:ring-2" style="accent-color: var(--brand-primary); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                            <span>散热器</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="filter-condition" data-dom-id="filter-condition">
+                                    <h3 class="text-sm font-semibold mb-3" style="color: var(--brand-ink);">成色</h3>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="radio" name="condition" class="w-4 h-4 focus:ring-2" style="accent-color: var(--brand-primary); --tw-ring-color: var(--brand-primary);">
+                                            <span>全新</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="radio" name="condition" checked class="w-4 h-4 focus:ring-2" style="accent-color: var(--brand-primary); --tw-ring-color: var(--brand-primary);">
+                                            <span>99新</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="radio" name="condition" class="w-4 h-4 focus:ring-2" style="accent-color: var(--brand-primary); --tw-ring-color: var(--brand-primary);">
+                                            <span>9成新</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer transition hover:opacity-90" style="color: var(--brand-ink-2);">
+                                            <input type="radio" name="condition" class="w-4 h-4 focus:ring-2" style="accent-color: var(--brand-primary); --tw-ring-color: var(--brand-primary);">
+                                            <span>战损版</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-sm font-semibold mb-3" style="color: var(--brand-ink);">价格区间</h3>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" placeholder="最低" class="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2" style="background-color: var(--brand-surface-2); border-color: var(--brand-line); color: var(--brand-ink); --tw-ring-color: var(--brand-primary);">
+                                        <span class="text-sm" style="color: var(--brand-ink-3);">-</span>
+                                        <input type="number" placeholder="最高" class="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2" style="background-color: var(--brand-surface-2); border-color: var(--brand-line); color: var(--brand-ink); --tw-ring-color: var(--brand-primary);">
+                                    </div>
+                                    <button type="button" class="mt-3 w-full rounded-md px-4 py-2 text-sm font-medium transition hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-primary); color: var(--brand-primary-ink); --tw-ring-color: var(--brand-primary);">应用</button>
+                                </div>
+                            </div>
+                        </details>
+                    </aside>
+
+                    <div class="flex-1 min-w-0">
+                        <!-- product-grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            <a href="product.html" id="product-gpu-card" data-dom-id="product-gpu-card" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-gpu-rtx4070.jpg" alt="NVIDIA RTX 4070 显卡" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">NVIDIA RTX 4070 显卡 8G 非公版</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-state-success-subtle); color: var(--brand-state-success);">99新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥3,200</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>深圳</span>
+                                        <span>2小时前</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="product.html" id="product-cpu-card" data-dom-id="product-cpu-card" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-cpu-13600k.jpg" alt="Intel i5-13600K CPU" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">Intel i5-13600K 盒装处理器</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-state-success-subtle); color: var(--brand-state-success);">99新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥1,100</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>北京</span>
+                                        <span>5小时前</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="product.html" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-ram-ddr5.jpg" alt="DDR5 32G 套条" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">DDR5 32G 套条 6000MHz C30</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-primary-subtle); color: var(--brand-primary);">全新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥480</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>上海</span>
+                                        <span>1天前</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="product.html" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-ssd-980pro.jpg" alt="三星 980 PRO 1TB" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">三星 980 PRO 1TB NVMe SSD</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-state-warning-subtle); color: var(--brand-state-warning);">9成新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥520</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>广州</span>
+                                        <span>3小时前</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="product.html" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-motherboard-b760.jpg" alt="B760 主板" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">B760M 主板 DDR5 版本</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-state-success-subtle); color: var(--brand-state-success);">99新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥650</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>成都</span>
+                                        <span>8小时前</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="product.html" class="product-card group block rounded-lg border overflow-hidden focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-surface); border-color: var(--brand-line); --tw-ring-color: var(--brand-primary);">
+                                <div class="aspect-[4/3] overflow-hidden" style="background-color: var(--brand-surface-2);">
+                                    <img src="../assets/product-cooler-nh-d15.jpg" alt="NH-D15 散热器" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="text-sm font-medium line-clamp-2 flex-1" style="color: var(--brand-ink);">NH-D15 双塔风冷散热器</h3>
+                                        <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium" style="background-color: var(--brand-state-warning-subtle); color: var(--brand-state-warning);">9成新</span>
+                                    </div>
+                                    <p class="mt-3 text-right text-xl font-bold price-value" style="color: var(--brand-primary);">¥380</p>
+                                    <div class="mt-2 flex items-center justify-between text-xs" style="color: var(--brand-ink-3);">
+                                        <span class="flex items-center gap-1"><i data-icon="map-pin" class="w-3 h-3"></i>杭州</span>
+                                        <span>1天前</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- pagination -->
+                        <nav class="mt-8 flex items-center justify-center gap-2" aria-label="分页">
+                            <button type="button" class="px-3 py-2 rounded-md text-sm font-medium border transition hover:bg-white/5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 disabled:opacity-40" style="border-color: var(--brand-line); color: var(--brand-ink-2); --tw-ring-color: var(--brand-primary);">上一页</button>
+                            <button type="button" class="w-9 h-9 rounded-md text-sm font-medium transition hover:bg-white/5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2" style="background-color: var(--brand-primary); color: var(--brand-primary-ink); --tw-ring-color: var(--brand-primary);">1</button>
+                            <button type="button" class="w-9 h-9 rounded-md text-sm font-medium border transition hover:bg-white/5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2" style="border-color: var(--brand-line); color: var(--brand-ink-2); --tw-ring-color: var(--brand-primary);">2</button>
+                            <button type="button" class="w-9 h-9 rounded-md text-sm font-medium border transition hover:bg-white/5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2" style="border-color: var(--brand-line); color: var(--brand-ink-2); --tw-ring-color: var(--brand-primary);">3</button>
+                            <span class="px-1 text-sm" style="color: var(--brand-ink-3);">...</span>
+                            <button type="button" id="pagination-next" data-dom-id="pagination-next" class="px-3 py-2 rounded-md text-sm font-medium border transition hover:bg-white/5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2" style="border-color: var(--brand-line); color: var(--brand-ink-2); --tw-ring-color: var(--brand-primary);">下一页</button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- footer -->
+            <footer class="border-t mt-auto" style="background-color: var(--brand-surface); border-color: var(--brand-line);">
+                <div class="mx-auto max-w-7xl px-4 py-10">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div>
+                            <h4 class="text-sm font-semibold mb-4" style="color: var(--brand-ink);">关于硬件侠</h4>
+                            <ul class="space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">平台介绍</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">加入我们</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">媒体报道</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold mb-4" style="color: var(--brand-ink);">买家保障</h4>
+                            <ul class="space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">验机报告</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">担保交易</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">售后政策</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold mb-4" style="color: var(--brand-ink);">卖家指南</h4>
+                            <ul class="space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">发布规范</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">定价建议</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">诚信卖家认证</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold mb-4" style="color: var(--brand-ink);">联系我们</h4>
+                            <ul class="space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">在线客服</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">意见反馈</a></li>
+                                <li><a href="#" class="transition hover:text-[var(--brand-primary)] focus-visible:outline-none focus-visible:ring-2 rounded" style="--tw-ring-color: var(--brand-primary);">商务合作</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-10 pt-6 border-t text-center text-xs" style="border-color: var(--brand-line); color: var(--brand-ink-3);">
+                        <p>2026 硬件侠 yingjianxia.cn 电脑配件二手交易平台 保留所有权利</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

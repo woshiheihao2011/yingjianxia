@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评价管理 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .reviews-shell { padding-top: 64px; }
+            @media (max-width: 768px) { .reviews-shell { padding-top: 56px; } }
+            .role-tab {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                height: 36px;
+                padding: 0 16px;
+                border-radius: var(--brand-radius-md);
+                font-size: 14px;
+                font-weight: 500;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .role-tab.active {
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+            }
+            .role-tab:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .role-tab:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .buyer-tab {
+                display: inline-flex;
+                align-items: center;
+                height: 36px;
+                padding: 0 16px;
+                border-radius: var(--brand-radius-pill);
+                font-size: 13px;
+                font-weight: 500;
+                white-space: nowrap;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .buyer-tab.active {
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+                border-color: rgba(0, 212, 170, 0.25);
+            }
+            .buyer-tab:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .buyer-tab:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .review-card {
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+                transition: border-color .2s, box-shadow .2s;
+            }
+            .review-card:hover {
+                border-color: var(--brand-primary);
+                box-shadow: var(--brand-shadow-2);
+            }
+            .btn-sm-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+                font-size: 13px;
+                font-weight: 600;
+                transition: background .2s;
+            }
+            .btn-sm-primary:hover { background: var(--brand-primary-hover); }
+            .btn-sm-secondary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: transparent;
+                color: var(--brand-ink);
+                border: 1px solid var(--brand-line);
+                font-size: 13px;
+                font-weight: 500;
+                transition: background .2s, border-color .2s;
+            }
+            .btn-sm-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .star-btn { color: var(--brand-ink-3); transition: color .15s; }
+            .star-btn.active { color: var(--brand-primary); }
+            .star-btn svg { fill: currentColor; }
+            .tag-chip {
+                display: inline-flex;
+                align-items: center;
+                height: 32px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-pill);
+                font-size: 13px;
+                font-weight: 500;
+                border: 1px solid var(--brand-line);
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                cursor: pointer;
+                transition: color .2s, background .2s, border-color .2s;
+            }
+            .tag-chip.active {
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+                border-color: rgba(0, 212, 170, 0.35);
+            }
+            .upload-box {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 96px;
+                height: 96px;
+                border-radius: var(--brand-radius-md);
+                border: 1px dashed var(--brand-line);
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-3);
+                cursor: pointer;
+                transition: border-color .2s, color .2s;
+            }
+            .upload-box:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 60;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: rgba(11, 12, 16, 0.75);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .2s;
+            }
+            .modal-overlay.open { opacity: 1; pointer-events: auto; }
+            .modal-panel {
+                width: 100%;
+                max-width: 560px;
+                max-height: calc(100vh - 32px);
+                overflow-y: auto;
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+                box-shadow: var(--brand-shadow-3);
+                transform: translateY(12px);
+                transition: transform .2s;
+            }
+            .modal-overlay.open .modal-panel { transform: translateY(0); }
+            .reply-box { display: none; }
+            .reply-box.open { display: block; animation: slideDown 180ms ease-out; }
+            @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        </style>
+
+        <a href="#reviews-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground">跳到主要内容</a>
+
+        <!-- 顶部固定导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <!-- 评价管理主体 -->
+        <div id="reviews-content" class="reviews-shell mx-auto max-w-7xl px-4 pb-24 pt-6 md:px-6 md:pt-8">
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <h1 class="text-2xl font-bold text-[var(--brand-ink)]">评价管理</h1>
+
+                <!-- 角色切换 -->
+                <div class="inline-flex rounded-lg bg-[var(--brand-surface-2)] p-1 border border-[var(--brand-line)]" role="group" aria-label="角色切换">
+                    <button type="button" id="role-buyer" class="role-tab active" onclick="setRole('buyer')">
+                        <i data-lucide="user" class="h-4 w-4"></i>
+                        <span>我是买家</span>
+                    </button>
+                    <button type="button" id="role-seller" class="role-tab" onclick="setRole('seller')">
+                        <i data-lucide="store" class="h-4 w-4"></i>
+                        <span>我是卖家</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 买家视角 -->
+            <div id="panel-buyer" class="role-panel">
+                <!-- 买家标签 -->
+                <div class="mb-5 flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-[var(--brand-line)] pb-3" role="tablist" aria-label="买家评价筛选">
+                    <button type="button" class="buyer-tab active" data-tab="pending" onclick="setBuyerTab('pending')">待评价</button>
+                    <button type="button" class="buyer-tab" data-tab="done" onclick="setBuyerTab('done')">已评价</button>
+                </div>
+
+                <!-- 待评价列表 -->
+                <div id="buyer-pending" class="buyer-subpanel space-y-4">
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-ssd-980pro.jpg" alt="三星 980 Pro 1TB" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">三星 980 Pro 1TB NVMe</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：硬盘收藏家</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">成交于 2026-08-25</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <p class="font-mono text-lg font-bold text-[var(--brand-primary)]">¥499</p>
+                                <button type="button" class="btn-sm-primary" onclick="openReviewModal('三星 980 Pro 1TB NVMe', '硬盘收藏家')">
+                                    <i data-lucide="star" class="h-3.5 w-3.5"></i>
+                                    去评价
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/product-cooler-nh-d15.jpg" alt="猫头鹰 NH-D15" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24" />
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">猫头鹰 NH-D15 双塔散热器</h3>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">卖家：静音党小王</p>
+                                    <p class="mt-1 text-sm text-[var(--brand-ink-3)]">成交于 2026-08-23</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-start gap-3 md:items-end">
+                                <p class="font-mono text-lg font-bold text-[var(--brand-primary)]">¥480</p>
+                                <button type="button" class="btn-sm-primary" onclick="openReviewModal('猫头鹰 NH-D15 双塔散热器', '静音党小王')">
+                                    <i data-lucide="star" class="h-3.5 w-3.5"></i>
+                                    去评价
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- 已评价列表 -->
+                <div id="buyer-done" class="buyer-subpanel space-y-4 hidden">
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/avatar-user.jpg" alt="我的头像" class="h-12 w-12 rounded-full object-cover" />
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-medium text-[var(--brand-ink)]">我</span>
+                                        <span class="text-xs text-[var(--brand-ink-3)]">2026-08-22</span>
+                                    </div>
+                                    <div class="mt-1 flex items-center gap-0.5">
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="product.html?id=gpu-rtx4070" class="flex items-center gap-3 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-2 transition-colors hover:border-[var(--brand-primary)]/30">
+                                <img src="../assets/product-gpu-rtx4070.jpg" alt="七彩虹 RTX 4070" class="h-12 w-12 rounded-md object-cover" />
+                                <div class="hidden md:block">
+                                    <p class="text-xs text-[var(--brand-ink-2)]">购买商品</p>
+                                    <p class="max-w-[160px] truncate text-sm text-[var(--brand-ink)]">七彩虹 RTX 4070 战斧豪华版</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mt-4 space-y-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">物流快</span>
+                                <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">成色好</span>
+                                <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">沟通顺畅</span>
+                            </div>
+                            <p class="text-sm leading-relaxed text-[var(--brand-ink-2)]">显卡成色非常棒，包装严实，顺丰第二天就到了。上机一次点亮，温度控制也很好，卖家描述属实，好评。</p>
+                            <div class="flex gap-2">
+                                <img src="../assets/product-gpu-rtx4070.jpg" alt="评价图片" class="h-16 w-16 rounded-md object-cover" />
+                            </div>
+                            <!-- 卖家回复 -->
+                            <div class="rounded-lg bg-[var(--brand-surface-2)] p-3">
+                                <div class="flex items-center gap-2">
+                                    <img src="../assets/avatar-seller.jpg" alt="卖家头像" class="h-5 w-5 rounded-full object-cover" />
+                                    <span class="text-xs font-medium text-[var(--brand-ink)]">数码老张</span>
+                                    <span class="text-xs text-[var(--brand-ink-3)]">回复：</span>
+                                </div>
+                                <p class="mt-1 text-sm text-[var(--brand-ink-2)]">感谢老哥支持，用的开心欢迎再来。</p>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" class="btn-sm-secondary">
+                                    <i data-lucide="message-square-plus" class="h-3.5 w-3.5"></i>
+                                    追评
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-4">
+                                <img src="../assets/avatar-user.jpg" alt="我的头像" class="h-12 w-12 rounded-full object-cover" />
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-medium text-[var(--brand-ink)]">我</span>
+                                        <span class="text-xs text-[var(--brand-ink-3)]">2026-08-18</span>
+                                    </div>
+                                    <div class="mt-1 flex items-center gap-0.5">
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                                        <i data-lucide="star" class="h-4 w-4 text-[var(--brand-ink-3)]"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="product.html?id=ram-ddr5" class="flex items-center gap-3 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-2 transition-colors hover:border-[var(--brand-primary)]/30">
+                                <img src="../assets/product-ram-ddr5.jpg" alt="芝奇 DDR5 内存" class="h-12 w-12 rounded-md object-cover" />
+                                <div class="hidden md:block">
+                                    <p class="text-xs text-[var(--brand-ink-2)]">购买商品</p>
+                                    <p class="max-w-[160px] truncate text-sm text-[var(--brand-ink)]">芝奇 DDR5 6000 32GB 套装</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mt-4 space-y-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">包装严实</span>
+                            </div>
+                            <p class="text-sm leading-relaxed text-[var(--brand-ink-2)]">内存运行稳定，XMP 一开直接 6000MHz，性价比不错。</p>
+                            <div class="flex justify-end">
+                                <button type="button" class="btn-sm-secondary">
+                                    <i data-lucide="message-square-plus" class="h-3.5 w-3.5"></i>
+                                    追评
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 卖家视角 -->
+            <div id="panel-seller" class="role-panel hidden space-y-6">
+                <!-- 评分统计 -->
+                <section class="grid gap-4 md:grid-cols-3">
+                    <div class="review-card p-5 text-center">
+                        <p class="text-sm text-[var(--brand-ink-2)]">综合评分</p>
+                        <div class="mt-2 flex items-center justify-center gap-1">
+                            <span class="font-mono text-3xl font-bold text-[var(--brand-primary)]">4.9</span>
+                            <span class="text-sm text-[var(--brand-ink-3)]">/ 5</span>
+                        </div>
+                        <div class="mt-1 flex items-center justify-center gap-0.5">
+                            <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                            <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                            <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                            <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                            <i data-lucide="star" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+                        </div>
+                    </div>
+                    <div class="review-card p-5 text-center">
+                        <p class="text-sm text-[var(--brand-ink-2)]">好评率</p>
+                        <p class="mt-2 font-mono text-3xl font-bold text-[var(--brand-ink)]">98.2%</p>
+                        <p class="mt-1 text-xs text-[var(--brand-ink-3)]">近 90 天</p>
+                    </div>
+                    <div class="review-card p-5 text-center">
+                        <p class="text-sm text-[var(--brand-ink-2)]">累计评价</p>
+                        <p class="mt-2 font-mono text-3xl font-bold text-[var(--brand-primary)]">112</p>
+                        <p class="mt-1 text-xs text-[var(--brand-ink-3)]">全部订单</p>
+                    </div>
+                </section>
+
+                <!-- 收到的评价列表 -->
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-[var(--brand-ink)]">收到的评价</h2>
+                        <select class="h-9 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)]">
+                            <option>全部评价</option>
+                            <option>好评</option>
+                            <option>中评</option>
+                            <option>差评</option>
+                        </select>
+                    </div>
+
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex items-start gap-4">
+                            <img src="../assets/avatar-user.jpg" alt="买家头像" class="h-12 w-12 rounded-full object-cover" />
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <div>
+                                        <p class="font-medium text-[var(--brand-ink)]">显卡发烧友</p>
+                                        <div class="mt-0.5 flex items-center gap-0.5">
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-[var(--brand-ink-3)]">2026-08-22</span>
+                                </div>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">物流快</span>
+                                    <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">成色好</span>
+                                    <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">沟通顺畅</span>
+                                </div>
+                                <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">显卡成色非常棒，包装严实，顺丰第二天就到了。上机一次点亮，温度控制也很好，卖家描述属实，好评。</p>
+                                <div class="mt-3 flex gap-2">
+                                    <img src="../assets/product-gpu-rtx4070.jpg" alt="评价图片" class="h-16 w-16 rounded-md object-cover" />
+                                </div>
+                                <div class="mt-3 flex items-center gap-2 text-sm">
+                                    <span class="text-[var(--brand-ink-3)]">购买商品：</span>
+                                    <a href="product.html?id=gpu-rtx4070" class="truncate text-[var(--brand-primary)] hover:underline">七彩虹 RTX 4070 战斧豪华版 12GB</a>
+                                </div>
+                                <!-- 回复入口 -->
+                                <div class="mt-4">
+                                    <button type="button" class="btn-sm-secondary" onclick="toggleReply(this)">
+                                        <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                        回复评价
+                                    </button>
+                                    <div class="reply-box mt-3">
+                                        <textarea placeholder="请输入回复内容..." class="h-20 w-full resize-none rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] p-3 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20"></textarea>
+                                        <div class="mt-2 flex justify-end gap-2">
+                                            <button type="button" class="btn-sm-secondary" onclick="toggleReply(this)">取消</button>
+                                            <button type="button" class="btn-sm-primary">提交回复</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="review-card p-4 md:p-5">
+                        <div class="flex items-start gap-4">
+                            <img src="../assets/avatar-seller.jpg" alt="买家头像" class="h-12 w-12 rounded-full object-cover" />
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <div>
+                                        <p class="font-medium text-[var(--brand-ink)]">小叶搞机</p>
+                                        <div class="mt-0.5 flex items-center gap-0.5">
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-primary)]"></i>
+                                            <i data-lucide="star" class="h-3.5 w-3.5 text-[var(--brand-ink-3)]"></i>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-[var(--brand-ink-3)]">2026-08-18</span>
+                                </div>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span class="rounded-full bg-[var(--brand-primary-subtle)] px-2.5 py-1 text-xs font-medium text-[var(--brand-primary)]">包装严实</span>
+                                </div>
+                                <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">内存运行稳定，XMP 一开直接 6000MHz，性价比不错。</p>
+                                <div class="mt-3 flex items-center gap-2 text-sm">
+                                    <span class="text-[var(--brand-ink-3)]">购买商品：</span>
+                                    <a href="product.html?id=ram-ddr5" class="truncate text-[var(--brand-primary)] hover:underline">芝奇 DDR5 6000 32GB(16×2) 套装</a>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="button" class="btn-sm-secondary" onclick="toggleReply(this)">
+                                        <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+                                        回复评价
+                                    </button>
+                                    <div class="reply-box mt-3">
+                                        <textarea placeholder="请输入回复内容..." class="h-20 w-full resize-none rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] p-3 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20"></textarea>
+                                        <div class="mt-2 flex justify-end gap-2">
+                                            <button type="button" class="btn-sm-secondary" onclick="toggleReply(this)">取消</button>
+                                            <button type="button" class="btn-sm-primary">提交回复</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </div>
+        </div>
+
+        <!-- 评价表单弹窗 -->
+        <div id="review-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+            <div class="modal-panel p-5 md:p-6">
+                <div class="flex items-center justify-between">
+                    <h2 id="review-modal-title" class="text-lg font-semibold text-[var(--brand-ink)]">发布评价</h2>
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]" onclick="closeReviewModal()" aria-label="关闭">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <p id="review-modal-subtitle" class="mt-1 text-sm text-[var(--brand-ink-2)]">对商品进行评价</p>
+
+                <form class="mt-5 space-y-5" onsubmit="return submitReview(event)">
+                    <!-- 星级评分 -->
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">综合评分</label>
+                        <div class="flex items-center gap-1" id="star-rating" role="radiogroup" aria-label="星级评分">
+                            <button type="button" class="star-btn p-1" data-value="1" aria-label="1 星" onclick="setRating(1)">
+                                <i data-lucide="star" class="h-7 w-7"></i>
+                            </button>
+                            <button type="button" class="star-btn p-1" data-value="2" aria-label="2 星" onclick="setRating(2)">
+                                <i data-lucide="star" class="h-7 w-7"></i>
+                            </button>
+                            <button type="button" class="star-btn p-1" data-value="3" aria-label="3 星" onclick="setRating(3)">
+                                <i data-lucide="star" class="h-7 w-7"></i>
+                            </button>
+                            <button type="button" class="star-btn p-1" data-value="4" aria-label="4 星" onclick="setRating(4)">
+                                <i data-lucide="star" class="h-7 w-7"></i>
+                            </button>
+                            <button type="button" class="star-btn p-1" data-value="5" aria-label="5 星" onclick="setRating(5)">
+                                <i data-lucide="star" class="h-7 w-7"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" id="rating-value" name="rating" value="0" />
+                    </div>
+
+                    <!-- 评价标签 -->
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">评价标签</label>
+                        <div class="flex flex-wrap gap-2" role="group" aria-label="评价标签">
+                            <button type="button" class="tag-chip" data-tag="物流快" onclick="toggleTag(this)">物流快</button>
+                            <button type="button" class="tag-chip" data-tag="成色好" onclick="toggleTag(this)">成色好</button>
+                            <button type="button" class="tag-chip" data-tag="沟通顺畅" onclick="toggleTag(this)">沟通顺畅</button>
+                            <button type="button" class="tag-chip" data-tag="包装严实" onclick="toggleTag(this)">包装严实</button>
+                            <button type="button" class="tag-chip" data-tag="描述相符" onclick="toggleTag(this)">描述相符</button>
+                        </div>
+                    </div>
+
+                    <!-- 文字评价 -->
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">评价内容</label>
+                        <textarea id="review-text" name="content" rows="4" placeholder="分享你的使用体验，帮助其他买家参考..." class="w-full resize-none rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] p-3 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20"></textarea>
+                    </div>
+
+                    <!-- 上传图片 -->
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-[var(--brand-ink)]">上传图片</label>
+                        <div class="flex flex-wrap gap-3">
+                            <button type="button" class="upload-box">
+                                <i data-lucide="camera" class="h-6 w-6"></i>
+                                <span class="mt-1 text-xs">添加图片</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 匿名选项 -->
+                    <label class="flex cursor-pointer items-center gap-2">
+                        <input type="checkbox" id="anonymous" name="anonymous" class="h-4 w-4 rounded border-[var(--brand-line)] bg-[var(--brand-bg)] text-[var(--brand-primary)] outline-none focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+                        <span class="text-sm text-[var(--brand-ink-2)]">匿名评价</span>
+                    </label>
+
+                    <!-- 提交按钮 -->
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" class="btn-sm-secondary" onclick="closeReviewModal()">取消</button>
+                        <button type="submit" class="btn-sm-primary">
+                            <i data-lucide="send" class="h-3.5 w-3.5"></i>
+                            提交评价
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+            <div class="mx-auto max-w-7xl px-4 md:px-6">
+                <div class="grid gap-8 md:grid-cols-4">
+                    <div>
+                        <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+                            <i data-lucide="cpu" class="h-6 w-6"></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">验机服务</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">帮助中心</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">交易规则</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">防骗指南</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">常见问题</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">联系客服</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">关注我们</h4>
+                        <div class="mt-3 flex gap-3">
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微信">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微博">
+                                <i data-lucide="at-sign" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="Bilibili">
+                                <i data-lucide="play-circle" class="h-4 w-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪 ICP 备 XXXXXXXX 号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            let currentRole = 'buyer';
+            let currentBuyerTab = 'pending';
+
+            function setRole(role) {
+                currentRole = role;
+                document.getElementById('role-buyer').classList.toggle('active', role === 'buyer');
+                document.getElementById('role-seller').classList.toggle('active', role === 'seller');
+                document.getElementById('panel-buyer').classList.toggle('hidden', role !== 'buyer');
+                document.getElementById('panel-seller').classList.toggle('hidden', role !== 'seller');
+            }
+
+            function setBuyerTab(tab) {
+                currentBuyerTab = tab;
+                document.querySelectorAll('.buyer-tab').forEach(function(el) {
+                    el.classList.toggle('active', el.dataset.tab === tab);
+                });
+                document.getElementById('buyer-pending').classList.toggle('hidden', tab !== 'pending');
+                document.getElementById('buyer-done').classList.toggle('hidden', tab !== 'done');
+            }
+
+            function openReviewModal(productName, sellerName) {
+                document.getElementById('review-modal-subtitle').textContent = '对「' + productName + '」进行评价';
+                document.getElementById('review-modal').classList.add('open');
+                document.getElementById('review-text').focus();
+            }
+
+            function closeReviewModal() {
+                document.getElementById('review-modal').classList.remove('open');
+                setRating(0);
+                document.getElementById('review-text').value = '';
+                document.querySelectorAll('.tag-chip.active').forEach(function(el) { el.classList.remove('active'); });
+                document.getElementById('anonymous').checked = false;
+            }
+
+            function setRating(value) {
+                document.getElementById('rating-value').value = value;
+                document.querySelectorAll('#star-rating .star-btn').forEach(function(btn) {
+                    btn.classList.toggle('active', parseInt(btn.dataset.value, 10) <= value);
+                });
+            }
+
+            function toggleTag(el) {
+                el.classList.toggle('active');
+            }
+
+            function toggleReply(btn) {
+                const box = btn.parentElement.querySelector('.reply-box');
+                if (box) {
+                    const isOpen = box.classList.contains('open');
+                    box.classList.toggle('open', !isOpen);
+                    btn.innerHTML = isOpen ? '<i data-lucide="message-square" class="h-3.5 w-3.5"></i>回复评价' : '<i data-lucide="x" class="h-3.5 w-3.5"></i>取消回复';
+                    lucide.createIcons();
+                }
+            }
+
+            function submitReview(event) {
+                event.preventDefault();
+                const rating = document.getElementById('rating-value').value;
+                if (!rating || rating === '0') {
+                    alert('请选择星级评分');
+                    return false;
+                }
+                closeReviewModal();
+                return false;
+            }
+
+            document.getElementById('review-modal').addEventListener('click', function(event) {
+                if (event.target === this) closeReviewModal();
+            });
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

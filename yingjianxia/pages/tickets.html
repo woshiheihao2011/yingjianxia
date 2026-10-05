@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服工单 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .page-shell { min-height: 100vh; display: flex; flex-direction: column; }
+            .page-frame { flex: 1 1 auto; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .ticket-tab { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: var(--brand-radius-pill); font-size: 14px; font-weight: 500; color: var(--brand-ink-2); background: transparent; border: 1px solid transparent; transition: color .2s, background .2s, border-color .2s; white-space: nowrap; cursor: pointer; }
+            .ticket-tab:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .ticket-tab.active { color: var(--brand-primary); background: var(--brand-primary-subtle); border-color: rgba(0, 212, 170, 0.25); }
+            .ticket-tab:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .ticket-row { border: 1px solid var(--brand-line); border-radius: var(--brand-radius-md); background: var(--brand-card); overflow: hidden; transition: border-color .2s; }
+            .ticket-row:hover { border-color: var(--brand-line-subtle); }
+            .ticket-row[open] { border-color: var(--brand-primary); }
+            .ticket-summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr; gap: 12px; padding: 16px; align-items: center; }
+            .ticket-summary::-webkit-details-marker { display: none; }
+            @media (min-width: 768px) {
+                .ticket-summary { grid-template-columns: 120px 1fr 140px 110px; }
+            }
+            @media (min-width: 1024px) {
+                .ticket-summary { grid-template-columns: 120px 1fr 140px 120px 110px; }
+            }
+            .ticket-detail { padding: 0 16px 16px; border-top: 1px solid var(--brand-line); }
+            .status-badge { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: var(--brand-radius-pill); font-size: 12px; font-weight: 600; }
+            .status-processing { color: var(--brand-state-info); background: var(--brand-state-info-subtle); }
+            .status-pending { color: var(--brand-state-warning); background: var(--brand-state-warning-subtle); }
+            .status-resolved { color: var(--brand-state-success); background: var(--brand-state-success-subtle); }
+            .status-closed { color: var(--brand-ink-3); background: var(--brand-surface-3); }
+            .chat-bubble-user { background: var(--brand-primary); color: var(--brand-primary-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm) var(--brand-radius-md); }
+            .chat-bubble-agent { background: var(--brand-surface-3); color: var(--brand-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm); }
+            .form-input { width: 100%; height: 44px; padding: 0 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; transition: border-color .2s, box-shadow .2s; }
+            .form-input::placeholder { color: var(--brand-ink-3); }
+            .form-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .form-textarea { width: 100%; min-height: 120px; padding: 12px 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; resize: vertical; transition: border-color .2s, box-shadow .2s; }
+            .form-textarea::placeholder { color: var(--brand-ink-3); }
+            .form-textarea:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+            .upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; border-radius: var(--brand-radius-md); border: 1px dashed var(--brand-line); background: var(--brand-bg); color: var(--brand-ink-2); cursor: pointer; transition: border-color .2s, background .2s; }
+            .upload-zone:hover { border-color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .faq-card { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); transition: border-color .2s, transform .2s; }
+            .faq-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+            .reply-input { width: 100%; min-height: 80px; padding: 10px 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; resize: vertical; transition: border-color .2s, box-shadow .2s; }
+            .reply-input::placeholder { color: var(--brand-ink-3); }
+            .reply-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+        </style>
+
+        <div class="page-shell">
+            <!-- 顶部导航 -->
+                <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+            <div class="nav-spacer"></div>
+
+            <!-- 页面标题 + 提交按钮 -->
+            <section class="bg-background border-b border-border">
+                <div class="max-w-7xl mx-auto px-4 py-10 md:py-14">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold text-foreground">客服工单</h1>
+                            <p class="text-muted-foreground mt-2">提交问题、查看进度、与客服沟通</p>
+                        </div>
+                        <a href="#new-ticket" class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-md bg-primary text-primary-foreground font-semibold hover:bg-[var(--brand-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0" data-dom-id="btn-new-ticket">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                            <span>提交新工单</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="page-frame bg-background">
+                <div class="max-w-7xl mx-auto px-4 py-8 md:py-10">
+                    <!-- 工单状态标签 -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-6" role="tablist" aria-label="工单状态筛选" data-dom-id="ticket-tabs">
+                        <button type="button" class="ticket-tab active" role="tab" aria-selected="true" data-status="all">全部</button>
+                        <button type="button" class="ticket-tab" role="tab" aria-selected="false" data-status="processing">处理中</button>
+                        <button type="button" class="ticket-tab" role="tab" aria-selected="false" data-status="pending">待回复</button>
+                        <button type="button" class="ticket-tab" role="tab" aria-selected="false" data-status="resolved">已解决</button>
+                        <button type="button" class="ticket-tab" role="tab" aria-selected="false" data-status="closed">已关闭</button>
+                    </div>
+
+                    <!-- 工单列表 -->
+                    <section class="mb-10" data-dom-id="ticket-list" aria-label="工单列表">
+                        <div class="space-y-4">
+                            <!-- 工单 1 -->
+                            <details class="ticket-row" open data-status="processing">
+                                <summary class="ticket-summary">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="ticket" class="w-4 h-4 text-muted-foreground"></i>
+                                        <span class="font-mono text-sm text-foreground">#TK-20261201-01</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-foreground">交易纠纷：显卡成色与描述不符</div>
+                                        <div class="text-xs text-muted-foreground mt-1">问题类型：交易 · 关联订单：ORD-20261128-8821</div>
+                                    </div>
+                                    <div class="hidden lg:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2026-12-01 09:23</div>
+                                    </div>
+                                    <div class="hidden md:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 2小时前</div>
+                                    </div>
+                                    <div class="flex md:justify-end">
+                                        <span class="status-badge status-processing"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>处理中</span>
+                                    </div>
+                                </summary>
+                                <div class="ticket-detail">
+                                    <div class="py-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                        <div class="lg:col-span-2 space-y-4">
+                                            <div>
+                                                <h3 class="text-sm font-semibold text-foreground mb-2">问题描述</h3>
+                                                <p class="text-sm text-muted-foreground leading-relaxed">收到的 RTX 4070 显卡背板有明显划痕，与卖家描述的「九成新、无明显划痕」不符。我已上传收货开箱视频与多角度照片，请平台介入核实。</p>
+                                            </div>
+                                            <div class="flex flex-wrap gap-2">
+                                                <a href="#" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted text-xs text-foreground hover:bg-[var(--brand-surface-3)]">
+                                                    <i data-lucide="paperclip" class="w-3.5 h-3.5"></i> 开箱视频.mp4
+                                                </a>
+                                                <a href="#" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted text-xs text-foreground hover:bg-[var(--brand-surface-3)]">
+                                                    <i data-lucide="image" class="w-3.5 h-3.5"></i> 背板划痕_01.jpg
+                                                </a>
+                                            </div>
+
+                                            <!-- 聊天记录 -->
+                                            <div class="pt-4 border-t border-border">
+                                                <h3 class="text-sm font-semibold text-foreground mb-4">沟通记录</h3>
+                                                <div class="space-y-4">
+                                                    <div class="flex gap-3">
+                                                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                                                            <i data-lucide="headset" class="w-4 h-4 text-primary"></i>
+                                                        </div>
+                                                        <div class="max-w-[80%]">
+                                                            <div class="chat-bubble-agent px-4 py-2.5 text-sm leading-relaxed">
+                                                                您好，已收到您的工单。请提供收货时的完整开箱视频，并确认显卡 SN 码是否与商品详情页一致。
+                                                            </div>
+                                                            <div class="text-xs text-muted-foreground mt-1">客服小侠 · 2026-12-01 10:05</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex gap-3 justify-end">
+                                                        <div class="max-w-[80%] text-right">
+                                                            <div class="chat-bubble-user px-4 py-2.5 text-sm leading-relaxed">
+                                                                已补充上传，麻烦查看。
+                                                            </div>
+                                                            <div class="text-xs text-muted-foreground mt-1">我 · 2026-12-01 11:20</div>
+                                                        </div>
+                                                        <img src="../assets/avatar-user.jpg" alt="我" class="w-8 h-8 rounded-full object-cover bg-muted shrink-0">
+                                                    </div>
+                                                    <div class="flex gap-3">
+                                                        <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                                                            <i data-lucide="headset" class="w-4 h-4 text-primary"></i>
+                                                        </div>
+                                                        <div class="max-w-[80%]">
+                                                            <div class="chat-bubble-agent px-4 py-2.5 text-sm leading-relaxed">
+                                                                收到，已转交售后专员处理，预计 24 小时内给出处理方案，请保持手机畅通。
+                                                            </div>
+                                                            <div class="text-xs text-muted-foreground mt-1">客服小侠 · 2小时前</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- 补充回复 -->
+                                            <form class="pt-4 border-t border-border" onsubmit="event.preventDefault();">
+                                                <label class="block text-sm font-semibold text-foreground mb-2">补充回复</label>
+                                                <textarea class="reply-input mb-3" rows="2" placeholder="补充描述或上传新附件…"></textarea>
+                                                <div class="flex items-center justify-between gap-3">
+                                                    <button type="button" class="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring">
+                                                        <i data-lucide="paperclip" class="w-4 h-4"></i> 添加附件
+                                                    </button>
+                                                    <button type="submit" class="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-[var(--brand-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                                        <span>发送</span>
+                                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="lg:col-span-1">
+                                            <div class="p-4 rounded-md bg-card border border-border">
+                                                <h4 class="text-sm font-semibold text-foreground mb-3">工单信息</h4>
+                                                <dl class="space-y-3 text-sm">
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">关联订单</dt>
+                                                        <dd class="text-foreground font-mono">ORD-20261128-8821</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">问题类型</dt>
+                                                        <dd class="text-foreground">交易</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">提交时间</dt>
+                                                        <dd class="text-foreground">2026-12-01 09:23</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">最近回复</dt>
+                                                        <dd class="text-foreground">2小时前</dd>
+                                                    </div>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- 工单 2 -->
+                            <details class="ticket-row" data-status="pending">
+                                <summary class="ticket-summary">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="ticket" class="w-4 h-4 text-muted-foreground"></i>
+                                        <span class="font-mono text-sm text-foreground">#TK-20261125-03</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-foreground">物流异常：快递超过 5 天未更新</div>
+                                        <div class="text-xs text-muted-foreground mt-1">问题类型：物流 · 关联订单：ORD-20261120-3341</div>
+                                    </div>
+                                    <div class="hidden lg:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2026-11-25 16:40</div>
+                                    </div>
+                                    <div class="hidden md:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 1天前</div>
+                                    </div>
+                                    <div class="flex md:justify-end">
+                                        <span class="status-badge status-pending"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>待回复</span>
+                                    </div>
+                                </summary>
+                                <div class="ticket-detail">
+                                    <div class="py-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                        <div class="lg:col-span-2 space-y-4">
+                                            <div>
+                                                <h3 class="text-sm font-semibold text-foreground mb-2">问题描述</h3>
+                                                <p class="text-sm text-muted-foreground leading-relaxed">物流信息显示已揽收但 5 天没有更新，联系快递员未回复。请协助核实包裹状态。</p>
+                                            </div>
+                                            <div class="pt-4 border-t border-border">
+                                                <h3 class="text-sm font-semibold text-foreground mb-4">沟通记录</h3>
+                                                <div class="space-y-4">
+                                                    <div class="flex gap-3">
+                                                        <img src="../assets/avatar-user.jpg" alt="我" class="w-8 h-8 rounded-full object-cover bg-muted shrink-0">
+                                                        <div class="max-w-[80%]">
+                                                            <div class="chat-bubble-user px-4 py-2.5 text-sm leading-relaxed">
+                                                                快递已经 5 天没动了，麻烦帮我查一下。
+                                                            </div>
+                                                            <div class="text-xs text-muted-foreground mt-1">我 · 2026-11-25 16:40</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <form class="pt-4 border-t border-border" onsubmit="event.preventDefault();">
+                                                <label class="block text-sm font-semibold text-foreground mb-2">补充回复</label>
+                                                <textarea class="reply-input mb-3" rows="2" placeholder="补充描述或上传新附件…"></textarea>
+                                                <div class="flex items-center justify-between gap-3">
+                                                    <button type="button" class="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring">
+                                                        <i data-lucide="paperclip" class="w-4 h-4"></i> 添加附件
+                                                    </button>
+                                                    <button type="submit" class="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-[var(--brand-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                                        <span>发送</span>
+                                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="lg:col-span-1">
+                                            <div class="p-4 rounded-md bg-card border border-border">
+                                                <h4 class="text-sm font-semibold text-foreground mb-3">工单信息</h4>
+                                                <dl class="space-y-3 text-sm">
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">关联订单</dt>
+                                                        <dd class="text-foreground font-mono">ORD-20261120-3341</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">问题类型</dt>
+                                                        <dd class="text-foreground">物流</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">提交时间</dt>
+                                                        <dd class="text-foreground">2026-11-25 16:40</dd>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <dt class="text-muted-foreground">最近回复</dt>
+                                                        <dd class="text-foreground">1天前</dd>
+                                                    </div>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- 工单 3 -->
+                            <details class="ticket-row" data-status="resolved">
+                                <summary class="ticket-summary">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="ticket" class="w-4 h-4 text-muted-foreground"></i>
+                                        <span class="font-mono text-sm text-foreground">#TK-20261110-07</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-foreground">账号问题：无法修改绑定手机号</div>
+                                        <div class="text-xs text-muted-foreground mt-1">问题类型：账号 · 关联订单：无</div>
+                                    </div>
+                                    <div class="hidden lg:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2026-11-10 11:05</div>
+                                    </div>
+                                    <div class="hidden md:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 2026-11-12</div>
+                                    </div>
+                                    <div class="flex md:justify-end">
+                                        <span class="status-badge status-resolved"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>已解决</span>
+                                    </div>
+                                </summary>
+                                <div class="ticket-detail">
+                                    <div class="py-4">
+                                        <h3 class="text-sm font-semibold text-foreground mb-2">处理结果</h3>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">已协助完成手机号换绑，旧手机号已解绑，新手机号可正常接收验证码。如您仍有问题，可重新提交工单。</p>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- 工单 4 -->
+                            <details class="ticket-row" data-status="closed">
+                                <summary class="ticket-summary">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="ticket" class="w-4 h-4 text-muted-foreground"></i>
+                                        <span class="font-mono text-sm text-foreground">#TK-20261028-12</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-foreground">售后咨询：退货运费承担方式</div>
+                                        <div class="text-xs text-muted-foreground mt-1">问题类型：售后 · 关联订单：ORD-20261025-1192</div>
+                                    </div>
+                                    <div class="hidden lg:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 2026-10-28 14:22</div>
+                                    </div>
+                                    <div class="hidden md:block text-sm text-muted-foreground">
+                                        <div class="flex items-center gap-2"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 2026-10-30</div>
+                                    </div>
+                                    <div class="flex md:justify-end">
+                                        <span class="status-badge status-closed"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>已关闭</span>
+                                    </div>
+                                </summary>
+                                <div class="ticket-detail">
+                                    <div class="py-4">
+                                        <h3 class="text-sm font-semibold text-foreground mb-2">关闭原因</h3>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">因您超过 7 天未补充凭证，系统已自动关闭。如有需要请重新提交工单。</p>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <!-- 提交新工单表单 -->
+                    <section id="new-ticket" class="mb-10" data-dom-id="new-ticket-form">
+                        <div class="rounded-xl border border-border bg-card p-6 md:p-8">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-md bg-primary/20 flex items-center justify-center">
+                                    <i data-lucide="plus-circle" class="w-5 h-5 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-foreground">提交新工单</h2>
+                                    <p class="text-sm text-muted-foreground">请尽量详细描述问题，有助于客服快速处理</p>
+                                </div>
+                            </div>
+                            <form class="space-y-5" onsubmit="event.preventDefault();">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-sm font-medium text-foreground mb-2">问题类型</label>
+                                        <select class="form-input form-select" required>
+                                            <option value="" disabled selected>请选择问题类型</option>
+                                            <option value="account">账号</option>
+                                            <option value="transaction">交易</option>
+                                            <option value="logistics">物流</option>
+                                            <option value="aftersales">售后</option>
+                                            <option value="complaint">投诉</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-foreground mb-2">关联订单 <span class="text-muted-foreground font-normal">（选填）</span></label>
+                                        <input type="text" placeholder="例如：ORD-20261128-8821" class="form-input">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">问题标题</label>
+                                    <input type="text" placeholder="用一句话概括遇到的问题" class="form-input" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">详细描述</label>
+                                    <textarea class="form-textarea" rows="5" placeholder="请描述问题发生的时间、操作步骤、期望结果与实际结果…" required></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">上传图片 <span class="text-muted-foreground font-normal">（选填）</span></label>
+                                    <label class="upload-zone cursor-pointer">
+                                        <i data-lucide="upload-cloud" class="w-8 h-8 text-primary"></i>
+                                        <span class="text-sm">点击或拖拽上传图片</span>
+                                        <span class="text-xs text-muted-foreground">支持 JPG、PNG，最多 5 张，单张不超过 10MB</span>
+                                        <input type="file" accept="image/*" multiple class="hidden">
+                                    </label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-sm font-medium text-foreground mb-2">联系方式</label>
+                                        <input type="text" placeholder="手机号或邮箱，方便客服联系" class="form-input" required>
+                                    </div>
+                                    <div class="flex items-end">
+                                        <p class="text-xs text-muted-foreground">客服会在工作时间内尽快处理，紧急问题请拨打客服热线。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 pt-2">
+                                    <button type="submit" class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md bg-primary text-primary-foreground font-semibold hover:bg-[var(--brand-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-dom-id="submit-ticket-btn">
+                                        <span>提交工单</span>
+                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                    <button type="reset" class="inline-flex items-center justify-center h-11 px-5 rounded-md border border-border text-foreground font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring">
+                                        重置
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- 常见问题快捷入口 -->
+                    <section data-dom-id="faq-quick">
+                        <h2 class="text-xl font-bold text-foreground mb-5">常见问题</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <a href="help.html#faq" class="faq-card" data-dom-id="faq-trading">
+                                <i data-lucide="repeat" class="w-5 h-5 text-primary"></i>
+                                <span class="font-medium text-foreground">买卖流程</span>
+                            </a>
+                            <a href="help.html#faq" class="faq-card" data-dom-id="faq-logistics">
+                                <i data-lucide="truck" class="w-5 h-5 text-primary"></i>
+                                <span class="font-medium text-foreground">物流与售后</span>
+                            </a>
+                            <a href="help.html#faq" class="faq-card" data-dom-id="faq-payment">
+                                <i data-lucide="wallet" class="w-5 h-5 text-primary"></i>
+                                <span class="font-medium text-foreground">支付与提现</span>
+                            </a>
+                            <a href="help.html#faq" class="faq-card" data-dom-id="faq-security">
+                                <i data-lucide="shield" class="w-5 h-5 text-primary"></i>
+                                <span class="font-medium text-foreground">账号安全</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- 页脚 -->
+            <footer class="py-14 bg-background border-t border-border mt-auto">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-foreground">
+                            <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                            <span class="text-lg font-bold">硬件侠</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li>客服邮箱：support@yingjianxia.com</li>
+                            <li>工作时间：周一至周日 9:00-21:00</li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                    &copy; 2026 硬件侠. All rights reserved.
+                </div>
+            </footer>
+        </div>
+
+        <script>
+            // 工单状态标签切换
+            const tabs = document.querySelectorAll('[data-status]');
+            const rows = document.querySelectorAll('.ticket-row');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+                    const status = tab.dataset.status;
+                    rows.forEach(row => {
+                        if (status === 'all' || row.dataset.status === status) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

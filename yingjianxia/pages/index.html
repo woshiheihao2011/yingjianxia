@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>硬件侠 - 电脑配件二手交易平台</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .critical-layout { box-sizing: border-box; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; transition: background .2s, transform .15s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-primary:active { transform: translateY(1px); }
+            .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+            .btn-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-secondary:active { transform: translateY(1px); }
+            .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-cta { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; border-radius: var(--brand-radius-md); background: var(--brand-bg); color: var(--brand-ink); font-weight: 600; transition: background .2s; }
+            .btn-cta:hover { background: var(--brand-surface-2); }
+            .btn-cta:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .category-card { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 16px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); transition: transform .2s, border-color .2s; }
+            .category-card:hover { transform: translateY(-4px); border-color: var(--brand-primary); }
+            .category-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .category-card img { width: 48px; height: 48px; object-fit: contain; filter: brightness(0) saturate(100%) invert(68%) sepia(96%) saturate(1700%) hue-rotate(117deg) brightness(100%) contrast(101%); }
+            .category-card span { color: var(--brand-ink); font-weight: 500; }
+            .product-card { display: flex; flex-direction: column; border-radius: var(--brand-radius-lg); background: var(--brand-card); border: 1px solid var(--brand-line); overflow: hidden; transition: transform .2s, border-color .2s; }
+            .product-card:hover { transform: translateY(-4px); border-color: var(--brand-primary); }
+            .product-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .product-card .thumb { aspect-ratio: 4/3; overflow: hidden; }
+            .product-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+            .product-card:hover .thumb img { transform: scale(1.03); }
+            .trust-item { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 24px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); }
+            .trust-item i { width: 28px; height: 28px; color: var(--brand-primary); }
+            .search-input { width: 100%; height: 48px; padding-left: 44px; padding-right: 16px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; transition: border-color .2s, box-shadow .2s; }
+            .search-input::placeholder { color: var(--brand-ink-3); }
+            .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .search-input:focus-visible { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            @media (max-width: 768px) { .hero-grid { grid-template-columns: 1fr; } }
+        </style>
+
+        <!-- 顶部导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+        <div class="nav-spacer"></div>
+
+        <!-- Hero -->
+        <section class="relative overflow-hidden bg-background">
+            <div class="max-w-7xl mx-auto px-4 py-16 lg:py-24">
+                <div class="hero-grid grid lg:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-6">
+                        <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-foreground">硬件侠</h1>
+                        <p class="text-lg lg:text-xl text-muted-foreground">发烧友信得过的电脑配件二手交易平台</p>
+
+                        <form class="relative max-w-md" role="search" aria-label="Hero 搜索">
+                            <input data-dom-id="hero-search" type="search" placeholder="搜索显卡、CPU、内存…" class="search-input">
+                            <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"></i>
+                        </form>
+
+                        <div class="flex flex-wrap gap-4">
+                            <a href="browse.html" data-dom-id="hero-cta-browse" class="btn-primary">逛硬件</a>
+                            <a href="sell.html" class="btn-secondary">发布闲置</a>
+                        </div>
+                    </div>
+
+                    <div class="relative rounded-2xl overflow-hidden aspect-[16/10] lg:aspect-[4/3]">
+                        <img src="../assets/hero-workstation.jpg" alt="高性能工作站主机" class="object-cover w-full h-full">
+                        <div class="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门分类 -->
+        <section class="py-16 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="text-2xl font-bold mb-8">热门分类</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <a href="browse.html?category=gpu" data-dom-id="category-gpu" class="category-card">
+                        <img src="../assets/category-gpu.svg" alt="显卡">
+                        <span>显卡</span>
+                    </a>
+                    <a href="browse.html?category=cpu" class="category-card">
+                        <img src="../assets/category-cpu.svg" alt="CPU">
+                        <span>CPU</span>
+                    </a>
+                    <a href="browse.html?category=motherboard" class="category-card">
+                        <img src="../assets/category-motherboard.svg" alt="主板">
+                        <span>主板</span>
+                    </a>
+                    <a href="browse.html?category=ram" class="category-card">
+                        <img src="../assets/category-ram.svg" alt="内存">
+                        <span>内存</span>
+                    </a>
+                    <a href="browse.html?category=ssd" class="category-card">
+                        <img src="../assets/category-ssd.svg" alt="硬盘">
+                        <span>硬盘</span>
+                    </a>
+                    <a href="browse.html?category=cooler" class="category-card">
+                        <img src="../assets/category-cooler.svg" alt="散热器">
+                        <span>散热器</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 精选好物 -->
+        <section class="py-16 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold">精选好物</h2>
+                    <a href="browse.html" class="text-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring rounded">查看全部</a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="product.html?id=gpu-rtx4070" data-dom-id="featured-gpu" class="product-card">
+                        <div class="thumb">
+                            <img src="../assets/product-gpu-rtx4070.jpg" alt="RTX 4070 显卡">
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-semibold text-foreground line-clamp-2">七彩虹 RTX 4070 战斧豪华版 12GB</h3>
+                                <span class="shrink-0 px-2 py-0.5 rounded text-xs font-medium bg-primary-subtle text-primary border border-primary/20" style="background:var(--brand-primary-subtle);color:var(--brand-primary);">99新</span>
+                            </div>
+                            <p class="text-sm text-muted-foreground">箱说全 · 在保 · 上海</p>
+                            <div class="flex items-baseline justify-between">
+                                <span class="text-xl font-bold text-primary">¥3,680</span>
+                                <span class="text-xs text-muted-foreground">卖家：数码老张</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="product.html?id=cpu-13600k" data-dom-id="featured-cpu" class="product-card">
+                        <div class="thumb">
+                            <img src="../assets/product-cpu-13600k.jpg" alt="Intel i5-13600K">
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-semibold text-foreground line-clamp-2">Intel Core i5-13600K 盒装</h3>
+                                <span class="shrink-0 px-2 py-0.5 rounded text-xs font-medium bg-primary-subtle text-primary border border-primary/20" style="background:var(--brand-primary-subtle);color:var(--brand-primary);">95新</span>
+                            </div>
+                            <p class="text-sm text-muted-foreground">原装散热器未用 · 深圳</p>
+                            <div class="flex items-baseline justify-between">
+                                <span class="text-xl font-bold text-primary">¥1,250</span>
+                                <span class="text-xs text-muted-foreground">卖家：极客阿杰</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="product.html?id=ram-ddr5" data-dom-id="featured-ram" class="product-card">
+                        <div class="thumb">
+                            <img src="../assets/product-ram-ddr5.jpg" alt="DDR5 内存">
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-semibold text-foreground line-clamp-2">芝奇 DDR5 6000 32GB(16×2) 套装</h3>
+                                <span class="shrink-0 px-2 py-0.5 rounded text-xs font-medium bg-primary-subtle text-primary border border-primary/20" style="background:var(--brand-primary-subtle);color:var(--brand-primary);">99新</span>
+                            </div>
+                            <p class="text-sm text-muted-foreground">EXPO/XMP 双平台 · 北京</p>
+                            <div class="flex items-baseline justify-between">
+                                <span class="text-xl font-bold text-primary">¥620</span>
+                                <span class="text-xs text-muted-foreground">卖家：装机小队</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 平台保障 -->
+        <section class="py-16 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4">
+                <h2 class="text-2xl font-bold mb-8">平台保障</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="trust-item">
+                        <i data-lucide="clipboard-check" class="w-7 h-7"></i>
+                        <div>
+                            <h3 class="font-semibold text-foreground">验机报告</h3>
+                            <p class="text-sm text-muted-foreground mt-1">每件硬件经真实检测，成色、功能、SN 码一目了然。</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                        <div>
+                            <h3 class="font-semibold text-foreground">担保交易</h3>
+                            <p class="text-sm text-muted-foreground mt-1">平台托管货款，确认收货后再放款，买卖双方都有保障。</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+                        <div>
+                            <h3 class="font-semibold text-foreground">7 天退换</h3>
+                            <p class="text-sm text-muted-foreground mt-1">到手 7 天内与描述不符可申请退换，售后不扯皮。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-20 bg-primary text-primary-foreground">
+            <div class="max-w-3xl mx-auto px-4 text-center space-y-6">
+                <h2 class="text-3xl lg:text-4xl font-bold">有闲置硬件？让它们继续发热</h2>
+                <p class="text-primary-foreground/80">几分钟发布，千万发烧友看见，安全出手。</p>
+                <a href="sell.html" class="btn-cta">发布闲置</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-14 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-foreground">
+                        <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                        <span class="text-lg font-bold">硬件侠</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">发烧友信的过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li>客服邮箱：support@yingjianxia.com</li>
+                        <li>工作时间：周一至周日 9:00-21:00</li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                © 2026 硬件侠. All rights reserved.
+            </div>
+        </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

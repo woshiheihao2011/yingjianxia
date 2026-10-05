@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>举报中心 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .reports-shell { min-height: 100vh; display: flex; flex-direction: column; }
+            .reports-frame { flex: 1 1 auto; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; transition: background .2s, transform .15s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-primary:active { transform: translateY(1px); }
+            .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+            .btn-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-secondary:active { transform: translateY(1px); }
+            .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-sm { height: 36px; padding: 0 16px; font-size: 14px; }
+            .report-tab { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: var(--brand-radius-pill); background: var(--brand-surface); border: 1px solid var(--brand-line); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; white-space: nowrap; transition: color .2s, background .2s, border-color .2s; }
+            .report-tab:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .report-tab.active { color: var(--brand-primary); background: var(--brand-primary-subtle); border-color: var(--brand-primary); }
+            .report-tab:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .form-card { border-radius: var(--brand-radius-lg); background: var(--brand-card); border: 1px solid var(--brand-line); }
+            .form-label { display: block; font-size: 14px; font-weight: 500; color: var(--brand-ink); margin-bottom: 8px; }
+            .form-required::after { content: " *"; color: var(--brand-state-error); }
+            .form-input { width: 100%; height: 44px; padding: 0 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; transition: border-color .2s, box-shadow .2s; }
+            .form-input::placeholder { color: var(--brand-ink-3); }
+            .form-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .form-textarea { width: 100%; min-height: 120px; padding: 12px 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; resize: vertical; transition: border-color .2s, box-shadow .2s; }
+            .form-textarea::placeholder { color: var(--brand-ink-3); }
+            .form-textarea:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 40px; }
+            .upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px 24px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 2px dashed var(--brand-line); color: var(--brand-ink-2); text-align: center; transition: border-color .2s, background .2s; cursor: pointer; }
+            .upload-zone:hover { border-color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .upload-zone i { width: 40px; height: 40px; color: var(--brand-primary); }
+            .upload-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .upload-thumb { position: relative; aspect-ratio: 1; border-radius: var(--brand-radius-md); overflow: hidden; border: 1px solid var(--brand-line); }
+            .upload-thumb img { width: 100%; height: 100%; object-fit: cover; }
+            .upload-thumb .remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: var(--brand-radius-sm); background: var(--brand-state-error); color: var(--brand-primary-ink); cursor: pointer; }
+            .upload-thumb .remove i { width: 14px; height: 14px; }
+            .checkbox-wrap { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+            .checkbox-wrap input { width: 18px; height: 18px; accent-color: var(--brand-primary); }
+            .notice-card { border-radius: var(--brand-radius-md); background: var(--brand-primary-subtle); border: 1px solid var(--brand-primary); color: var(--brand-ink); }
+            .record-card { border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); }
+            .status-badge { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: var(--brand-radius-pill); font-size: 13px; font-weight: 500; }
+            .status-pending { background: var(--brand-state-warning-subtle); color: var(--brand-state-warning); }
+            .status-processing { background: var(--brand-state-info-subtle); color: var(--brand-state-info); }
+            .status-resolved { background: var(--brand-state-success-subtle); color: var(--brand-state-success); }
+            .result-card { border-radius: var(--brand-radius-md); background: var(--brand-surface-2); border: 1px solid var(--brand-line); }
+            .result-measure { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: var(--brand-radius-md); background: var(--brand-state-error-subtle); border: 1px solid var(--brand-state-error); color: var(--brand-ink); }
+            .result-measure i { width: 22px; height: 22px; color: var(--brand-state-error); flex-shrink: 0; }
+            .result-tip { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: var(--brand-radius-md); background: var(--brand-state-info-subtle); border: 1px solid var(--brand-state-info); color: var(--brand-ink); }
+            .result-tip i { width: 22px; height: 22px; color: var(--brand-state-info); flex-shrink: 0; }
+            @media (max-width: 768px) { .upload-preview { grid-template-columns: repeat(2, 1fr); } }
+        </style>
+
+        <div class="reports-shell">
+            <!-- 顶部导航 -->
+                <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+            <div class="nav-spacer"></div>
+
+            <!-- 页面标题 + 举报须知 -->
+            <section class="bg-background border-b border-border">
+                <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+                    <div class="max-w-3xl">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="shield-alert" class="w-8 h-8 text-primary"></i>
+                            <h1 class="text-3xl md:text-4xl font-bold text-foreground">举报中心</h1>
+                        </div>
+                        <p class="text-muted-foreground mb-6">维护公平交易环境，共同打击违规与欺诈行为。平台承诺对举报信息严格保密，并在 1-3 个工作日内完成审核。</p>
+                        <div class="notice-card p-4 md:p-5">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="info" class="w-5 h-5 text-primary flex-shrink-0 mt-0.5"></i>
+                                <div class="text-sm leading-relaxed">
+                                    <p class="font-medium mb-1">举报须知</p>
+                                    <ul class="list-disc list-inside space-y-1 text-brand-ink-2">
+                                        <li>请如实填写举报信息，恶意举报将承担相应责任。</li>
+                                        <li>上传的证据图片需清晰可见，建议包含商品截图、聊天记录、订单号等。</li>
+                                        <li>涉及诈骗、盗图等严重违规行为，平台将优先处理并同步警方。</li>
+                                        <li>处理结果将通过站内信通知，可在「我的举报记录」中查看进度。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 举报类型标签 -->
+            <section class="bg-background border-b border-border">
+                <div class="max-w-7xl mx-auto px-4 py-5">
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" role="tablist" aria-label="举报类型筛选">
+                        <button type="button" class="report-tab active" role="tab" aria-selected="true" data-dom-id="tab-all">全部</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-product">商品违规</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-fake">虚假交易</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-fraud">诈骗</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-stolen">盗图</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-abuse">恶意辱骂</button>
+                        <button type="button" class="report-tab" role="tab" aria-selected="false" data-dom-id="tab-other">其他</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 提交举报表单 + 我的举报记录 -->
+            <section class="reports-frame py-12 md:py-16 bg-background">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                        <!-- 左侧：提交表单 -->
+                        <div class="lg:col-span-3">
+                            <h2 class="text-xl md:text-2xl font-bold text-foreground mb-6">提交举报</h2>
+                            <form class="form-card p-5 md:p-8 space-y-6" onsubmit="event.preventDefault();">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="form-label form-required" for="report-type">举报类型</label>
+                                        <select id="report-type" class="form-input form-select" data-dom-id="report-type">
+                                            <option value="">请选择举报类型</option>
+                                            <option value="product">商品违规</option>
+                                            <option value="fake">虚假交易</option>
+                                            <option value="fraud">诈骗</option>
+                                            <option value="stolen">盗图</option>
+                                            <option value="abuse">恶意辱骂</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="form-label form-required" for="report-target-type">被举报对象</label>
+                                        <select id="report-target-type" class="form-input form-select" data-dom-id="report-target-type">
+                                            <option value="">请选择对象类型</option>
+                                            <option value="product">商品</option>
+                                            <option value="user">用户</option>
+                                            <option value="order">订单</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label form-required" for="report-target-id">对象编号 / 链接</label>
+                                    <input id="report-target-id" type="text" placeholder="例如商品编号、用户昵称、订单号或商品链接" class="form-input" data-dom-id="report-target-id">
+                                </div>
+
+                                <div>
+                                    <label class="form-label form-required" for="report-reason">举报原因</label>
+                                    <select id="report-reason" class="form-input form-select" data-dom-id="report-reason">
+                                        <option value="">请选择具体原因</option>
+                                        <option value="fake-info">发布虚假信息</option>
+                                        <option value="stolen-image">盗用他人图片</option>
+                                        <option value="price-fraud">价格欺诈</option>
+                                        <option value="offline-transaction">诱导线下交易</option>
+                                        <option value="malicious-abuse">恶意辱骂/骚扰</option>
+                                        <option value="prohibited-item">发布违禁品</option>
+                                        <option value="identity-fraud">身份冒用</option>
+                                        <option value="other">其他</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="form-label form-required" for="report-desc">详细描述</label>
+                                    <textarea id="report-desc" placeholder="请详细说明事件经过，包括时间、涉及金额、沟通记录等，便于平台快速核实。" class="form-textarea" data-dom-id="report-desc"></textarea>
+                                    <p class="mt-2 text-xs text-muted-foreground">建议 50-500 字，客观描述事实，避免情绪化表达。</p>
+                                </div>
+
+                                <!-- 证据上传区 -->
+                                <div>
+                                    <label class="form-label">上传证据图片</label>
+                                    <div class="upload-zone" role="button" tabindex="0" data-dom-id="upload-zone">
+                                        <i data-lucide="upload-cloud"></i>
+                                        <div>
+                                            <p class="font-medium text-foreground">点击或拖拽上传证据</p>
+                                            <p class="text-sm mt-1">支持 JPG、PNG、GIF，单张不超过 10MB，最多 6 张</p>
+                                        </div>
+                                    </div>
+                                    <div class="upload-preview mt-4" data-dom-id="upload-preview">
+                                        <div class="upload-thumb">
+                                            <img src="../assets/upload-placeholder.svg" alt="证据示例">
+                                            <span class="remove" aria-label="删除图片"><i data-lucide="x"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 p-4 rounded-md bg-muted border border-border">
+                                        <p class="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                                            <i data-lucide="file-check" class="w-4 h-4 text-primary"></i>
+                                            证据要求
+                                        </p>
+                                        <ul class="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                                            <li>商品页面截图需包含价格、描述、卖家信息。</li>
+                                            <li>聊天记录需完整展示时间、双方账号与关键对话。</li>
+                                            <li>支付凭证需包含交易单号、金额与收款方。</li>
+                                            <li>图片不得遮挡、涂抹关键信息，确保审核人员可辨。</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                                    <label class="checkbox-wrap text-sm text-muted-foreground">
+                                        <input type="checkbox" data-dom-id="report-anonymous">
+                                        <span>匿名举报（平台仍可在必要时联系您核实）</span>
+                                    </label>
+                                    <div class="flex items-center gap-3">
+                                        <button type="reset" class="btn-secondary btn-sm" data-dom-id="report-reset">重置</button>
+                                        <button type="submit" class="btn-primary btn-sm" data-dom-id="report-submit">提交举报</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 右侧：我的举报记录 -->
+                        <div class="lg:col-span-2">
+                            <h2 class="text-xl md:text-2xl font-bold text-foreground mb-6">我的举报记录</h2>
+                            <div class="space-y-4">
+                                <!-- 记录 1 -->
+                                <div class="record-card p-5">
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div>
+                                            <p class="text-sm text-muted-foreground">2026-08-20 14:32</p>
+                                            <p class="font-medium text-foreground mt-1">诈骗</p>
+                                        </div>
+                                        <span class="status-badge status-processing"><span class="w-2 h-2 rounded-full bg-current"></span>受理中</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground mb-1">被举报对象：<span class="text-foreground">用户「数码老张」</span></p>
+                                    <p class="text-sm text-muted-foreground mb-3">原因：诱导线下交易并收款不发货</p>
+                                    <div class="flex items-center justify-between gap-3 pt-3 border-t border-border">
+                                        <span class="text-xs text-muted-foreground">处理结果：平台已冻结该账号，正在进一步核实资金流向。</span>
+                                        <button type="button" class="btn-secondary btn-sm" data-dom-id="supplement-1">补充材料</button>
+                                    </div>
+                                </div>
+
+                                <!-- 记录 2 -->
+                                <div class="record-card p-5">
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div>
+                                            <p class="text-sm text-muted-foreground">2026-08-15 09:18</p>
+                                            <p class="font-medium text-foreground mt-1">盗图</p>
+                                        </div>
+                                        <span class="status-badge status-resolved"><span class="w-2 h-2 rounded-full bg-current"></span>已处理</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground mb-1">被举报对象：<span class="text-foreground">商品「RTX 4070 显卡」</span></p>
+                                    <p class="text-sm text-muted-foreground mb-3">原因：商品图片盗用其他卖家实拍图</p>
+                                    <div class="flex items-center justify-between gap-3 pt-3 border-t border-border">
+                                        <span class="text-xs text-muted-foreground">处理结果：商品已下架，卖家被扣 6 分信用分。</span>
+                                        <button type="button" class="btn-secondary btn-sm" data-dom-id="supplement-2">补充材料</button>
+                                    </div>
+                                </div>
+
+                                <!-- 记录 3 -->
+                                <div class="record-card p-5">
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div>
+                                            <p class="text-sm text-muted-foreground">2026-08-10 21:05</p>
+                                            <p class="font-medium text-foreground mt-1">商品违规</p>
+                                        </div>
+                                        <span class="status-badge status-pending"><span class="w-2 h-2 rounded-full bg-current"></span>待处理</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground mb-1">被举报对象：<span class="text-foreground">商品「DDR5 6000 内存套装」</span></p>
+                                    <p class="text-sm text-muted-foreground mb-3">原因：商品描述与实际规格不符</p>
+                                    <div class="flex items-center justify-between gap-3 pt-3 border-t border-border">
+                                        <span class="text-xs text-muted-foreground">处理结果：排队审核中，预计 24 小时内反馈。</span>
+                                        <button type="button" class="btn-secondary btn-sm" data-dom-id="supplement-3">补充材料</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 处理结果展示 -->
+                            <div class="mt-8">
+                                <h3 class="text-lg font-bold text-foreground mb-4">处理结果示例</h3>
+                                <div class="result-card p-5 space-y-4">
+                                    <div class="result-measure">
+                                        <i data-lucide="gavel"></i>
+                                        <div>
+                                            <p class="font-medium">处罚措施</p>
+                                            <p class="text-sm mt-1 opacity-90">该商品已下架，卖家账号被限制发布 7 天，信用分扣减 6 分。情节严重者将永久封禁并移交相关部门。</p>
+                                        </div>
+                                    </div>
+                                    <div class="result-tip">
+                                        <i data-lucide="message-circle"></i>
+                                        <div>
+                                            <p class="font-medium">平台提示</p>
+                                            <p class="text-sm mt-1 opacity-90">如您的权益受到损失，可在订单详情页申请售后或联系客服发起担保交易赔付。请保留好沟通与支付凭证。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 页脚 -->
+            <footer class="py-14 bg-background border-t border-border mt-auto">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-foreground">
+                            <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                            <span class="text-lg font-bold">硬件侠</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li>客服邮箱：support@yingjianxia.com</li>
+                            <li>工作时间：周一至周日 9:00-21:00</li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                    © 2026 硬件侠. All rights reserved.
+                </div>
+            </footer>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

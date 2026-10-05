@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钱包 / 余额 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <style>
+      .page-root { padding-top: 64px; }
+      @media (max-width: 768px) { .page-root { padding-top: 56px; } }
+      .balance-card {
+        background: linear-gradient(135deg, var(--brand-surface) 0%, var(--brand-surface-2) 100%);
+        border: 1px solid var(--brand-line);
+      }
+      .amount-hidden { filter: blur(8px); user-select: none; }
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(4px);
+      }
+      .modal-overlay[hidden] { display: none; }
+      .modal-card {
+        width: 100%;
+        max-width: 480px;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        border-radius: var(--brand-radius-lg);
+        background: var(--brand-surface);
+        border: 1px solid var(--brand-line);
+        box-shadow: var(--brand-shadow-3);
+      }
+      .amount-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 44px;
+        padding: 0 16px;
+        border-radius: var(--brand-radius-md);
+        border: 1px solid var(--brand-line);
+        background: var(--brand-surface-2);
+        color: var(--brand-ink);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: border-color .2s, background .2s, color .2s;
+      }
+      .amount-pill.active, .amount-pill:hover {
+        border-color: var(--brand-primary);
+        background: var(--brand-primary-subtle);
+        color: var(--brand-primary);
+      }
+      .pay-method {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: var(--brand-radius-md);
+        border: 1px solid var(--brand-line);
+        background: var(--brand-surface-2);
+        cursor: pointer;
+        transition: border-color .2s, background .2s;
+      }
+      .pay-method.active, .pay-method:hover {
+        border-color: var(--brand-primary);
+        background: var(--brand-primary-subtle);
+      }
+      .method-radio {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--brand-ink-3);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+      .pay-method.active .method-radio { border-color: var(--brand-primary); }
+      .method-radio::after {
+        content: '';
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--brand-primary);
+        transform: scale(0);
+        transition: transform .15s;
+      }
+      .pay-method.active .method-radio::after { transform: scale(1); }
+      .section-card {
+        border-radius: var(--brand-radius-lg);
+        background: var(--brand-surface);
+        border: 1px solid var(--brand-line);
+      }
+      .txn-row:not(:last-child) { border-bottom: 1px solid var(--brand-line); }
+    </style>
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground">跳到主要内容</a>
+
+    <!-- 顶部固定导航 -->
+        <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+    <main id="main-content" class="page-root mx-auto max-w-7xl px-4 pb-24 pt-6 md:px-6 md:pt-8">
+      <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <h1 class="text-2xl font-bold text-[var(--brand-ink)]">我的钱包</h1>
+        <a href="transactions.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--brand-ink-2)] transition-colors hover:text-[var(--brand-primary)]">
+          <i data-lucide="list" class="h-4 w-4"></i>
+          收支明细
+        </a>
+      </div>
+
+      <!-- 余额卡片区 -->
+      <section class="mb-6 grid gap-4 md:grid-cols-3" aria-label="账户余额">
+        <div class="balance-card col-span-1 flex flex-col justify-between rounded-2xl p-6 md:col-span-1">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[var(--brand-ink-2)]">总余额</span>
+            <button id="toggle-balance" type="button" class="inline-flex items-center justify-center rounded-md p-1.5 text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-3)] hover:text-[var(--brand-ink)]" aria-label="隐藏金额">
+              <i data-lucide="eye" class="h-4 w-4"></i>
+            </button>
+          </div>
+          <div class="mt-4">
+            <span class="text-lg font-medium text-[var(--brand-primary)]">¥</span>
+            <span id="balance-total" class="balance-value font-mono text-4xl font-bold tracking-tight text-[var(--brand-ink)] md:text-5xl">12,580.50</span>
+          </div>
+          <p class="mt-2 text-xs text-[var(--brand-ink-3)]">上次更新：2026-08-29 14:32</p>
+        </div>
+        <div class="section-card flex flex-col justify-center p-6">
+          <span class="text-sm text-[var(--brand-ink-2)]">冻结金额</span>
+          <div class="mt-3">
+            <span class="text-base font-medium text-[var(--brand-ink-2)]">¥</span>
+            <span class="balance-value font-mono text-3xl font-bold text-[var(--brand-ink)]">1,200.00</span>
+          </div>
+          <p class="mt-2 text-xs text-[var(--brand-ink-3)]">交易中订单担保金额</p>
+        </div>
+        <div class="section-card flex flex-col justify-center p-6">
+          <span class="text-sm text-[var(--brand-ink-2)]">可用余额</span>
+          <div class="mt-3">
+            <span class="text-base font-medium text-[var(--brand-primary)]">¥</span>
+            <span class="balance-value font-mono text-3xl font-bold text-[var(--brand-primary)]">11,380.50</span>
+          </div>
+          <p class="mt-2 text-xs text-[var(--brand-ink-3)]">可提现 / 可直接支付</p>
+        </div>
+      </section>
+
+      <!-- 快捷操作 -->
+      <section class="mb-8 grid grid-cols-3 gap-3 md:gap-4" aria-label="快捷操作">
+        <button type="button" onclick="openModal('recharge')" class="inline-flex flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-5 text-[var(--brand-ink)] transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)] hover:text-[var(--brand-primary)]">
+          <i data-lucide="plus" class="h-6 w-6"></i>
+          <span class="text-sm font-medium">充值</span>
+        </button>
+        <button type="button" onclick="openModal('withdraw')" class="inline-flex flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-5 text-[var(--brand-ink)] transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)] hover:text-[var(--brand-primary)]">
+          <i data-lucide="minus" class="h-6 w-6"></i>
+          <span class="text-sm font-medium">提现</span>
+        </button>
+        <button type="button" onclick="openModal('transfer')" class="inline-flex flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-5 text-[var(--brand-ink)] transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)] hover:text-[var(--brand-primary)]">
+          <i data-lucide="arrow-right-left" class="h-6 w-6"></i>
+          <span class="text-sm font-medium">转账</span>
+        </button>
+      </section>
+
+      <div class="grid gap-6 lg:grid-cols-3">
+        <!-- 左侧：支付方式 + 安全提示 -->
+        <div class="space-y-6 lg:col-span-1">
+          <!-- 支付方式管理 -->
+          <section class="section-card p-5">
+            <div class="mb-4 flex items-center justify-between">
+              <h2 class="font-semibold text-[var(--brand-ink)]">支付方式</h2>
+              <button type="button" onclick="openModal('add-method')" class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-primary-subtle)]">
+                <i data-lucide="plus" class="h-3.5 w-3.5"></i>
+                添加
+              </button>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <div class="flex items-center gap-3">
+                  <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]">
+                    <i data-lucide="landmark" class="h-5 w-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-[var(--brand-ink)]">中国工商银行</p>
+                    <p class="text-xs text-[var(--brand-ink-3)]">储蓄卡 · 尾号 6688</p>
+                  </div>
+                </div>
+                <button type="button" class="rounded-md px-2 py-1 text-xs text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]">解绑</button>
+              </div>
+              <div class="flex items-center justify-between rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <div class="flex items-center gap-3">
+                  <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand-state-info-subtle)] text-[var(--brand-state-info)]">
+                    <i data-lucide="wallet" class="h-5 w-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-[var(--brand-ink)]">支付宝</p>
+                    <p class="text-xs text-[var(--brand-ink-3)]">138****5678</p>
+                  </div>
+                </div>
+                <button type="button" class="rounded-md px-2 py-1 text-xs text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]">解绑</button>
+              </div>
+              <div class="flex items-center justify-between rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <div class="flex items-center gap-3">
+                  <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]">
+                    <i data-lucide="smartphone" class="h-5 w-5"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-medium text-[var(--brand-ink)]">微信支付</p>
+                    <p class="text-xs text-[var(--brand-ink-3)]">已绑定</p>
+                  </div>
+                </div>
+                <button type="button" class="rounded-md px-2 py-1 text-xs text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]">解绑</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 安全提示 -->
+          <section class="section-card p-5">
+            <h2 class="mb-4 font-semibold text-[var(--brand-ink)]">账户安全</h2>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <i data-lucide="shield-check" class="h-5 w-5 text-[var(--brand-state-success)]"></i>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">实名认证</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">已完成 · 叶 **</p>
+                </div>
+                <span class="rounded-full bg-[var(--brand-state-success-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-success)]">已认证</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <i data-lucide="lock" class="h-5 w-5 text-[var(--brand-primary)]"></i>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">支付密码</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">已设置 6 位数字密码</p>
+                </div>
+                <button type="button" class="text-xs font-medium text-[var(--brand-primary)] hover:underline">修改</button>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+                <i data-lucide="gauge" class="h-5 w-5 text-[var(--brand-state-warning)]"></i>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">交易限额</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">单笔 ¥50,000 · 单日 ¥200,000</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 右侧：最近交易 -->
+        <section class="section-card p-5 lg:col-span-2">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="font-semibold text-[var(--brand-ink)]">最近交易</h2>
+            <a href="transactions.html" class="inline-flex items-center gap-1 text-sm font-medium text-[var(--brand-primary)] transition-colors hover:underline">
+              查看全部
+              <i data-lucide="chevron-right" class="h-4 w-4"></i>
+            </a>
+          </div>
+          <div class="divide-y divide-[var(--brand-line)]">
+            <div class="txn-row flex items-center justify-between py-4">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]">
+                  <i data-lucide="arrow-down-left" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">买家付款 - RTX 4070</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">2026-08-28 10:23 · 订单 ORD20260828001</p>
+                </div>
+              </div>
+              <span class="font-mono text-base font-semibold text-[var(--brand-state-success)]">+¥3,680.00</span>
+            </div>
+            <div class="txn-row flex items-center justify-between py-4">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-error-subtle)] text-[var(--brand-state-error)]">
+                  <i data-lucide="arrow-up-right" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">提现至工商银行</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">2026-08-27 16:45 · 尾号 6688</p>
+                </div>
+              </div>
+              <span class="font-mono text-base font-semibold text-[var(--brand-state-error)]">-¥2,000.00</span>
+            </div>
+            <div class="txn-row flex items-center justify-between py-4">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]">
+                  <i data-lucide="arrow-down-left" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">账户充值</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">2026-08-25 09:12 · 支付宝</p>
+                </div>
+              </div>
+              <span class="font-mono text-base font-semibold text-[var(--brand-state-success)]">+¥500.00</span>
+            </div>
+            <div class="txn-row flex items-center justify-between py-4">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-error-subtle)] text-[var(--brand-state-error)]">
+                  <i data-lucide="arrow-up-right" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">购买 DDR5 内存</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">2026-08-24 20:18 · 订单 ORD20260824012</p>
+                </div>
+              </div>
+              <span class="font-mono text-base font-semibold text-[var(--brand-state-error)]">-¥599.00</span>
+            </div>
+            <div class="txn-row flex items-center justify-between py-4">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]">
+                  <i data-lucide="snowflake" class="h-5 w-5"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[var(--brand-ink)]">订单冻结</p>
+                  <p class="text-xs text-[var(--brand-ink-3)]">2026-08-23 14:30 · 担保交易</p>
+                </div>
+              </div>
+              <span class="font-mono text-base font-semibold text-[var(--brand-ink-2)]">-¥1,200.00</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- 充值弹窗 -->
+    <div id="modal-recharge" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="recharge-title">
+      <div class="modal-card p-5 md:p-6">
+        <div class="mb-5 flex items-center justify-between">
+          <h2 id="recharge-title" class="text-lg font-semibold text-[var(--brand-ink)]">账户充值</h2>
+          <button type="button" onclick="closeModal('recharge')" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]" aria-label="关闭">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">充值金额</label>
+            <div class="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
+              <button type="button" class="amount-pill" data-amount="50" onclick="selectRechargeAmount(50)">¥50</button>
+              <button type="button" class="amount-pill active" data-amount="100" onclick="selectRechargeAmount(100)">¥100</button>
+              <button type="button" class="amount-pill" data-amount="200" onclick="selectRechargeAmount(200)">¥200</button>
+              <button type="button" class="amount-pill" data-amount="500" onclick="selectRechargeAmount(500)">¥500</button>
+              <button type="button" class="amount-pill" data-amount="custom" onclick="selectRechargeAmount('custom')">自定义</button>
+            </div>
+            <div id="recharge-custom-wrap" class="hidden">
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--brand-ink-2)]">¥</span>
+                <input id="recharge-custom" type="number" min="1" step="0.01" placeholder="请输入充值金额" class="h-11 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] pl-8 pr-4 text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">支付方式</label>
+            <div class="space-y-2">
+              <label class="pay-method active" data-method="wechat" onclick="selectRechargeMethod('wechat')">
+                <span class="method-radio"></span>
+                <i data-lucide="smartphone" class="h-5 w-5 text-[var(--brand-state-success)]"></i>
+                <span class="flex-1 text-sm font-medium text-[var(--brand-ink)]">微信支付</span>
+              </label>
+              <label class="pay-method" data-method="alipay" onclick="selectRechargeMethod('alipay')">
+                <span class="method-radio"></span>
+                <i data-lucide="wallet" class="h-5 w-5 text-[var(--brand-state-info)]"></i>
+                <span class="flex-1 text-sm font-medium text-[var(--brand-ink)]">支付宝</span>
+              </label>
+              <label class="pay-method" data-method="bank" onclick="selectRechargeMethod('bank')">
+                <span class="method-radio"></span>
+                <i data-lucide="landmark" class="h-5 w-5 text-[var(--brand-primary)]"></i>
+                <span class="flex-1 text-sm font-medium text-[var(--brand-ink)]">银行卡（工商银行 6688）</span>
+              </label>
+            </div>
+          </div>
+          <button type="button" onclick="closeModal('recharge')" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand-primary)] px-4 text-sm font-semibold text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]">
+            <i data-lucide="check" class="h-4 w-4"></i>
+            确认充值
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 提现弹窗 -->
+    <div id="modal-withdraw" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="withdraw-title">
+      <div class="modal-card p-5 md:p-6">
+        <div class="mb-5 flex items-center justify-between">
+          <h2 id="withdraw-title" class="text-lg font-semibold text-[var(--brand-ink)]">余额提现</h2>
+          <button type="button" onclick="closeModal('withdraw')" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]" aria-label="关闭">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">到账银行卡</label>
+            <div class="pay-method active cursor-default">
+              <i data-lucide="landmark" class="h-5 w-5 text-[var(--brand-primary)]"></i>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-[var(--brand-ink)]">中国工商银行（6688）</p>
+                <p class="text-xs text-[var(--brand-ink-3)]">预计 2 小时内到账</p>
+              </div>
+              <i data-lucide="check" class="h-4 w-4 text-[var(--brand-primary)]"></i>
+            </div>
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">提现金额</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-medium text-[var(--brand-ink-2)]">¥</span>
+              <input id="withdraw-amount" type="number" min="1" step="0.01" placeholder="请输入提现金额" class="h-12 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] pl-9 pr-4 text-xl font-semibold text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+            </div>
+            <div class="mt-2 flex items-center justify-between text-xs text-[var(--brand-ink-3)]">
+              <span>可用余额 ¥11,380.50</span>
+              <button type="button" onclick="document.getElementById('withdraw-amount').value='11380.50'" class="text-[var(--brand-primary)] hover:underline">全部提现</button>
+            </div>
+          </div>
+          <div class="rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-[var(--brand-ink-2)]">预计到账时间</span>
+              <span class="font-medium text-[var(--brand-ink)]">2026-08-29 16:30 前</span>
+            </div>
+            <div class="mt-1 flex items-center justify-between text-sm">
+              <span class="text-[var(--brand-ink-2)]">手续费</span>
+              <span class="font-medium text-[var(--brand-ink)]">¥0.00</span>
+            </div>
+          </div>
+          <button type="button" onclick="closeModal('withdraw')" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand-primary)] px-4 text-sm font-semibold text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]">
+            <i data-lucide="check" class="h-4 w-4"></i>
+            确认提现
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 转账弹窗 -->
+    <div id="modal-transfer" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="transfer-title">
+      <div class="modal-card p-5 md:p-6">
+        <div class="mb-5 flex items-center justify-between">
+          <h2 id="transfer-title" class="text-lg font-semibold text-[var(--brand-ink)]">转账给朋友</h2>
+          <button type="button" onclick="closeModal('transfer')" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]" aria-label="关闭">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">对方账户</label>
+            <input type="text" placeholder="手机号 / 用户名 / 邮箱" class="h-11 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] px-4 text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">转账金额</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-medium text-[var(--brand-ink-2)]">¥</span>
+              <input type="number" min="0.01" step="0.01" placeholder="请输入转账金额" class="h-12 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] pl-9 pr-4 text-xl font-semibold text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+            </div>
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-[var(--brand-ink-2)]">备注（选填）</label>
+            <input type="text" placeholder="请输入转账备注" class="h-11 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] px-4 text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+          </div>
+          <button type="button" onclick="closeModal('transfer')" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--brand-primary)] px-4 text-sm font-semibold text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]">
+            <i data-lucide="check" class="h-4 w-4"></i>
+            确认转账
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加支付方式弹窗 -->
+    <div id="modal-add-method" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="add-method-title">
+      <div class="modal-card p-5 md:p-6">
+        <div class="mb-5 flex items-center justify-between">
+          <h2 id="add-method-title" class="text-lg font-semibold text-[var(--brand-ink)]">添加支付方式</h2>
+          <button type="button" onclick="closeModal('add-method')" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]" aria-label="关闭">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <button type="button" onclick="closeModal('add-method')" class="flex w-full items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 text-left transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)]">
+            <i data-lucide="landmark" class="h-6 w-6 text-[var(--brand-primary)]"></i>
+            <span class="text-sm font-medium text-[var(--brand-ink)]">添加银行卡</span>
+          </button>
+          <button type="button" onclick="closeModal('add-method')" class="flex w-full items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 text-left transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)]">
+            <i data-lucide="wallet" class="h-6 w-6 text-[var(--brand-state-info)]"></i>
+            <span class="text-sm font-medium text-[var(--brand-ink)]">添加支付宝</span>
+          </button>
+          <button type="button" onclick="closeModal('add-method')" class="flex w-full items-center gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 text-left transition-colors hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary-subtle)]">
+            <i data-lucide="smartphone" class="h-6 w-6 text-[var(--brand-state-success)]"></i>
+            <span class="text-sm font-medium text-[var(--brand-ink)]">添加微信支付</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+      <div class="mx-auto max-w-7xl px-4 md:px-6">
+        <div class="grid gap-8 md:grid-cols-4">
+          <div>
+            <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+              <i data-lucide="cpu" class="h-6 w-6"></i>
+              <span>硬件侠</span>
+            </a>
+            <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+          </div>
+          <div>
+            <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+            <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+              <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+              <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+              <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+              <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">验机服务</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-medium text-[var(--brand-ink)]">帮助中心</h4>
+            <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+              <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">交易规则</a></li>
+              <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">防骗指南</a></li>
+              <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">常见问题</a></li>
+              <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">联系客服</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-medium text-[var(--brand-ink)]">关注我们</h4>
+            <div class="mt-3 flex gap-3">
+              <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微信">
+                <i data-lucide="message-circle" class="h-4 w-4"></i>
+              </a>
+              <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微博">
+                <i data-lucide="at-sign" class="h-4 w-4"></i>
+              </a>
+              <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="Bilibili">
+                <i data-lucide="play-circle" class="h-4 w-4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+          <p>© 2026 硬件侠. 保留所有权利。</p>
+          <div class="flex gap-4">
+            <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+            <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+            <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪ICP备XXXXXXXX号</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function() {
+        let balanceVisible = true;
+        const toggleBtn = document.getElementById('toggle-balance');
+        const values = document.querySelectorAll('.balance-value');
+        const total = document.getElementById('balance-total');
+        const originalValues = [];
+        values.forEach(function(el) { originalValues.push(el.textContent); });
+
+        function updateEyeIcon() {
+          const icon = toggleBtn.querySelector('i');
+          icon.setAttribute('data-lucide', balanceVisible ? 'eye' : 'eye-off');
+          icon.innerHTML = '';
+          lucide.createIcons();
+        }
+
+        toggleBtn.addEventListener('click', function() {
+          balanceVisible = !balanceVisible;
+          values.forEach(function(el, i) {
+            if (balanceVisible) {
+              el.textContent = originalValues[i];
+              el.classList.remove('amount-hidden');
+            } else {
+              el.textContent = '****';
+              el.classList.add('amount-hidden');
+            }
+          });
+          if (!balanceVisible) total.textContent = '****';
+          else total.textContent = originalValues[0];
+          updateEyeIcon();
+        });
+
+        window.openModal = function(id) {
+          document.getElementById('modal-' + id).removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+        };
+        window.closeModal = function(id) {
+          document.getElementById('modal-' + id).setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        };
+
+        window.selectRechargeAmount = function(amount) {
+          document.querySelectorAll('#modal-recharge .amount-pill').forEach(function(btn) {
+            btn.classList.toggle('active', btn.dataset.amount === String(amount));
+          });
+          const customWrap = document.getElementById('recharge-custom-wrap');
+          if (amount === 'custom') {
+            customWrap.classList.remove('hidden');
+            document.getElementById('recharge-custom').focus();
+          } else {
+            customWrap.classList.add('hidden');
+          }
+        };
+
+        window.selectRechargeMethod = function(method) {
+          document.querySelectorAll('#modal-recharge .pay-method').forEach(function(el) {
+            el.classList.toggle('active', el.dataset.method === method);
+          });
+        };
+
+        document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+          overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+              overlay.setAttribute('hidden', '');
+              document.body.style.overflow = '';
+            }
+          });
+        });
+      })();
+    </script>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

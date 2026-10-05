@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布商品 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <style>
+      .form-input {
+        height: 48px;
+        border-radius: 8px;
+        background-color: var(--brand-surface);
+        border: 1px solid var(--brand-line);
+        color: var(--brand-ink);
+        padding: 0 12px;
+        font-size: 15px;
+        width: 100%;
+        transition: border-color 160ms ease, box-shadow 160ms ease;
+      }
+      .form-input::placeholder { color: var(--brand-ink-3); }
+      .form-input:hover:not(:disabled):not([aria-disabled="true"]) { border-color: var(--brand-ink-3); }
+      .form-input:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+      .form-input:disabled { opacity: 0.55; cursor: not-allowed; background-color: var(--brand-surface-2); }
+      .form-input[aria-invalid="true"] { border-color: var(--brand-state-error); }
+      .form-input[aria-invalid="true"]:focus { box-shadow: 0 0 0 2px var(--brand-state-error-subtle); }
+      select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+      textarea.form-input { height: auto; min-height: 128px; padding: 12px; resize: vertical; }
+      .form-label { display: block; font-size: 14px; color: var(--brand-ink-2); margin-bottom: 8px; }
+      .required-mark { color: var(--brand-state-error); margin-left: 2px; }
+      .radio-pill { display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; height: 36px; border-radius: 999px; border: 1px solid var(--brand-line); background-color: var(--brand-surface); color: var(--brand-ink-2); font-size: 14px; cursor: pointer; transition: all 160ms ease; user-select: none; }
+      .radio-pill:hover { border-color: var(--brand-ink-3); color: var(--brand-ink); }
+      .radio-input { position: absolute; opacity: 0; width: 0; height: 0; }
+      .radio-input:checked + .radio-pill { border-color: var(--brand-primary); background-color: var(--brand-primary-subtle); color: var(--brand-primary); }
+      .radio-input:focus-visible + .radio-pill { box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+      .checkbox-row { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; color: var(--brand-ink-2); font-size: 14px; }
+      .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--brand-primary); cursor: pointer; }
+      .upload-zone { border: 2px dashed var(--brand-line); border-radius: 12px; background-color: var(--brand-surface); transition: border-color 160ms ease, background-color 160ms ease; }
+      .upload-zone:hover { border-color: var(--brand-primary); background-color: var(--brand-primary-subtle); }
+      .upload-zone:focus-within { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+      .btn-primary { height: 48px; padding: 0 28px; border-radius: 8px; background-color: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; font-size: 16px; border: none; cursor: pointer; transition: background-color 160ms ease, transform 100ms ease; }
+      .btn-primary:hover { background-color: var(--brand-primary-hover); }
+      .btn-primary:active { transform: translateY(1px); }
+      .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    </style>
+    <main>
+          <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+      <section class="pt-24 pb-8 md:pt-28 md:pb-10">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+          <h1 class="text-3xl font-bold tracking-tight md:text-4xl" style="color: var(--brand-ink);">发布闲置</h1>
+          <p class="mt-2 text-base" style="color: var(--brand-ink-2);">让你的硬件找到下一个主人</p>
+        </div>
+      </section>
+
+      <section class="pb-10">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+          <label class="upload-zone flex cursor-pointer flex-col items-center justify-center gap-3 py-12 md:py-16">
+            <input type="file" accept="image/*" multiple class="sr-only" />
+            <img src="../assets/upload-placeholder.svg" alt="上传占位图" class="h-16 w-16 opacity-70" />
+            <span class="text-base font-medium" style="color: var(--brand-ink);">点击或拖拽上传图片</span>
+            <span class="text-sm" style="color: var(--brand-ink-3);">最多 9 张，单张不超过 10MB</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="pb-12 md:pb-16">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+          <form class="space-y-6" onsubmit="event.preventDefault();">
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="md:col-span-2">
+                <label class="form-label" for="form-title">商品标题<span class="required-mark">*</span></label>
+                <input id="form-title" data-dom-id="form-title" type="text" placeholder="例如：RTX 3060 Ti 8G 显卡" class="form-input" />
+              </div>
+
+              <div>
+                <label class="form-label" for="form-category">分类<span class="required-mark">*</span></label>
+                <select id="form-category" data-dom-id="form-category" class="form-input">
+                  <option value="" disabled selected>请选择分类</option>
+                  <option value="gpu">显卡</option>
+                  <option value="cpu">CPU</option>
+                  <option value="motherboard">主板</option>
+                  <option value="ram">内存</option>
+                  <option value="storage">硬盘</option>
+                  <option value="cooler">散热器</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="form-price">价格<span class="required-mark">*</span></label>
+                <div class="relative">
+                  <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base" style="color: var(--brand-ink-3);">¥</span>
+                  <input id="form-price" data-dom-id="form-price" type="number" min="0" step="0.01" placeholder="0.00" class="form-input pl-8" />
+                </div>
+              </div>
+
+              <div class="md:col-span-2">
+                <span class="form-label">成色<span class="required-mark">*</span></span>
+                <div id="form-condition" data-dom-id="form-condition" class="flex flex-wrap gap-3">
+                  <label class="relative">
+                    <input type="radio" name="condition" value="new" class="radio-input" />
+                    <span class="radio-pill">全新</span>
+                  </label>
+                  <label class="relative">
+                    <input type="radio" name="condition" value="like-new" class="radio-input" checked />
+                    <span class="radio-pill">99新</span>
+                  </label>
+                  <label class="relative">
+                    <input type="radio" name="condition" value="good" class="radio-input" />
+                    <span class="radio-pill">9成新</span>
+                  </label>
+                  <label class="relative">
+                    <input type="radio" name="condition" value="worn" class="radio-input" />
+                    <span class="radio-pill">战损版</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label" for="form-original-price">原价（选填）</label>
+                <div class="relative">
+                  <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base" style="color: var(--brand-ink-3);">¥</span>
+                  <input id="form-original-price" type="number" min="0" step="0.01" placeholder="0.00" class="form-input pl-8" />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label" for="form-channel">购买渠道</label>
+                <select id="form-channel" class="form-input">
+                  <option value="" disabled selected>请选择购买渠道</option>
+                  <option value="official">官方自营</option>
+                  <option value="jd">京东</option>
+                  <option value="tmall">天猫</option>
+                  <option value="taobao">淘宝</option>
+                  <option value="offline">线下实体店</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="checkbox-row">
+                  <input type="checkbox" name="box" />
+                  <span>箱说全（保留原包装、说明书及配件）</span>
+                </label>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="form-label" for="form-description">商品描述</label>
+                <textarea id="form-description" placeholder="描述商品使用情况、瑕疵、保修状态等，信息越完整越容易成交..." class="form-input"></textarea>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="checkbox-row">
+                  <input type="checkbox" name="report" />
+                  <span>我已上传或同意平台验机报告</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-4">
+              <button type="submit" id="form-submit" data-dom-id="form-submit" class="btn-primary w-full md:w-auto">立即发布</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <footer class="border-t py-10 md:py-12" style="border-color: var(--brand-line-subtle); background-color: var(--brand-surface);">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6">
+          <div class="grid gap-8 md:grid-cols-4">
+            <div>
+              <a href="index.html" class="flex items-center gap-2 text-lg font-bold" style="color: var(--brand-ink);">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-md" style="background-color: var(--brand-primary); color: var(--brand-primary-ink);">
+                  <i data-lucide="cpu" class="h-4 w-4"></i>
+                </span>
+                硬件侠
+              </a>
+              <p class="mt-3 text-sm leading-relaxed" style="color: var(--brand-ink-3);">专业可信的电脑配件二手交易平台，让闲置硬件继续发光。</p>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold" style="color: var(--brand-ink);">平台</h3>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                <li><a href="index.html" class="hover:text-[var(--brand-primary)] transition-colors">首页</a></li>
+                <li><a href="browse.html" class="hover:text-[var(--brand-primary)] transition-colors">逛硬件</a></li>
+                <li><a href="sell.html" class="hover:text-[var(--brand-primary)] transition-colors">发布闲置</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold" style="color: var(--brand-ink);">服务</h3>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                <li><a href="#" class="hover:text-[var(--brand-primary)] transition-colors">验机服务</a></li>
+                <li><a href="#" class="hover:text-[var(--brand-primary)] transition-colors">交易保障</a></li>
+                <li><a href="#" class="hover:text-[var(--brand-primary)] transition-colors">帮助中心</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold" style="color: var(--brand-ink);">联系</h3>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--brand-ink-2);">
+                <li><a href="#" class="hover:text-[var(--brand-primary)] transition-colors">关于我们</a></li>
+                <li><a href="#" class="hover:text-[var(--brand-primary)] transition-colors">意见反馈</a></li>
+                <li><span>support@yingjianxia.com</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-10 border-t pt-6 text-center text-xs" style="border-color: var(--brand-line-subtle); color: var(--brand-ink-3);">
+            © 2026 硬件侠 YingJianXia. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

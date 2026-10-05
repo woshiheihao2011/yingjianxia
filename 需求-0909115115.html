@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>硬件侠 - 业务线复验报告（第三轮）</title>
+    <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #161821;
+            --bg-card: #1c1f2b;
+            --bg-hover: #232634;
+            --text-primary: #e4e6eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #2d3142;
+            --accent: #7c5cfc;
+            --accent-light: #a78bfa;
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --info: #3b82f6;
+            --info-bg: rgba(59, 130, 246, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+        .header {
+            background: linear-gradient(135deg, #1c1f2b 0%, #2a2d3d 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(124, 92, 252, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #7c5cfc, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 20px; }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .meta-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .meta-item .label { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .meta-item .value { color: var(--text-primary); font-size: 14px; font-weight: 600; margin-top: 2px; }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .summary-card .number { font-size: 36px; font-weight: 700; line-height: 1.2; }
+        .summary-card .label { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+        .summary-card.fixed .number { color: var(--success); }
+        .summary-card.fail .number { color: var(--danger); }
+        .summary-card.partial .number { color: var(--warning); }
+        .summary-card.total .number { color: var(--accent); }
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .test-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .test-table th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .test-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .test-table tr:hover td { background: var(--bg-hover); }
+        .test-table tr:last-child td { border-bottom: none; }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-fixed { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-fail { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-partial { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .priority-p0 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .priority-p1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .priority-p2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .issue-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--danger);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+        }
+        .issue-card.p1 { border-left-color: var(--warning); }
+        .issue-card.p2 { border-left-color: var(--info); }
+        .issue-card.resolved { border-left-color: var(--success); opacity: 0.7; }
+        .issue-card .issue-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .issue-card .issue-title { font-size: 15px; font-weight: 600; }
+        .issue-card .issue-body { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+        .issue-card .issue-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        @media (max-width: 768px) {
+            .container { padding: 12px 8px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            .section { padding: 16px; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .nav-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        .nav-bar a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+        .nav-bar a:hover { background: rgba(124, 92, 252, 0.1); }
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--accent));
+            border-radius: 4px;
+        }
+        .code-block {
+            background: #0d0e14;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #f87171;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        .highlight-box {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>硬件侠 — 业务线复验报告（第三轮）</h1>
+            <p class="subtitle">针对需求-0909111430中残留和回归问题的最终复验</p>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="label">复验日期</div>
+                    <div class="value">2026-09-09</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">测试环境</div>
+                    <div class="value">localhost:5173</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">对比文档</div>
+                    <div class="value">需求-0909111430</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">文档编号</div>
+                    <div class="value">需求-0909115115</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav Bar -->
+        <div class="nav-bar">
+            <a href="#summary">修复总览</a>
+            <a href="#compare">前后对比</a>
+            <a href="#buyer">买家侧</a>
+            <a href="#audit">审核侧</a>
+            <a href="#platform">平台支撑</a>
+            <a href="#resolved">已修复项</a>
+            <a href="#remaining">残留问题</a>
+            <a href="#roadmap">修复建议</a>
+        </div>
+
+        <!-- Summary -->
+        <div id="summary" class="section">
+            <h2 class="section-title">修复总览</h2>
+            <div class="summary-grid">
+                <div class="summary-card fixed">
+                    <div class="number">6</div>
+                    <div class="label">已修复</div>
+                </div>
+                <div class="summary-card fail">
+                    <div class="number">2</div>
+                    <div class="label">未修复</div>
+                </div>
+                <div class="summary-card partial">
+                    <div class="number">1</div>
+                    <div class="label">部分修复</div>
+                </div>
+                <div class="summary-card total">
+                    <div class="number">9</div>
+                    <div class="label">验证项总计</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px;">
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">本轮修复进度</p>
+                <div class="progress-bar"><div class="fill" style="width: 78%;"></div></div>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">6/9 问题已修复（67%），2项P1残留，1项P2部分修复</p>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 14px; color: var(--success);">
+                    <strong>已修复亮点：</strong>个人中心、社区、帮助中心三个回归问题全部修复；工单和优惠券页面内容正常展示；主板分类恢复商品列表；审核中心标签切换和操作按钮完整可用；商品审核子页面独立展示。
+                </p>
+                <p style="font-size: 14px; margin-top: 8px; color: var(--danger);">
+                    <strong>仍需修复：</strong>搜索"显卡"仍跳转至审核中心且0结果（疑似路由守卫冲突）；直接访问/product/1仍报"商品不存在"但UI渲染占位数据（应显示404提示）；审核子页面仅/admin/products独立，其余4个仍跳转/audit。
+                </p>
+            </div>
+        </div>
+
+        <!-- Comparison -->
+        <div id="compare" class="section">
+            <h2 class="section-title">问题修复前后对比</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">编号</th>
+                            <th>问题</th>
+                            <th>上轮状态</th>
+                            <th>本轮状态</th>
+                            <th>结论</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P1-01</td>
+                            <td>搜索返回0条结果</td>
+                            <td>页面不再跳转，但搜索"显卡"仍0结果</td>
+                            <td>搜索"显卡"页面跳转至/audit?type=1，无法展示结果</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P1-02</td>
+                            <td>/product/1直接访问数据异常</td>
+                            <td>价格¥0、无图片、未知店铺</td>
+                            <td>后端返回code 2010"商品不存在或已删除"，但前端仍渲染占位数据（¥0/暂无图片/未知店铺）</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>审核子页面未做功能区分</td>
+                            <td>5个URL全部跳转至/audit</td>
+                            <td>/admin/products已独立展示商品审核；其余4个仍跳转/audit且main区域为空</td>
+                            <td><span class="badge badge-partial">部分修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-02</td>
+                            <td>/ticket和/coupon内容为空</td>
+                            <td>标题加载但main区域为空</td>
+                            <td>/ticket→/tickets正常展示工单列表；/coupon→/coupons正常展示优惠券积分</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-03</td>
+                            <td>主板分类页面内容为空</td>
+                            <td>标题加载但main区域为空</td>
+                            <td>正常展示2件主板商品，面包屑和筛选器正常</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-01</td>
+                            <td>/profile个人中心内容为空</td>
+                            <td>标题加载但main区域为空</td>
+                            <td>正常展示用户头像、昵称、信用等级、快捷入口、个人资料</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-02</td>
+                            <td>/community社区内容为空（回归）</td>
+                            <td>标题加载但main区域为空</td>
+                            <td>正常展示搜索框、6个分类标签、精选攻略、最新帖子、热门话题、社区达人榜</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-03</td>
+                            <td>/help帮助中心内容为空（回归）</td>
+                            <td>标题加载但main区域为空</td>
+                            <td>正常展示搜索框、6个问题分类、8个热门问题、快速入口</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-04</td>
+                            <td>审核流程端到端未验证</td>
+                            <td>未深入验证</td>
+                            <td>4条待审核记录，标签切换正常，类型切换正常，审核按钮可用</td>
+                            <td><span class="badge badge-fixed">已验证</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Buyer Side -->
+        <div id="buyer" class="section">
+            <h2 class="section-title">买家侧复验详情</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">编号</th>
+                            <th>验证项</th>
+                            <th>验证方法</th>
+                            <th>结果</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P1-01</td>
+                            <td>搜索"显卡"</td>
+                            <td>访问/search?q=显卡</td>
+                            <td>页面标题"搜索-硬件侠"加载，搜索框填入"显卡"，但页面持续显示"搜索中..."后自动跳转至/audit?type=1审核中心。Vue Router导航守卫存在next()弃用警告。</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P1-02</td>
+                            <td>商品详情/product/1</td>
+                            <td>直接访问URL</td>
+                            <td>main区域为空，控制台报错"加载商品详情失败 {code: 2010, message: 商品不存在或已删除}"。/product/2同样报错但UI仍渲染占位数据（¥0/暂无图片/未知店铺）。</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-01</td>
+                            <td>个人中心/profile</td>
+                            <td>登录后访问/profile</td>
+                            <td>正常渲染：用户头像、昵称RefreshTestUser、手机号脱敏、信用等级、快捷入口（我的订单/收藏/钱包/优惠券）、个人资料区域</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-02</td>
+                            <td>社区/community</td>
+                            <td>访问/community</td>
+                            <td>正常渲染：搜索框、6个分类标签、精选攻略、最新帖子列表、分页、热门话题、社区达人榜</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-03</td>
+                            <td>帮助中心/help</td>
+                            <td>访问/help</td>
+                            <td>正常渲染：搜索框、6个问题分类、8个热门问题（可展开）、快速入口（联系客服/意见反馈/信任中心/用户协议/隐私政策）</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Audit Side -->
+        <div id="audit" class="section">
+            <h2 class="section-title">审核侧复验详情</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">编号</th>
+                            <th>验证项</th>
+                            <th>验证方法</th>
+                            <th>结果</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>/admin/products 商品审核</td>
+                            <td>直接访问</td>
+                            <td><strong style="color:var(--success)">已独立展示</strong>：统计卡片、标签切换（待审核/全部/已通过/已拒绝）、商品审核列表及操作按钮</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>/admin/inspection 验机审核</td>
+                            <td>直接访问</td>
+                            <td>重定向至/audit?type=1，未展示独立验机审核功能</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>/inspection 验机页面</td>
+                            <td>直接访问</td>
+                            <td>重定向至/audit，main区域为空</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>/admin/orders 订单管理</td>
+                            <td>直接访问</td>
+                            <td>重定向至/audit?type=3，main区域为空</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-01</td>
+                            <td>/admin/users 用户管理</td>
+                            <td>直接访问</td>
+                            <td>重定向至/audit?type=3，main区域为空</td>
+                            <td><span class="badge badge-fail">未修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>N-04</td>
+                            <td>审核中心标签切换</td>
+                            <td>在/audit页面操作</td>
+                            <td>4条待审核记录，"待审核/全部记录/已通过/已拒绝"标签切换正常，"商品审核/帖子审核/举报处理/提现审核"类型切换正常，"去审核"按钮可用</td>
+                            <td><span class="badge badge-fixed">已验证</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Platform Support -->
+        <div id="platform" class="section">
+            <h2 class="section-title">平台支撑域复验详情</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">编号</th>
+                            <th>验证项</th>
+                            <th>验证方法</th>
+                            <th>结果</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P2-02</td>
+                            <td>工单/ticket</td>
+                            <td>访问/ticket</td>
+                            <td>重定向至/tickets，正常展示客服工单页面：提交新工单按钮、状态筛选标签、工单列表</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-02</td>
+                            <td>优惠券/coupon</td>
+                            <td>访问/coupon</td>
+                            <td>重定向至/coupons，正常展示优惠券积分页面：用户信息、等级、签到、优惠券/积分/任务模块</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                        <tr>
+                            <td>P2-03</td>
+                            <td>主板分类/browse?category=motherboard</td>
+                            <td>直接访问</td>
+                            <td>正常展示：面包屑"首页/找货市场/主板"、筛选器、排序选项、2件主板商品、分页</td>
+                            <td><span class="badge badge-fixed">已修复</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Resolved Issues -->
+        <div id="resolved" class="section">
+            <h2 class="section-title">已修复问题清单</h2>
+            <div class="issue-list">
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">N-01 /profile 个人中心内容为空</span>
+                        <span class="priority priority-p2">P2 回归</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已修复</strong> — 个人中心页面正常渲染，展示用户头像、昵称(RefreshTestUser)、手机号脱敏、信用等级、快捷入口（我的订单/收藏/钱包/优惠券）和个人资料区域。
+                    </div>
+                </div>
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">N-02 /community 社区内容为空（回归）</span>
+                        <span class="priority priority-p2">P2 回归</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已修复</strong> — 社区页面正常渲染，包含搜索框、6个分类标签、精选攻略、最新帖子列表、分页、热门话题和社区达人榜等完整模块。
+                    </div>
+                </div>
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">N-03 /help 帮助中心内容为空（回归）</span>
+                        <span class="priority priority-p2">P2 回归</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已修复</strong> — 帮助中心页面正常渲染，包含搜索框、6个问题分类、8个热门问题（可展开）和快速入口（联系客服/意见反馈/信任中心/用户协议/隐私政策）。
+                    </div>
+                </div>
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-02 /ticket和/coupon页面内容为空</span>
+                        <span class="priority priority-p2">P2 残留</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已修复</strong> — /ticket重定向至/tickets，正常展示工单列表（提交新工单按钮、状态筛选、工单列表）；/coupon重定向至/coupons，正常展示优惠券积分中心（用户信息、等级、签到、优惠券/积分/任务）。
+                    </div>
+                </div>
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-03 主板分类页面内容为空</span>
+                        <span class="priority priority-p2">P2 残留</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已修复</strong> — /browse?category=motherboard正常展示2件主板商品，面包屑"首页/找货市场/主板"正确显示，筛选器和排序选项正常。
+                    </div>
+                </div>
+                <div class="issue-card resolved">
+                    <div class="issue-header">
+                        <span class="issue-title">N-04 审核中心端到端验证</span>
+                        <span class="priority priority-p2">P3 待验证</span>
+                    </div>
+                    <div class="issue-body">
+                        <strong style="color:var(--success)">已验证</strong> — 审核中心4条待审核记录，"待审核/全部记录/已通过/已拒绝"标签切换正常，"商品审核/帖子审核/举报处理/提现审核"类型切换正常，"去审核"操作按钮可用。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remaining Issues -->
+        <div id="remaining" class="section">
+            <h2 class="section-title">残留问题清单</h2>
+            <div class="issue-list">
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-01 搜索功能异常（路由守卫冲突）</span>
+                        <span class="priority priority-p1">P1 未修复</span>
+                    </div>
+                    <div class="issue-body">
+                        访问/search?q=显卡时，页面标题"搜索-硬件侠"正常加载且搜索框已填入"显卡"，但页面持续显示"搜索中..."后<strong>自动跳转至/audit?type=1审核中心</strong>，无法展示搜索结果。控制台存在Vue Router导航守卫next()弃用警告。
+                        <br><br>
+                        <strong>根因分析：</strong>这不是搜索接口本身的问题，而是前端路由守卫（navigation guard）在/search路由上触发了异常重定向。搜索请求可能被路由守卫拦截后重定向到了/audit?type=1。
+                    </div>
+                    <div class="code-block">控制台错误: Vue Router navigation guard next() deprecation warning
+跳转路径: /search?q=显卡 → /audit?type=1</div>
+                    <div class="issue-meta">
+                        <span>影响范围: 买家搜索全链路</span>
+                        <span>建议排查: 1. 前端router/guard中对/search路由的守卫逻辑 2. 是否存在路由匹配冲突（/search和/audit的路由定义） 3. next()调用方式是否符合Vue Router 4规范</span>
+                        <span>负责域: 前端</span>
+                    </div>
+                </div>
+
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-02 /product/{id}商品详情异常（后端404但前端渲染占位数据）</span>
+                        <span class="priority priority-p1">P1 未修复</span>
+                    </div>
+                    <div class="issue-body">
+                        直接访问/product/1时，后端返回<strong>code: 2010, message: "商品不存在或已删除"</strong>，但前端未正确处理该错误，仍渲染了占位数据（价格¥0、图片"暂无图片"、卖家"未知店铺"）。/product/2同样报错，UI渲染"商品不存在或已下架"提示但仍显示占位数据。
+                        <br><br>
+                        <strong>根因分析：</strong>ID=1和ID=2的商品在数据库中不存在或已被删除（状态为已删除）。后端正确返回了错误码2010，但前端未拦截该错误状态，仍使用默认/空值渲染了商品详情组件。
+                    </div>
+                    <div class="code-block">后端返回: {code: 2010, message: "商品不存在或已删除"}
+前端行为: 未拦截错误，仍渲染占位UI（¥0/暂无图片/未知店铺）</div>
+                    <div class="issue-meta">
+                        <span>影响范围: 商品详情页直接访问</span>
+                        <span>建议: 1. 前端在商品详情接口返回非成功code时，应展示"商品不存在"提示页而非占位数据 2. 或确保/product/1对应有效商品数据 3. 建议前端拦截code=2010跳转404页面或空状态组件</span>
+                        <span>负责域: 前端 / product-service</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p2">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-01 审核子页面仅1/5独立（4个仍跳转/audit）</span>
+                        <span class="priority priority-p2">P2 部分修复</span>
+                    </div>
+                    <div class="issue-body">
+                        /admin/products已独立展示商品审核页面（统计卡片+标签切换+商品列表+操作按钮），<strong style="color:var(--success)">该页面已修复</strong>。但其余4个子页面仍未独立：
+                        <ul style="margin-top: 8px; padding-left: 20px; color: var(--text-secondary);">
+                            <li>/admin/inspection → 重定向至/audit?type=1，未展示验机审核</li>
+                            <li>/inspection → 重定向至/audit，main区域为空</li>
+                            <li>/admin/orders → 重定向至/audit?type=3，main区域为空</li>
+                            <li>/admin/users → 重定向至/audit?type=3，main区域为空</li>
+                        </ul>
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 验机审核、订单管理、用户管理功能</span>
+                        <span>建议: 1. 参照/admin/products的独立实现方式，为其余4个子页面开发独立组件 2. 或在/audit内通过子路由Tab区分不同审核类型 3. 验机审核(/inspection)可对接inspection-service</span>
+                        <span>负责域: 前端 / audit-service / inspection-service</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roadmap -->
+        <div id="roadmap" class="section">
+            <h2 class="section-title">修复建议</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <h3 style="color: var(--warning); font-size: 16px; margin-bottom: 10px;">第一优先级（P1 — 立即修复）</h3>
+                    <table class="test-table">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>问题</th>
+                                <th>修复建议</th>
+                                <th>负责域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P1-01</td>
+                                <td>搜索跳转至/audit</td>
+                                <td>
+                                    <strong>这不是搜索接口问题，是前端路由守卫问题。</strong><br>
+                                    1. 检查router/index.js或路由守卫文件，找到/search路由的beforeEnter或全局beforeEach守卫<br>
+                                    2. 排查是否有路由匹配冲突（/search和/audit的路由path或正则重叠）<br>
+                                    3. 检查next()调用是否符合Vue Router 4规范（避免同步next()和异步混用）<br>
+                                    4. 确认搜索路由是否需要登录守卫，如不需要则移除该守卫
+                                </td>
+                                <td>前端</td>
+                            </tr>
+                            <tr>
+                                <td>P1-02</td>
+                                <td>/product/{id}占位数据</td>
+                                <td>
+                                    <strong>后端已正确返回错误码，前端需拦截处理。</strong><br>
+                                    1. 在商品详情组件中，接口返回code≠200时展示"商品不存在"空状态页面<br>
+                                    2. 移除或隐藏默认占位数据（¥0/暂无图片/未知店铺）<br>
+                                    3. 建议拦截code=2010后跳转到404页面或"商品已下架"提示页<br>
+                                    4. 如需保留/product/1可访问，在数据库中创建有效的测试商品数据
+                                </td>
+                                <td>前端 / product-service</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--info); font-size: 16px; margin-bottom: 10px;">第二优先级（P2 — 下周修复）</h3>
+                    <table class="test-table">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>问题</th>
+                                <th>修复建议</th>
+                                <th>负责域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P2-01</td>
+                                <td>4个审核子页面未独立</td>
+                                <td>
+                                    /admin/products已独立实现作为参考模板。参照其模式：<br>
+                                    1. /admin/inspection → 开发验机审核独立组件，对接inspection-service<br>
+                                    2. /inspection → 验机详情/操作页面，可复用/admin/inspection<br>
+                                    3. /admin/orders → 开发订单管理独立组件（查看订单/处理异常）<br>
+                                    4. /admin/users → 开发用户管理独立组件（查看/封禁/解封用户）<br>
+                                    5. 或在/audit内通过子路由+Tab区分，避免全部跳转
+                                </td>
+                                <td>前端 / audit-service / inspection-service</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Three-round Summary -->
+        <div class="section">
+            <h2 class="section-title">三轮测试修复历程</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>轮次</th>
+                            <th>文档编号</th>
+                            <th>测试项</th>
+                            <th>通过</th>
+                            <th>失败/阻塞</th>
+                            <th>修复率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>第一轮（初测）</td>
+                            <td>需求-0909094414</td>
+                            <td>39</td>
+                            <td>10</td>
+                            <td>29</td>
+                            <td>26%</td>
+                        </tr>
+                        <tr>
+                            <td>第二轮（复验）</td>
+                            <td>需求-0909111430</td>
+                            <td>~45</td>
+                            <td>28</td>
+                            <td>12</td>
+                            <td>72%</td>
+                        </tr>
+                        <tr>
+                            <td>第三轮（终验）</td>
+                            <td>需求-0909115115</td>
+                            <td>9</td>
+                            <td>6</td>
+                            <td>3</td>
+                            <td>67%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 16px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);">
+                <p style="font-size: 14px; color: var(--text-secondary);">
+                    <strong style="color: var(--success);">总结：</strong>经过三轮迭代测试，硬件侠平台从初测26%通过率提升至当前状态。卖家侧全链路已打通（12/12），买家侧核心交易链路已贯通（登录→浏览→详情→购物车→订单→评价），平台支撑域大部分正常。剩余3项问题中，P1-01（搜索路由守卫冲突）和P1-02（商品详情错误处理）为前端问题，修复难度不高；P2-01（审核子页面）需开发4个独立组件，工作量较大但非阻断性问题。
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
+            <p>硬件侠 — 业务线复验报告（第三轮·终验）| 文档编号: 需求-0909115115 | 生成时间: 2026-09-09</p>
+            <p style="margin-top: 8px;">对比文档: 需求-0909111430 → 需求-0909094414 | 三轮累计修复率从26%提升至当前水平</p>
+        </div>
+    </div>
+</body>
+</html>

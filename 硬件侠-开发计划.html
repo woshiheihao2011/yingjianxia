@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>硬件侠 — 完整可执行开发计划 v1.0</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-hover: #20242f;
+  --border: #2a2e3a;
+  --text: #e4e4e7;
+  --text-dim: #9ca3af;
+  --text-muted: #6b7280;
+  --primary: #10b981;
+  --primary-dim: #059669;
+  --blue: #3b82f6;
+  --blue-dim: #2563eb;
+  --amber: #f59e0b;
+  --amber-dim: #d97706;
+  --red: #ef4444;
+  --red-dim: #dc2626;
+  --purple: #8b5cf6;
+  --cyan: #06b6d4;
+  --pink: #ec4899;
+  --teal: #14b8a6;
+  --orange: #f97316;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #0f1117 0%, #1a1d27 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.header .subtitle { color: var(--text-dim); font-size: 18px; margin-bottom: 16px; }
+.header .meta { display: flex; gap: 24px; flex-wrap: wrap; }
+.header .meta-item {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text-muted); font-size: 13px;
+}
+.header .meta-item strong { color: var(--text-dim); }
+
+/* Section */
+.section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  background: var(--primary); color: #000;
+  border-radius: 8px; font-size: 16px; font-weight: 800;
+}
+.section-desc { color: var(--text-dim); margin-bottom: 24px; font-size: 14px; }
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.card-title { font-size: 18px; font-weight: 700; }
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* Stat Cards */
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary);
+}
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.stat-card.blue .stat-value { color: var(--blue); }
+.stat-card.amber .stat-value { color: var(--amber); }
+.stat-card.purple .stat-value { color: var(--purple); }
+.stat-card.cyan .stat-value { color: var(--cyan); }
+.stat-card.pink .stat-value { color: var(--pink); }
+.stat-card.red .stat-value { color: var(--red); }
+.stat-card.teal .stat-value { color: var(--teal); }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  background: var(--card-hover);
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+tr:hover { background: var(--card-hover); }
+td code { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-p0 { background: rgba(239,68,68,0.15); color: #f87171; }
+.badge-p1 { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.badge-p2 { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-done { background: rgba(16,185,129,0.15); color: #34d399; }
+.badge-active { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-pending { background: rgba(156,163,175,0.15); color: #9ca3af; }
+.badge-green { background: rgba(16,185,129,0.15); color: #34d399; }
+.badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.badge-amber { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+.badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.badge-cyan { background: rgba(6,182,212,0.15); color: #22d3ee; }
+.badge-teal { background: rgba(20,184,166,0.15); color: #2dd4bf; }
+.badge-orange { background: rgba(249,115,22,0.15); color: #fb923c; }
+.badge-pink { background: rgba(236,72,153,0.15); color: #f472b6; }
+
+/* Gantt */
+.gantt-container { overflow-x: auto; margin-bottom: 16px; }
+.gantt {
+  min-width: 900px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.gantt-header {
+  display: grid;
+  grid-template-columns: 200px repeat(14, 1fr);
+  background: var(--card-hover);
+  border-bottom: 1px solid var(--border);
+}
+.gantt-header > div {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  border-right: 1px solid var(--border);
+}
+.gantt-header > div:first-child { text-align: left; }
+.gantt-row {
+  display: grid;
+  grid-template-columns: 200px repeat(14, 1fr);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.gantt-row:last-child { border-bottom: none; }
+.gantt-label {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-right: 1px solid var(--border);
+}
+.gantt-cell {
+  height: 36px;
+  border-right: 1px solid rgba(42,46,58,0.5);
+  position: relative;
+}
+.gantt-bar {
+  position: absolute;
+  top: 8px; left: 2px; right: 2px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Phase colors */
+.phase-0 { background: var(--text-muted); }
+.phase-1 { background: var(--blue); }
+.phase-2 { background: var(--primary); }
+.phase-3 { background: var(--amber); }
+.phase-4 { background: var(--purple); }
+.phase-5 { background: var(--cyan); }
+.phase-6 { background: var(--orange); }
+.phase-7 { background: var(--red); }
+
+/* Sprint Card */
+.sprint-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.sprint-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sprint-header h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.sprint-body { padding: 20px 24px; }
+.sprint-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-dim); }
+.sprint-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* Role tags */
+.role-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.role-be { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.role-fe { background: rgba(16,185,129,0.15); color: #34d399; }
+.role-qa { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.role-devops { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.role-all { background: rgba(156,163,175,0.15); color: #9ca3af; }
+
+/* Deliverable */
+.deliverable-list { list-style: none; }
+.deliverable-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+}
+.deliverable-list li:last-child { border-bottom: none; }
+.deliverable-list li::before {
+  content: '▣';
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Risk */
+.risk-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+  font-size: 13px;
+}
+.risk-row:last-child { border-bottom: none; }
+
+/* Callout */
+.callout {
+  background: rgba(16,185,129,0.05);
+  border-left: 3px solid var(--primary);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+.callout-amber {
+  background: rgba(245,158,11,0.05);
+  border-left-color: var(--amber);
+}
+.callout-red {
+  background: rgba(239,68,68,0.05);
+  border-left-color: var(--red);
+}
+.callout-blue {
+  background: rgba(59,130,246,0.05);
+  border-left-color: var(--blue);
+}
+.callout-title { font-weight: 700; margin-bottom: 4px; }
+.callout p { font-size: 14px; color: var(--text-dim); }
+
+/* Dependency Graph */
+.mermaid {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+/* Team */
+.team-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.team-card .avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 12px;
+}
+.team-card .role-name { font-weight: 700; font-size: 15px; }
+.team-card .role-desc { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+.team-card .role-count { font-size: 11px; color: var(--primary); margin-top: 8px; }
+
+/* Quality Gate */
+.gate-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.gate-step:last-child { border-bottom: none; }
+.gate-num {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+}
+.gate-content { flex: 1; }
+.gate-content h4 { font-size: 15px; margin-bottom: 4px; }
+.gate-content p { font-size: 13px; color: var(--text-dim); }
+
+/* Milestone Timeline */
+.milestone-list { position: relative; padding-left: 32px; }
+.milestone-list::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.milestone-item {
+  position: relative;
+  padding: 12px 0 12px 24px;
+}
+.milestone-item::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 16px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid var(--bg);
+}
+.milestone-item h4 { font-size: 15px; }
+.milestone-item .ms-date { font-size: 12px; color: var(--primary); font-weight: 600; }
+.milestone-item p { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+/* Task list */
+.task-block {
+  background: var(--card-hover);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.task-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.task-block-title { font-weight: 700; font-size: 14px; }
+.task-list { list-style: none; }
+.task-list li {
+  padding: 6px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-dim);
+}
+.task-list li::before {
+  content: '○';
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Env table */
+.env-tier {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.env-tier-label {
+  padding: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.env-tier-content { padding: 12px 16px; border-left: 1px solid var(--border); font-size: 13px; }
+
+/* Summary table */
+.summary-table th { background: var(--card-hover); }
+.summary-table td { font-size: 13px; }
+
+/* Critical path */
+.cp-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--card-hover);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.cp-arrow { color: var(--amber); font-size: 18px; }
+
+footer {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  .card, .stat-card, .sprint-card { background: #f9f9f9; border: 1px solid #ddd; }
+  .gantt-bar { color: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<div class="header">
+  <div class="container">
+    <h1>硬件侠 — 完整可执行开发计划</h1>
+    <div class="subtitle">C2C 电脑配件二手交易平台 · DDD 微服务架构 · 0-to-1 项目</div>
+    <div class="meta">
+      <div class="meta-item"><strong>文档版本：</strong>v1.0</div>
+      <div class="meta-item"><strong>编制角色：</strong>开发小组长</div>
+      <div class="meta-item"><strong>计划周期：</strong>14 周（3.5 个月）</div>
+      <div class="meta-item"><strong>团队规模：</strong>10-12 人</div>
+      <div class="meta-item"><strong>编制日期：</strong>2026-09-01</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ========== 1. 项目概述与范围 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">1</span> 项目概述与范围</div>
+  <div class="section-desc">基于 PRD 需求文档、业务流程图、概要设计、详细设计、测试策略与计划、测试用例文档综合提炼</div>
+
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="stat-card"><div class="stat-value">15</div><div class="stat-label">微服务域</div></div>
+    <div class="stat-card blue"><div class="stat-value">9</div><div class="stat-label">逻辑数据库</div></div>
+    <div class="stat-card amber"><div class="stat-value">49</div><div class="stat-label">数据表</div></div>
+    <div class="stat-card purple"><div class="stat-value">31</div><div class="stat-label">前端页面</div></div>
+    <div class="stat-card cyan"><div class="stat-value">14</div><div class="stat-label">功能模块</div></div>
+    <div class="stat-card pink"><div class="stat-value">4</div><div class="stat-label">核心业务流</div></div>
+    <div class="stat-card teal"><div class="stat-value">170</div><div class="stat-label">测试用例</div></div>
+    <div class="stat-card red"><div class="stat-value">18</div><div class="stat-label">MQ 事件</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">核心业务机制</div>
+      <table>
+        <tr><th>机制</th><th>说明</th><th>技术方案</th></tr>
+        <tr><td><strong>平台验机</strong></td><td>12项专业检测，生成验机报告</td><td>SHA-256 数字签名 + OSS 存储</td></tr>
+        <tr><td><strong>担保交易</strong></td><td>买家付款→平台冻结→确认收货→放款</td><td>TCC + Saga + Outbox Pattern</td></tr>
+        <tr><td><strong>7天退换</strong></td><td>仅退款/退货退款/换货 + 平台仲裁</td><td>Saga 事件编排 + 超时自动处理</td></tr>
+        <tr><td><strong>防超卖</strong></td><td>Redis 预扣 + MySQL 乐观锁实扣</td><td>Lua 原子操作 + 乐观锁双重保障</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">技术栈</div>
+      <table>
+        <tr><th>层级</th><th>技术选型</th></tr>
+        <tr><td>前端</td><td>Vue 3 + Vite + Pinia + Tailwind CSS v4</td></tr>
+        <tr><td>后端</td><td>Spring Boot 3 + Spring Cloud 2023</td></tr>
+        <tr><td>微服务治理</td><td>Nacos + Gateway + Sentinel</td></tr>
+        <tr><td>数据库</td><td>MySQL 8.0（1主2从）+ ShardingSphere</td></tr>
+        <tr><td>缓存</td><td>Redis 7 Cluster（3主3从）</td></tr>
+        <tr><td>搜索</td><td>Elasticsearch 8</td></tr>
+        <tr><td>消息队列</td><td>RocketMQ 5</td></tr>
+        <tr><td>实时通信</td><td>Netty + WebSocket</td></tr>
+        <tr><td>数据分析</td><td>ClickHouse + Flink</td></tr>
+        <tr><td>容器编排</td><td>Docker + Kubernetes + ArgoCD</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout callout-amber" style="margin-top:16px;">
+    <div class="callout-title">关键约束（来自项目记忆）</div>
+    <p>1. 资金相关操作必须包含幂等键和唯一约束；2. 验机报告必须使用 SHA-256 数字签名防篡改；3. 订单和售后流程必须有独立状态变更日志表；4. 微服务按 15 个 DDD 域拆分；5. 高增长表（messages/transactions/orders/tracks/points_records）使用 ShardingSphere 水平分表。</p>
+  </div>
+</div>
+
+<!-- ========== 2. 团队组织与角色 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">2</span> 团队组织与角色分工</div>
+  <div class="section-desc">基于 15 个微服务 + 31 个前端页面的工作量，配置 10-12 人开发团队</div>
+
+  <div class="grid-4">
+    <div class="team-card">
+      <div class="avatar">🏗️</div>
+      <div class="role-name">架构师 / Tech Lead</div>
+      <div class="role-desc">架构决策、技术攻关、代码审查</div>
+      <div class="role-count">1 人</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">⚙️</div>
+      <div class="role-name">后端开发 BE</div>
+      <div class="role-desc">微服务开发、API 实现、事务保障</div>
+      <div class="role-count">5 人</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">🎨</div>
+      <div class="role-name">前端开发 FE</div>
+      <div class="role-desc">Vue3 页面开发、响应式适配、WebSocket</div>
+      <div class="role-count">3 人</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">🧪</div>
+      <div class="role-name">测试工程师 QA</div>
+      <div class="role-desc">170 条用例执行、自动化、压测</div>
+      <div class="role-count">2 人</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">🚀</div>
+      <div class="role-name">DevOps</div>
+      <div class="role-desc">K8s、CI/CD、监控告警、环境维护</div>
+      <div class="role-count">1 人</div>
+    </div>
+    <div class="team-card">
+      <div class="avatar">📋</div>
+      <div class="role-name">产品经理 PM</div>
+      <div class="role-desc">需求跟进、验收协调（兼）</div>
+      <div class="role-count">1 人（兼）</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title" style="margin-bottom:12px;">后端开发人员微服务分配</div>
+    <table>
+      <tr><th>人员</th><th>负责微服务</th><th>核心难点</th><th>工作量评估</th></tr>
+      <tr><td><strong>BE-1</strong></td><td>用户服务 + 评价服务</td><td>JWT Token 黑名单、信用分算法、OAuth2 第三方登录</td><td><span class="badge badge-amber">中</span></td></tr>
+      <tr><td><strong>BE-2</strong></td><td>商品服务 + 审核服务</td><td>防超卖（Redis Lua + MySQL 乐观锁）、ES 同步、Canal Binlog</td><td><span class="badge badge-red">高</span></td></tr>
+      <tr><td><strong>BE-3</strong></td><td>订单服务 + 担保交易服务</td><td>TCC 三阶段事务、Saga 编排、幂等键、状态机引擎</td><td><span class="badge badge-red">高</span></td></tr>
+      <tr><td><strong>BE-4</strong></td><td>支付服务 + 售后服务</td><td>第三方支付回调验签、退款幂等、平台仲裁、超时自动处理</td><td><span class="badge badge-red">高</span></td></tr>
+      <tr><td><strong>BE-5</strong></td><td>物流 + 消息 + 社区 + 营销 + 客服 + 风控</td><td>WebSocket 推送≤2s、IM 跨节点广播、优惠券防超发、风控规则引擎</td><td><span class="badge badge-amber">中高</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">前端开发人员页面分配</div>
+    <table>
+      <tr><th>人员</th><th>负责页面域</th><th>核心页面</th></tr>
+      <tr><td><strong>FE-1</strong></td><td>买家域（10页）</td><td>首页、浏览、搜索、商品详情、购物车、订单、评价、售后</td></tr>
+      <tr><td><strong>FE-2</strong></td><td>卖家域（11页）</td><td>发布商品、卖家店铺、我的发布、库存预警、发货管理、物流跟踪、数据中心、钱包、店铺设置、营销活动</td></tr>
+      <tr><td><strong>FE-3</strong></td><td>平台支撑域（9页）+ 消息私聊</td><td>登录注册、个人中心、信任中心、帮助中心、客服工单、公告通知、优惠券积分、消息私聊、硬件社区</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ========== 3. 开发阶段总览（甘特图） ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">3</span> 开发阶段总览 — 14 周甘特图</div>
+  <div class="section-desc">从环境搭建到正式上线，共 8 个阶段、7 个 Sprint、4 个关键里程碑</div>
+
+  <div class="gantt-container">
+    <div class="gantt">
+      <div class="gantt-header">
+        <div>阶段 / 周次</div>
+        <div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div>
+        <div>W7</div><div>W8</div><div>W9</div><div>W10</div><div>W11</div><div>W12</div>
+        <div>W13</div><div>W14</div>
+      </div>
+
+      <!-- Phase 0 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 0: 环境与脚手架</div>
+        <div class="gantt-cell"><div class="gantt-bar phase-0">环境搭建</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 1 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 1: 基础服务</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-1">用户+店铺+网关</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-1">Sprint 1</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 2: 商品与验机</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-2">商品+验机+审核+ES</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-2">Sprint 2</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 3: 核心交易</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-3">订单+担保+支付+营销</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-3">Sprint 3</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 4: 物流与售后</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-4">物流+售后+消息+评价</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-4">Sprint 4</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 5: 平台支撑</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-5">社区+客服+风控+公告</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-5">Sprint 5</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 6 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 6: 集成测试</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-6">SIT+系统+性能+安全</div></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-6">Sprint 6</div></div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- Phase 7 -->
+      <div class="gantt-row">
+        <div class="gantt-label">Phase 7: UAT与上线</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-7">UAT+灰度+上线</div></div>
+      </div>
+
+      <!-- Milestones -->
+      <div class="gantt-row">
+        <div class="gantt-label" style="color:var(--primary);">★ 里程碑</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-1">M1: 基础服务</div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-2">M2: 商品上架</div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-3">M3: 交易闭环</div></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-4">M4: 售后闭环</div></div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar phase-7">M5: 上线</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="milestone-list" style="margin-top:24px;">
+    <div class="milestone-item">
+      <div class="ms-date">第 3 周末</div>
+      <h4>★ M1 — 基础服务可用</h4>
+      <p>用户注册登录、JWT 鉴权、个人中心、店铺管理完成。API 网关 + Nacos + CI/CD 就绪。前端可登录注册。</p>
+    </div>
+    <div class="milestone-item">
+      <div class="ms-date">第 5 周末</div>
+      <h4>★ M2 — 商品上架与验机</h4>
+      <p>商品发布、审核流程、12 项验机检测、SHA-256 签名报告、ES 搜索全部完成。前端可浏览、搜索、查看验机报告。</p>
+    </div>
+    <div class="milestone-item">
+      <div class="ms-date">第 7 周末</div>
+      <h4>★ M3 — 核心交易闭环</h4>
+      <p>下单、TCC 冻结资金、支付、确认收货、担保放款全链路打通。购物车、订单、钱包、收支明细前端完成。</p>
+    </div>
+    <div class="milestone-item">
+      <div class="ms-date">第 9 周末</div>
+      <h4>★ M4 — 售后与物流闭环</h4>
+      <p>发货管理、物流轨迹、售后申请/审核/仲裁/退款、消息推送、评价管理全部完成。4 大业务流程 E2E 可跑通。</p>
+    </div>
+    <div class="milestone-item">
+      <div class="ms-date">第 14 周末</div>
+      <h4>★ M5 — 正式上线</h4>
+      <p>全部 15 个微服务、31 个页面、170 条测试用例全部通过。性能、安全指标达标。UAT 签字确认。灰度发布→正式上线。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 4. Sprint 详细计划 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">4</span> Sprint 详细计划</div>
+  <div class="section-desc">每个 Sprint 包含任务分解、人员分配、交付物和验收标准</div>
+
+  <!-- Sprint 0 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(156,163,175,0.08);">
+      <h3><span class="badge badge-pending">Phase 0</span> 环境搭建与脚手架</h3>
+      <div class="sprint-meta">
+        <span>📅 第 1 周</span>
+        <span>👤 DevOps + 全员参与</span>
+        <span>🎯 基础设施就绪</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">基础设施搭建 <span class="role-tag role-devops">DevOps</span></div>
+            </div>
+            <ul class="task-list">
+              <li>K8s 集群搭建（3 节点），Ingress Nginx 配置</li>
+              <li>Nacos 集群部署（3 节点），注册中心 + 配置中心</li>
+              <li>MySQL 8.0 部署（1 主 2 从），9 个逻辑库 + 49 张表 DDL 执行</li>
+              <li>Redis 7 Cluster 部署（3 主 3 从），6 节点</li>
+              <li>Elasticsearch 8 部署（3 节点），商品索引 Mapping 创建</li>
+              <li>RocketMQ 5 部署（NameSrv + Broker × 3）</li>
+              <li>ClickHouse 部署（2 节点）</li>
+              <li>MinIO/OSS 对象存储配置 + CDN 配置</li>
+              <li>XXL-Job 任务调度中心部署</li>
+              <li>Prometheus + Grafana + ELK 监控日志部署</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">工程脚手架 <span class="role-tag role-be">BE</span> <span class="role-tag role-fe">FE</span></div>
+            </div>
+            <ul class="task-list">
+              <li>后端 Maven 多模块项目结构创建（15 个微服务模块）</li>
+              <li>后端公共库：统一响应体、错误码体系、分页、JWT 工具、幂等键拦截器</li>
+              <li>后端公共库：OpenFeign 配置 + Sentinel 熔断降级配置</li>
+              <li>后端公共库：Outbox 表 + RocketMQ 事务消息封装</li>
+              <li>前端 Vue3 + Vite + Pinia + Tailwind CSS v4 脚手架</li>
+              <li>前端公共组件：布局、导航、商品卡、分页、空状态、Loading</li>
+              <li>前端 API 请求封装：Axios + JWT 拦截 + 幂等 Key 注入</li>
+              <li>前端深色主题全局样式、响应式断点配置</li>
+              <li>GitLab CI/CD Pipeline 配置：编译→单测→Docker→K8s 部署</li>
+              <li>ShardingSphere-JDBC 分表配置（messages/orders/transactions/tracks/points_records）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-blue" style="margin-top:16px;">
+        <div class="callout-title">交付物与验收标准</div>
+        <p>① K8s 集群健康，所有中间件可访问 ② 9 库 49 表 DDL 执行成功 ③ 后端项目可编译启动并注册到 Nacos ④ 前端项目可启动展示深色主题页面 ⑤ CI/CD Pipeline 可自动构建部署 ⑥ 冒烟测试通过</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 1 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(59,130,246,0.08);">
+      <h3><span class="badge badge-blue">Sprint 1</span> Phase 1 — 基础服务（用户 + 店铺 + 网关）</h3>
+      <div class="sprint-meta">
+        <span>📅 第 2-3 周</span>
+        <span>👤 BE-1 + BE-5 + FE-3</span>
+        <span>🎯 M1 基础服务可用</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">用户服务 <span class="role-tag role-be">BE-1</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_user 建表：users, user_auth, user_real_name, addresses, shops, shop_settings, reviews</li>
+              <li>手机号注册：验证码发送（Redis 60s 防刷）、BCrypt 加密、JWT Token 生成</li>
+              <li>密码登录 + 验证码登录：Access Token 2h + Refresh Token 7d</li>
+              <li>第三方 OAuth2 登录（微信/QQ/支付宝）：code 换 token + 绑定手机号</li>
+              <li>Token 黑名单（Redis SET）：登出/改密后旧 Token 失效</li>
+              <li>密码安全：连续 5 次错误锁定 30 分钟，找回密码防泄露</li>
+              <li>个人中心：资料查看/修改、信用分查询</li>
+              <li>实名认证：对接公安二要素/三要素 API（Mock）</li>
+              <li>信用分算法实现 + XXL-Job 每日凌晨批量刷新</li>
+              <li>收货地址 CRUD</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">店铺子模块 <span class="role-tag role-be">BE-1</span></div>
+            </div>
+            <ul class="task-list">
+              <li>一键开店（实名认证后自动创建默认店铺）</li>
+              <li>店铺设置：名称、简介、头像、封面、客服联系方式、营业时间</li>
+              <li>退货地址、默认快递（顺丰/圆通/中通/韵达/EMS）</li>
+              <li>高级设置：接受砍价、支持面交、发货时效承诺（24/48/72h）</li>
+              <li>店铺评分/粉丝/成交量/在售数冗余字段 + 事件驱动更新</li>
+              <li>优质卖家认证条件：成交量≥50、好评率≥95%、纠纷率≤2%</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">API 网关与鉴权 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>Spring Cloud Gateway 路由配置（按路径前缀路由到微服务）</li>
+              <li>JWT Token 全局过滤器：校验 → 解析 userId 注入请求头</li>
+              <li>Sentinel 限流熔断：API 维度 + 用户维度双重限流</li>
+              <li>CORS 跨域统一配置</li>
+              <li>灰度发布路由：基于请求头路由到灰度实例</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">前端页面 <span class="role-tag role-fe">FE-3</span></div>
+            </div>
+            <ul class="task-list">
+              <li>auth.html：登录/注册/找回密码三 Tab 卡片，验证码 60s 倒计时</li>
+              <li>profile.html：个人中心，统计卡片 + 三 Tab（发布/订单/消息）</li>
+              <li>JWT Token 管理：Axios 拦截器自动注入 + 401 自动刷新</li>
+              <li>卖家店铺页 seller.html 基础框架（封面、头像、统计卡、Tab）</li>
+              <li>store-settings.html：店铺设置实时预览</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">对应测试用例 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>TC-USER-001~020（20 条，P0×12）</li>
+              <li>TC-SHOP-001~005（5 条，P0×1）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">交付物与验收标准</div>
+        <p>① 用户可注册、登录、找回密码 ② JWT Token 鉴权全链路可用 ③ 实名认证 Mock 通过 ④ 个人中心展示信用分 ⑤ 店铺可开店和设置 ⑥ 前端可登录注册进入个人中心 ⑦ TC-USER P0 用例 100% 通过</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 2 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(16,185,129,0.08);">
+      <h3><span class="badge badge-green">Sprint 2</span> Phase 2 — 商品与验机（商品 + 验机 + 审核 + ES 搜索）</h3>
+      <div class="sprint-meta">
+        <span>📅 第 4-5 周</span>
+        <span>👤 BE-2 + BE-5 + FE-1 + FE-2</span>
+        <span>🎯 M2 商品上架与验机</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">商品服务 <span class="role-tag role-be">BE-2</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_product 建表：categories, products, product_images, product_specs, product_favorites</li>
+              <li>商品 CRUD：创建（草稿）、编辑、删除、查询详情</li>
+              <li>商品发布流程：草稿 → 审核中 → 调用审核服务 → 在售/拒绝</li>
+              <li>商品状态机：草稿/审核中/在售/已售/下架/审核拒绝</li>
+              <li>商品图片上传 OSS（WebP 格式）+ 封面设置</li>
+              <li>规格参数管理</li>
+              <li>商品收藏/取消收藏（UNIQUE 防重复）</li>
+              <li>库存管理：预警阈值、建议补货量计算</li>
+              <li>浏览量：Redis INCR + XXL-Job 每 5 分钟批量写回 MySQL</li>
+              <li>商品快照：下单时保存标题/图片/价格/规格</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">验机服务 <span class="role-tag role-be">BE-2</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_inspection 建表：inspection_reports, inspection_items, inspection_templates</li>
+              <li>创建检测任务（幂等：已有进行中任务返回已有 ID）</li>
+              <li>12 项检测项逐条录入：外观/风扇/GPU核心/显存/3DMark/温度/接口等</li>
+              <li>完成检测 → 自动评级算法（优/良/合格/不合格）</li>
+              <li>SHA-256 数字签名生成（productId|grade|result|inspectorId|items|timestamp + SALT）</li>
+              <li>验机报告 PDF 生成 + OSS 上传，降级返回 JSON</li>
+              <li>报告公开查询接口（GET /api/v1/inspections/{productId}/report）</li>
+              <li>InspectionCompletedEvent 发送 → 商品服务消费后上架</li>
+              <li>收货 48h 未完成检测预警</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">审核服务 + ES 搜索 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_support 建表审核相关表</li>
+              <li>机审接口对接阿里云内容安全（Mock）</li>
+              <li>两级阈值：低于阈值直接通过，高于直接拒绝，中间人工审核</li>
+              <li>机审不可用时降级为全部待人工审核（禁止直接放行）</li>
+              <li>人审队列 + 审核员操作（通过/拒绝）</li>
+              <li>ProductAuditPassedEvent 发送 → 商品状态改为"在售"</li>
+              <li>Canal 监听 MySQL binlog → RocketMQ → ES 同步消费者</li>
+              <li>ES 索引 Mapping 创建（keyword/text ik/scaled_float 等）</li>
+              <li>商品搜索：关键词 + 分类多选 + 成色单选 + 价格区间 + 地区 + 排序</li>
+              <li>P95 ≤ 800ms，热门搜索词 Redis 缓存 5 分钟</li>
+              <li>ES 不可用降级到 MySQL 模糊查询</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">前端页面 <span class="role-tag role-fe">FE-1</span> <span class="role-tag role-fe">FE-2</span></div>
+            </div>
+            <ul class="task-list">
+              <li>index.html：首页（Hero 搜索 + 6 类热门分类 + 精选好物 + 平台保障）</li>
+              <li>browse.html：商品浏览（左侧筛选 + 右侧网格，响应式）</li>
+              <li>search.html：搜索（关键词标签 + 横向筛选 + 已选标签 + 视图切换）</li>
+              <li>product.html：商品详情（60/40 布局 + 图片画廊 + 验机报告展示 + 12 项检测清单）</li>
+              <li>sell.html：发布商品（拖拽上传 + 表单 + 验机同意项）</li>
+              <li>listings.html：我的发布（状态 Tab + 批量操作 + 商品卡片网格）</li>
+              <li>inventory.html：库存预警（统计卡 + 表格 + 建议补货量）</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">对应测试用例 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>TC-PROD-001~015（15 条，P0×8）</li>
+              <li>TC-INSP-001~009（9 条，P0×6）</li>
+              <li>TC-MOD-001~005（5 条，P0×2）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">交付物与验收标准</div>
+        <p>① 卖家可发布商品并进入审核流程 ② 审核通过后商品上架可搜索 ③ 12 项验机检测可录入并生成报告 ④ SHA-256 签名可验证 ⑤ ES 搜索响应 ≤ 800ms ⑥ 前端可浏览/搜索/查看详情/查看验机报告 ⑦ TC-PROD/INSP/MOD P0 用例 100% 通过</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 3 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(245,158,11,0.08);">
+      <h3><span class="badge badge-amber">Sprint 3</span> Phase 3 — 核心交易（订单 + 担保 + 支付 + 营销）</h3>
+      <div class="sprint-meta">
+        <span>📅 第 6-7 周</span>
+        <span>👤 BE-3 + BE-4 + FE-1 + FE-2</span>
+        <span>🎯 M3 核心交易闭环</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">订单服务 <span class="role-tag role-be">BE-3</span> <span class="badge badge-red">核心难点</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_order 建表：orders, order_items, cart_items, order_status_logs</li>
+              <li>购物车 CRUD（Redis 高频读写 + MySQL 持久化）</li>
+              <li>创建订单 TCC Try 流程：
+                <span style="display:block;margin-left:16px;color:var(--text-muted);">
+                  ① 批量查询商品 + 校验库存<br>
+                  ② 调用营销服务计算优惠<br>
+                  ③ 商品服务 Try 预扣库存（Redis Lua）<br>
+                  ④ 担保交易 Try 冻结资金<br>
+                  ⑤ 创建订单 + 订单明细 + 商品快照<br>
+                  ⑥ 发送 OrderCreatedEvent
+                </span>
+              </li>
+              <li>支付成功 Saga Confirm 流程：
+                <span style="display:block;margin-left:16px;color:var(--text-muted);">
+                  ① 消费 PaymentSuccessEvent（幂等键 orderId）<br>
+                  ② 担保交易 Confirm 确认冻结<br>
+                  ③ 商品服务 Confirm 实扣库存（MySQL 乐观锁）<br>
+                  ④ 订单状态 → 待发货<br>
+                  ⑤ 发送 OrderPaidEvent
+                </span>
+              </li>
+              <li>订单取消 TCC Cancel 流程：Redis 库存回补 + 担保资金解冻</li>
+              <li>订单状态机引擎（Spring StateMachine）+ 状态变更日志表</li>
+              <li>超时取消：XXL-Job 每分钟扫描待付款订单</li>
+              <li>超时自动确认：XXL-Job 每小时扫描待收货订单（7 天）</li>
+              <li>支付回调幂等：order_id + channel_tx_no 唯一键</li>
+              <li>买家/卖家双角色视图</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">担保交易服务 <span class="role-tag role-be">BE-3</span> <span class="badge badge-red">核心难点</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_escrow 建表：wallets, escrow_records, transactions, withdrawal_records, recharge_records</li>
+              <li>TCC Try：买家可用余额 -amount，冻结 +amount（乐观锁 + 幂等键）</li>
+              <li>TCC Confirm：escrow_records status=已冻结，不可逆</li>
+              <li>TCC Cancel：解冻回买家（处理空回滚 + 悬挂）</li>
+              <li>确认收货放款：手续费 1% → 卖家可用余额 +settle_amount</li>
+              <li>卖家账号冻结 → 放款到冻结余额（不可提现）</li>
+              <li>售后退款（已冻结/已放款两种场景）</li>
+              <li>每日三方对账任务：担保 = 钱包 = 流水</li>
+              <li>Outbox Pattern 实现：本地事务写业务 + 事件表</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">支付服务 <span class="role-tag role-be">BE-4</span></div>
+            </div>
+            <ul class="task-list">
+              <li>发起支付：创建支付单 → 调用第三方统一下单 API（Mock）</li>
+              <li>支付回调：验签 + 幂等校验 → 更新支付单 → 发送 PaymentSuccessEvent</li>
+              <li>主动查询兜底：定时查询待支付订单状态</li>
+              <li>钱包余额查询、收支明细</li>
+              <li>充值：预设金额 + 自定义金额</li>
+              <li>提现：二次验证（短信 + 支付密码）+ 限额（单笔 5 万/日 20 万/日 3 次）</li>
+              <li>新绑定提现账户 24h 内不可提现</li>
+              <li>提现失败退回余额</li>
+              <li>支付回调迟到 → 订单已取消 → 触发退款</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">营销服务（基础） <span class="role-tag role-be">BE-4</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_support 营销相关建表：coupons, coupon_records, promotions, points_records</li>
+              <li>优惠券创建/领取/锁定/核销/解锁闭环</li>
+              <li>优惠券防超发：Redis 预扣 + DB 乐观锁</li>
+              <li>优惠价格计算接口（内部 RPC）</li>
+              <li>积分基础：签到 +5、完成订单积分</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">前端页面 <span class="role-tag role-fe">FE-1</span> <span class="role-tag role-fe">FE-2</span></div>
+            </div>
+            <ul class="task-list">
+              <li>cart.html：购物车（商品列表 + 结算侧栏 + 支付方式选择）</li>
+              <li>orders.html：订单中心（角色切换 + 状态 Tab + 订单卡片 + 操作按钮）</li>
+              <li>wallet.html：钱包（余额卡片 + 充值/提现 + 支付方式 + 安全设置）</li>
+              <li>transactions.html：收支明细（汇总卡 + 筛选 + 可展开列表）</li>
+              <li>coupons.html：优惠券/积分（积分卡片 + 优惠券 Tab + 领券中心 + 积分兑换）</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">对应测试用例 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>TC-ORD-001~020（20 条，P0×14）— TCC 事务核心用例</li>
+              <li>TC-ESC-001~015（15 条，P0×12）— 担保交易核心用例</li>
+              <li>TC-PAY-001~015（15 条，P0×10）— 支付核心用例</li>
+              <li>TC-MKT-001~010（10 条，P0×4）— 营销用例</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-amber">
+        <div class="callout-title">交付物与验收标准（核心里程碑）</div>
+        <p>① 下单 → TCC 冻结资金 → 支付 → 确认收货 → 担保放款全链路打通 ② TCC 悬挂/空回滚场景验证通过 ③ 并发 100 下单防超卖验证通过 ④ 支付回调验签 + 幂等验证通过 ⑤ 前端购物车→下单→支付→订单管理全流程可用 ⑥ TC-ORD/ESC/PAY P0 用例 100% 通过 ⑦ 每日三方对账无差异</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 4 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(139,92,246,0.08);">
+      <h3><span class="badge badge-purple">Sprint 4</span> Phase 4 — 物流与售后（物流 + 售后 + 消息 + 评价）</h3>
+      <div class="sprint-meta">
+        <span>📅 第 8-9 周</span>
+        <span>👤 BE-4 + BE-5 + FE-1 + FE-2 + FE-3</span>
+        <span>🎯 M4 售后与物流闭环</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">物流服务 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_logistics 建表：shipments, logistics_tracks</li>
+              <li>创建物流单：选择快递公司 + 运单号 + 选择发货商品（部分发货）</li>
+              <li>快递 100 API 对接（Mock）：订阅物流轨迹推送</li>
+              <li>物流轨迹写入 + LogisticsUpdatedEvent 发送</li>
+              <li>买家地址脱敏：手机号中间 4 位打码</li>
+              <li>运费计算接口</li>
+              <li>电子面单打印预览</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">售后服务 <span class="role-tag role-be">BE-4</span> <span class="badge badge-red">核心难点</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_aftersales 建表：after_sales, arbitration_records, aftersale_logs</li>
+              <li>提交售后：校验 7 天期限 + 一订单一售后 + 退款金额 ≤ 实付</li>
+              <li>售后状态机：审核中 → 已通过 → 待退货 → 已完成 / 已拒绝</li>
+              <li>仅退款：卖家未发货前直接退款</li>
+              <li>退货退款：卖家同意 → 买家寄回 → 卖家确认 → 担保退款</li>
+              <li>换货：寄回 → 换新寄出</li>
+              <li>卖家拒绝 → 平台介入仲裁 → 支持退款/支持卖家</li>
+              <li>超时自动处理：卖家 48h 未处理→自动同意；买家 7 天未寄回→自动关闭；卖家 48h 未确认→自动确认</li>
+              <li>售后退款幂等：after_sale_id 为幂等键</li>
+              <li>RefundCompletedEvent 发送 → 售后状态 → 已退款</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">消息服务 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_message 建表：conversations, messages（16 分表）</li>
+              <li>Netty WebSocket Gateway 集群 + Redis Pub/Sub 跨节点广播</li>
+              <li>消息推送延迟 ≤ 2s，30s 心跳，60s 超时检测</li>
+              <li>离线消息 Redis List 持久化，上线拉取</li>
+              <li>消息路由策略：站内信/短信/微信/APP 推送</li>
+              <li>消息合并防骚扰：单用户每分钟最多 5 条同类型</li>
+              <li>会话列表 Redis ZSet 排序</li>
+              <li>事件消费：OrderCreated/PaymentSuccess/OrderShipped/EscrowReleased/AfterSale/InspectionCompleted</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">评价服务 <span class="role-tag role-be">BE-1</span></div>
+            </div>
+            <ul class="task-list">
+              <li>评价提交：5 星 + 标签 + 图文 + 匿名</li>
+              <li>追评、卖家回复</li>
+              <li>15 天评价时效，逾期默认好评</li>
+              <li>ReviewCreatedEvent → 店铺评分重新计算</li>
+              <li>刷评风控：IP/设备指纹检测</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">前端页面 <span class="role-tag role-fe">FE-1</span> <span class="role-tag role-fe">FE-2</span> <span class="role-tag role-fe">FE-3</span></div>
+            </div>
+            <ul class="task-list">
+              <li>shipping.html：发货管理（状态 Tab + 发货弹窗 + 面单预览）</li>
+              <li>logistics.html：物流跟踪（垂直时间线 + 操作栏）</li>
+              <li>aftersales.html：售后（申请表单 + 进度时间线）</li>
+              <li>reviews.html：评价管理（双角色 + 星级 + 标签 + 图片）</li>
+              <li>messages.html：消息私聊（全屏布局 + 聊天详情 + 商品卡嵌入）</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">对应测试用例 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>TC-LOGI-001~009（9 条，P0×3）</li>
+              <li>TC-AFT-001~017（17 条，P0×10）— 售后核心用例</li>
+              <li>TC-MSG-001~009（9 条，P0×2）</li>
+              <li>TC-REV-001~007（7 条，P0×2）</li>
+              <li>TC-E2E-001~008（8 条，P0×8）— 4 大业务流程全链路</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-amber">
+        <div class="callout-title">交付物与验收标准</div>
+        <p>① 4 大业务流程 E2E 全链路可跑通（核心交易/商品发布验机/售后退款/资金托管）② 售后超时自动处理验证通过 ③ WebSocket 消息推送 ≤ 2s ④ 物流轨迹实时更新 ⑤ 评价 + 店铺评分更新 ⑥ TC-E2E P0 用例 100% 通过 ⑦ TC-AFT P0 用例 100% 通过</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 5 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(6,182,212,0.08);">
+      <h3><span class="badge badge-cyan">Sprint 5</span> Phase 5 — 平台支撑（社区 + 客服 + 风控 + 公告 + 数据统计）</h3>
+      <div class="sprint-meta">
+        <span>📅 第 10-11 周</span>
+        <span>👤 BE-5 + 全员补缺 + FE-2 + FE-3</span>
+        <span>🎯 全功能完成</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">社区服务 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_message 社区建表：community_posts, post_interactions</li>
+              <li>帖子发布/列表/详情/点赞/评论</li>
+              <li>关注/取消关注</li>
+              <li>IM 通讯：WebSocket 长连接 + MongoDB 历史消息（TTL 180 天）</li>
+              <li>IM 发送后审模式，违规消息自动撤回</li>
+              <li>社区达人榜、热门话题、活动管理</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">客服服务 + 风控服务 <span class="role-tag role-be">BE-5</span></div>
+            </div>
+            <ul class="task-list">
+              <li>db_support 客服建表：tickets, ticket_messages, faqs, quick_replies, reports, announcements</li>
+              <li>工单系统：提交→分配→处理→待回复→已解决/已关闭</li>
+              <li>工单自动分配算法：技能标签 + 负载均衡</li>
+              <li>超时自动关闭（7 天无补充）+ 重新打开</li>
+              <li>FAQ 帮助中心 + 快捷回复配置</li>
+              <li>举报中心：商品违规/虚假交易/诈骗/盗图/恶意辱骂</li>
+              <li>风控规则引擎：批量发布（>10件/h）、频繁退款（>30%/30天）、异常价格（<市场均价 50%）、新号交易限制（<24h）</li>
+              <li>公告管理：4 类公告 + 置顶 + 订阅偏好</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">营销服务（完善）+ 数据统计 <span class="role-tag role-be">BE-4</span></div>
+            </div>
+            <ul class="task-list">
+              <li>限时折扣/满减/包邮活动创建</li>
+              <li>积分完整体系：签到+发帖+评价+完成订单+邀请</li>
+              <li>积分兑换：无门槛券/运费券/实物礼品</li>
+              <li>积分每日上限 + 频控防刷</li>
+              <li>卖家数据中心：6 指标 + 趋势图 + 商品排名 + 流量来源 + 买家画像</li>
+              <li>ClickHouse OLAP 查询 + 报表导出</li>
+              <li>资金/库存强一致数据走业务库（不走 ClickHouse）</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">前端页面 <span class="role-tag role-fe">FE-2</span> <span class="role-tag role-fe">FE-3</span></div>
+            </div>
+            <ul class="task-list">
+              <li>community.html：社区（Hero + 分类 Tab + 帖子列表 + 发帖 + 侧边栏）</li>
+              <li>help.html：帮助中心（搜索 + 分类卡 + FAQ + 快速入口）</li>
+              <li>tickets.html：客服工单（状态 Tab + 列表 + 新建工单）</li>
+              <li>chatbot.html：客服快捷回复配置（预览区）</li>
+              <li>trust.html：信任中心（统计数据 + 保障卡片 + 验机流程 + FAQ）</li>
+              <li>reports.html：举报中心（表单 + 记录列表）</li>
+              <li>announcements.html：公告（分类 Tab + 置顶 + 详情弹窗）</li>
+              <li>promotions.html：营销活动（指标卡 + 创建表单 + 活动列表）</li>
+              <li>analytics.html：数据中心（指标卡 + SVG 折线图 + 排名 + 流量 + 画像）</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">对应测试用例 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>TC-COMM-001~009（9 条，P0×1）</li>
+              <li>TC-SUP-001~008（8 条，P0×1）</li>
+              <li>TC-RISK-001~004（4 条，P0×4）</li>
+              <li>TC-MKT 补充用例</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">交付物与验收标准</div>
+        <p>① 全部 15 个微服务开发完成 ② 全部 31 个前端页面开发完成 ③ 170 条测试用例可执行 ④ 社区/客服/风控/公告功能可用 ⑤ 卖家数据中心 6 指标可查询 ⑥ 风控规则可触发告警</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 6 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(249,115,22,0.08);">
+      <h3><span class="badge badge-orange">Sprint 6</span> Phase 6 — 集成测试与优化</h3>
+      <div class="sprint-meta">
+        <span>📅 第 12-13 周</span>
+        <span>👤 QA 主导 + 全员配合</span>
+        <span>🎯 质量达标</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">集成测试 SIT <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>微服务间 RPC 调用测试（OpenFeign + Sentinel）</li>
+              <li>事件驱动测试：12 个核心 MQ 事件全链路验证</li>
+              <li>Saga 编排验证：支付成功→确认冻结→实扣库存→通知发货</li>
+              <li>TCC 异常场景：悬挂、空回滚、Cancel 已 Confirm</li>
+              <li>优惠券锁定→核销→解锁闭环</li>
+              <li>验机完成→商品上架→ES 同步</li>
+              <li>接口覆盖率 ≥ 90%</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">系统测试 + E2E <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>170 条测试用例全量执行</li>
+              <li>4 大业务流程 E2E 全链路测试</li>
+              <li>异常测试：余额不足/库存为 0/账号锁定/ES 不可用/机审不可用</li>
+              <li>边界测试：库存 0/超限/验证码 60s/凭证 6 张 10MB</li>
+              <li>安全测试：JWT 黑名单/验证码爆破/SHA-256 签名/地址脱敏</li>
+              <li>P0/P1 用例 100% 通过，P2 ≥ 95%</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">性能测试 <span class="role-tag role-qa">QA</span> <span class="role-tag role-devops">DevOps</span></div>
+            </div>
+            <ul class="task-list">
+              <li>JMeter 压测：首屏加载 ≤ 2s（4G 网络）</li>
+              <li>ES 搜索响应 ≤ 800ms（1000+ 商品 + 多条件筛选）</li>
+              <li>WebSocket 推送延迟 ≤ 2s</li>
+              <li>并发下单：100 并发/库存 10 → 仅 10 个成功/无超卖</li>
+              <li>系统 QPS ≥ 5000</li>
+              <li>订单下单接口 ≤ 500ms</li>
+              <li>支付回调 ≤ 3s 完成</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">Bug 修复与优化 <span class="role-tag role-all">全员</span></div>
+            </div>
+            <ul class="task-list">
+              <li>P0 缺陷 4 小时内修复，P1 24 小时内修复</li>
+              <li>慢查询优化、索引调优</li>
+              <li>Redis 缓存策略优化</li>
+              <li>前端性能优化：懒加载/CDN/WebP/代码分割</li>
+              <li>日志完善 + 监控告警验证</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-red">
+        <div class="callout-title">交付物与验收标准（质量门禁）</div>
+        <p>① P0/P1 用例 100% 通过，P2 ≥ 95% ② 无未关闭 P0/P1 缺陷 ③ 性能指标全部达标 ④ 安全测试无高危漏洞 ⑤ 核心链路 E2E 100% 通过 ⑥ 三方对账（担保/钱包/流水）无差异 ⑦ 单元测试行覆盖率 ≥ 80%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 7 -->
+  <div class="sprint-card">
+    <div class="sprint-header" style="background:rgba(239,68,68,0.08);">
+      <h3><span class="badge badge-red">Phase 7</span> UAT 验收与上线</h3>
+      <div class="sprint-meta">
+        <span>📅 第 14 周</span>
+        <span>👤 全员 + PM</span>
+        <span>🎯 M5 正式上线</span>
+      </div>
+    </div>
+    <div class="sprint-body">
+      <div class="grid-2">
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">UAT 验收 <span class="role-tag role-qa">QA</span></div>
+            </div>
+            <ul class="task-list">
+              <li>预发布环境（PRE）部署 + 生产快照脱敏数据</li>
+              <li>业务方 UAT 测试：模拟真实用户操作</li>
+              <li>验收测试报告输出</li>
+              <li>业务方签字确认</li>
+            </ul>
+          </div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">上线准备 <span class="role-tag role-devops">DevOps</span></div>
+            </div>
+            <ul class="task-list">
+              <li>生产环境部署（K8s 集群 + 全部中间件）</li>
+              <li>数据库生产初始化 + 数据校验</li>
+              <li>ArgoCD GitOps 配置 + 滚动发布策略</li>
+              <li>灰度发布：先 10% 流量 → 观察 → 逐步放量</li>
+              <li>回滚预案准备</li>
+              <li>监控告警全套验证（Prometheus + Grafana + 钉钉告警）</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="task-block">
+            <div class="task-block-header">
+              <div class="task-block-title">上线检查清单 <span class="role-tag role-all">全员</span></div>
+            </div>
+            <ul class="task-list">
+              <li>☐ 9 库 49 表 DDL 在生产执行成功</li>
+              <li>☐ 15 个微服务全部健康注册到 Nacos</li>
+              <li>☐ RocketMQ 18 个 Topic 创建</li>
+              <li>☐ ES 索引创建 + Mapping 正确</li>
+              <li>☐ Redis Cluster 6 节点健康</li>
+              <li>☐ XXL-Job 所有定时任务注册</li>
+              <li>☐ 第三方服务对接配置（支付/短信/实名/快递/内容安全）</li>
+              <li>☐ CDN + OSS 配置正确</li>
+              <li>☐ HTTPS 证书配置</li>
+              <li>☐ 日志收集（ELK）正常</li>
+              <li>☐ 监控面板（Grafana）正常</li>
+              <li>☐ 告警规则配置（钉钉/邮件）</li>
+              <li>☐ 域名解析 + DNS 配置</li>
+              <li>☐ 回滚预案演练通过</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 5. 关键路径与依赖关系 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">5</span> 关键路径与依赖关系</div>
+  <div class="section-desc">微服务间依赖链决定了开发顺序，关键路径上的延期将直接影响整体交付</div>
+
+  <div class="mermaid">
+    graph TD
+      subgraph 关键路径
+        A[Phase 0: 环境搭建] --> B[用户服务 + API网关]
+        B --> C[商品服务 + 审核服务]
+        C --> D[验机服务]
+        D --> E[订单服务 + 担保交易 + 支付服务]
+        E --> F[物流服务 + 售后服务]
+        F --> G[消息服务 + 评价服务]
+        G --> H[社区 + 客服 + 风控 + 营销 + 数据统计]
+        H --> I[集成测试 + 性能测试]
+        I --> J[UAT + 上线]
+      end
+
+      subgraph 并行可开发
+        K[店铺子模块] -.-> B
+        L[ES搜索+Canal] -.-> C
+        M[营销服务基础] -.-> E
+        N[社区服务] -.-> H
+        O[客服服务] -.-> H
+      end
+
+      style A fill:#6b7280,color:#fff
+      style B fill:#3b82f6,color:#fff
+      style C fill:#10b981,color:#fff
+      style D fill:#10b981,color:#fff
+      style E fill:#f59e0b,color:#fff
+      style F fill:#8b5cf6,color:#fff
+      style G fill:#8b5cf6,color:#fff
+      style H fill:#06b6d4,color:#fff
+      style I fill:#f97316,color:#fff
+      style J fill:#ef4444,color:#fff
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">同步 RPC 依赖关系</div>
+    <table>
+      <tr><th>调用方</th><th>被调用方</th><th>场景</th><th>阶段</th></tr>
+      <tr><td>订单服务</td><td>商品服务</td><td>下单时查询商品、校验库存</td><td>Sprint 3</td></tr>
+      <tr><td>订单服务</td><td>担保交易服务</td><td>TCC 冻结/确认/取消资金</td><td>Sprint 3</td></tr>
+      <tr><td>订单服务</td><td>营销服务</td><td>计算优惠价格</td><td>Sprint 3</td></tr>
+      <tr><td>商品服务</td><td>验机服务</td><td>创建检测任务</td><td>Sprint 2</td></tr>
+      <tr><td>商品服务</td><td>审核服务</td><td>提交商品审核</td><td>Sprint 2</td></tr>
+      <tr><td>售后服务</td><td>担保交易服务</td><td>退款操作</td><td>Sprint 4</td></tr>
+      <tr><td>售后服务</td><td>物流服务</td><td>退货物流</td><td>Sprint 4</td></tr>
+      <tr><td>评价服务</td><td>订单服务</td><td>查询订单完成状态</td><td>Sprint 4</td></tr>
+      <tr><td>评价服务</td><td>用户服务</td><td>查询用户信息</td><td>Sprint 4</td></tr>
+      <tr><td>客服服务</td><td>订单服务</td><td>工单关联订单</td><td>Sprint 5</td></tr>
+      <tr><td>社区服务</td><td>用户服务</td><td>查询用户信息</td><td>Sprint 5</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">异步事件订阅关系</div>
+    <table>
+      <tr><th>事件名</th><th>触发方</th><th>消费方</th><th>用途</th></tr>
+      <tr><td><code>OrderCreatedEvent</code></td><td>订单服务</td><td>消息服务</td><td>新订单通知</td></tr>
+      <tr><td><code>PaymentSuccessEvent</code></td><td>支付服务</td><td>订单服务、担保交易</td><td>支付成功→确认订单</td></tr>
+      <tr><td><code>OrderPaidEvent</code></td><td>订单服务</td><td>消息服务</td><td>卖家待发货通知</td></tr>
+      <tr><td><code>OrderConfirmedEvent</code></td><td>订单服务</td><td>担保交易</td><td>确认收货→放款</td></tr>
+      <tr><td><code>EscrowReleasedEvent</code></td><td>担保交易</td><td>消息服务</td><td>款项到账通知</td></tr>
+      <tr><td><code>AfterSaleCreatedEvent</code></td><td>售后服务</td><td>消息服务</td><td>售后申请通知</td></tr>
+      <tr><td><code>AfterSaleConfirmedEvent</code></td><td>售后服务</td><td>担保交易</td><td>售后确认→退款</td></tr>
+      <tr><td><code>RefundCompletedEvent</code></td><td>担保交易</td><td>售后服务、订单服务</td><td>退款完成</td></tr>
+      <tr><td><code>InspectionCompletedEvent</code></td><td>验机服务</td><td>商品服务、消息服务</td><td>验机完成→商品在售</td></tr>
+      <tr><td><code>ProductAuditPassedEvent</code></td><td>审核服务</td><td>商品服务</td><td>审核通过→上架</td></tr>
+      <tr><td><code>ProductPublishedEvent</code></td><td>商品服务</td><td>ES 同步消费者</td><td>商品上架→ES 索引</td></tr>
+      <tr><td><code>LogisticsUpdatedEvent</code></td><td>物流服务</td><td>订单服务、消息服务</td><td>物流轨迹更新通知</td></tr>
+      <tr><td><code>ReviewCreatedEvent</code></td><td>评价服务</td><td>店铺子模块、营销服务</td><td>店铺评分重算+积分</td></tr>
+      <tr><td><code>PostCreatedEvent</code></td><td>社区服务</td><td>营销服务</td><td>发帖积分发放</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ========== 6. 技术风险与应对措施 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">6</span> 技术风险与应对措施</div>
+  <div class="section-desc">从测试策略文档提取的 8 大风险 + 开发过程中的额外风险</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">风险矩阵</div>
+    <div class="risk-row" style="background:var(--card-hover);font-weight:600;font-size:12px;color:var(--text-dim);text-transform:uppercase;">
+      <div>风险项</div>
+      <div>等级</div>
+      <div>影响</div>
+      <div>应对措施</div>
+    </div>
+    <div class="risk-row">
+      <div>Redis 预扣与 MySQL 实扣时间差导致超卖</div>
+      <div><span class="badge badge-red">高</span></div>
+      <div>资金损失、用户投诉</div>
+      <div>Lua 原子操作 + MySQL 乐观锁双重保障；MQ 消费失败重试；每日对账脚本比对 Redis 与 MySQL 库存差</div>
+    </div>
+    <div class="risk-row">
+      <div>TCC 悬挂/空回滚处理不当</div>
+      <div><span class="badge badge-red">高</span></div>
+      <div>资金不一致</div>
+      <div>Cancel 先到写标记 + Try 前检查标记；空回滚幂等处理；每日三方对账（担保/钱包/流水）</div>
+    </div>
+    <div class="risk-row">
+      <div>支付回调验签失败或重复回调</div>
+      <div><span class="badge badge-red">高</span></div>
+      <div>重复扣款/未支付</div>
+      <div>强制验签 + 幂等键（order_id + channel_tx_no）去重 + 定时主动查询兜底</div>
+    </div>
+    <div class="risk-row">
+      <div>验机报告 SHA-256 签名被绕过</div>
+      <div><span class="badge badge-red">高</span></div>
+      <div>信任体系崩塌</div>
+      <div>报告表仅 INSERT 权限（无 UPDATE）；盐值存 Nacos 加密配置；前端签名验证；定期轮换盐值</div>
+    </div>
+    <div class="risk-row">
+      <div>MQ 消息丢失导致事件未消费</div>
+      <div><span class="badge badge-amber">中</span></div>
+      <div>状态不一致</div>
+      <div>Outbox Pattern + 本地事务；消费幂等；定时补偿任务扫描 Outbox 表</div>
+    </div>
+    <div class="risk-row">
+      <div>ES 不可用导致搜索降级</div>
+      <div><span class="badge badge-green">低</span></div>
+      <div>搜索体验下降</div>
+      <div>降级到 MySQL 模糊查询；ES 集群 3 节点高可用；每日快照到 OSS</div>
+    </div>
+    <div class="risk-row">
+      <div>机审不可用导致 UGC 堆积</div>
+      <div><span class="badge badge-amber">中</span></div>
+      <div>审核延迟</div>
+      <div>降级为全部人工审核；禁止直接放行；增加审核员人力</div>
+    </div>
+    <div class="risk-row">
+      <div>新号交易限制误伤正常用户</div>
+      <div><span class="badge badge-green">低</span></div>
+      <div>用户体验差</div>
+      <div>限制仅大额交易；24h 后自动解除；客服可手动解除</div>
+    </div>
+    <div class="risk-row">
+      <div>WebSocket 长连接稳定性（跨节点广播）</div>
+      <div><span class="badge badge-amber">中</span></div>
+      <div>消息推送失败</div>
+      <div>Redis Pub/Sub 跨节点转发 + 离线消息 Redis List 持久化 + 30s 心跳 + 60s 超时清理</div>
+    </div>
+    <div class="risk-row">
+      <div>第三方支付/实名/快递 API 不稳定</div>
+      <div><span class="badge badge-amber">中</span></div>
+      <div>核心流程阻断</div>
+      <div>Mock 环境先行开发；Sentinel 熔断降级；超时重试策略；第三方不可用时降级方案</div>
+    </div>
+    <div class="risk-row">
+      <div>ShardingSphere 分表配置复杂导致查询异常</div>
+      <div><span class="badge badge-amber">中</span></div>
+      <div>分表数据查询不到</div>
+      <div>分表前充分测试；分表键必须在查询条件中；提供不分表兜底方案</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 7. 质量保障与测试对齐 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">7</span> 质量保障与测试计划对齐</div>
+  <div class="section-desc">与测试策略文档的 6 个测试阶段对齐，定义每个 Sprint 的质量门禁</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">测试阶段与质量门禁</div>
+    <div class="gate-step">
+      <div class="gate-num">1</div>
+      <div class="gate-content">
+        <h4>单元测试（贯穿开发全程）</h4>
+        <p><strong>准入：</strong>代码编译通过 &nbsp; <strong>准出：</strong>行覆盖率 ≥ 80%，分支覆盖率 ≥ 70% &nbsp; <strong>工具：</strong>JUnit 5 + Mockito &nbsp; <strong>责任：</strong>各 BE 开发人员</p>
+      </div>
+    </div>
+    <div class="gate-step">
+      <div class="gate-num">2</div>
+      <div class="gate-content">
+        <h4>集成测试 SIT（Sprint 4 结束后启动）</h4>
+        <p><strong>准入：</strong>单元测试通过 &nbsp; <strong>准出：</strong>接口覆盖率 ≥ 90%，P0 用例 100% 通过 &nbsp; <strong>周期：</strong>2 周（W10-W11） &nbsp; <strong>重点：</strong>RPC 调用 + 事件驱动 + Saga 编排 + TCC 异常</p>
+      </div>
+    </div>
+    <div class="gate-step">
+      <div class="gate-num">3</div>
+      <div class="gate-content">
+        <h4>系统测试（Sprint 6）</h4>
+        <p><strong>准入：</strong>SIT 准出 &nbsp; <strong>准出：</strong>P0/P1 用例 100% 通过，P2 ≥ 95% &nbsp; <strong>周期：</strong>2 周（W12-W13） &nbsp; <strong>范围：</strong>170 条用例全量 + E2E + 异常 + 边界 + 安全</p>
+      </div>
+    </div>
+    <div class="gate-step">
+      <div class="gate-num">4</div>
+      <div class="gate-content">
+        <h4>性能测试（Sprint 6 并行）</h4>
+        <p><strong>准入：</strong>系统测试 P0 通过 &nbsp; <strong>准出：</strong>NFR 指标全部达标 &nbsp; <strong>周期：</strong>1 周 &nbsp; <strong>工具：</strong>JMeter &nbsp; <strong>指标：</strong>首屏 ≤ 2s / 搜索 ≤ 800ms / 推送 ≤ 2s / QPS ≥ 5000</p>
+      </div>
+    </div>
+    <div class="gate-step">
+      <div class="gate-num">5</div>
+      <div class="gate-content">
+        <h4>安全测试（Sprint 6 并行）</h4>
+        <p><strong>准入：</strong>系统测试 P0 通过 &nbsp; <strong>准出：</strong>无高危漏洞，SHA-256 签名验证通过 &nbsp; <strong>周期：</strong>1 周 &nbsp; <strong>范围：</strong>JWT/验证码爆破/支付验签/签名防篡改/地址脱敏/风控规则</p>
+      </div>
+    </div>
+    <div class="gate-step">
+      <div class="gate-num">6</div>
+      <div class="gate-content">
+        <h4>验收测试 UAT（Sprint 7）</h4>
+        <p><strong>准入：</strong>系统测试准出 &nbsp; <strong>准出：</strong>业务方签字确认 &nbsp; <strong>周期：</strong>1 周（W14） &nbsp; <strong>环境：</strong>PRE 预发布环境 + 生产快照脱敏数据</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">缺陷管理 SLA</div>
+      <table>
+        <tr><th>等级</th><th>定义</th><th>SLA</th></tr>
+        <tr><td><span class="badge badge-red">P0</span></td><td>核心功能不可用、资金错误、数据丢失</td><td><strong>4 小时内修复</strong></td></tr>
+        <tr><td><span class="badge badge-amber">P1</span></td><td>主要功能异常但有 workaround</td><td><strong>24 小时内修复</strong></td></tr>
+        <tr><td><span class="badge badge-blue">P2</span></td><td>次要功能问题，不影响主流程</td><td>迭代内修复</td></tr>
+        <tr><td><span class="badge badge-pending">P3</span></td><td>优化建议、体验改进</td><td>排期处理</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">测试用例分布与 Sprint 对应</div>
+      <table>
+        <tr><th>Sprint</th><th>对应模块</th><th>用例数</th><th>P0</th></tr>
+        <tr><td>Sprint 1</td><td>用户+店铺</td><td>25</td><td>13</td></tr>
+        <tr><td>Sprint 2</td><td>商品+验机+审核</td><td>29</td><td>16</td></tr>
+        <tr><td>Sprint 3</td><td>订单+担保+支付+营销</td><td>60</td><td>40</td></tr>
+        <tr><td>Sprint 4</td><td>物流+售后+消息+评价+E2E</td><td>50</td><td>25</td></tr>
+        <tr><td>Sprint 5</td><td>社区+客服+风控</td><td>21</td><td>6</td></tr>
+        <tr><td>Sprint 6</td><td>NFR 非功能</td><td>10</td><td>4</td></tr>
+        <tr><td><strong>合计</strong></td><td></td><td><strong>170</strong></td><td><strong>90</strong></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 8. 环境与工具链 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">8</span> 环境与工具链</div>
+  <div class="section-desc">4 层测试环境 + 完整 CI/CD 工具链</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">环境分层</div>
+    <div class="env-tier">
+      <div class="env-tier-label" style="background:rgba(16,185,129,0.15);color:var(--primary);">DEV</div>
+      <div class="env-tier-content">
+        <strong>开发联调环境</strong> — 各开发人员本地 Docker Compose 或共享 DEV 集群。开发自造数据，可自由重启服务。
+        K8s 命名空间：<code>dev</code>。每日自动构建最新镜像部署。
+      </div>
+    </div>
+    <div class="env-tier">
+      <div class="env-tier-label" style="background:rgba(59,130,246,0.15);color:var(--blue);">SIT</div>
+      <div class="env-tier-content">
+        <strong>系统集成测试环境</strong> — QA 主导。测试造数脚本批量生成数据（买家/卖家各 50+，6 品类各 20+ 商品，各状态订单）。
+        K8s 命名空间：<code>sit</code>。所有 Mock/Stub 服务可用。
+      </div>
+    </div>
+    <div class="env-tier">
+      <div class="env-tier-label" style="background:rgba(245,158,11,0.15);color:var(--amber);">UAT</div>
+      <div class="env-tier-content">
+        <strong>用户验收测试环境</strong> — 接近生产数据。使用生产快照脱敏数据。
+        K8s 命名空间：<code>uat</code>。业务方在此验收。
+      </div>
+    </div>
+    <div class="env-tier">
+      <div class="env-tier-label" style="background:rgba(239,68,68,0.15);color:var(--red);">PRE</div>
+      <div class="env-tier-content">
+        <strong>预发布环境</strong> — 生产配置 + 生产快照脱敏数据。灰度发布前验证。
+        K8s 命名空间：<code>pre</code>。与生产同规格部署。
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">CI/CD Pipeline</div>
+      <table>
+        <tr><th>阶段</th><th>工具</th><th>说明</th></tr>
+        <tr><td>代码提交</td><td>GitLab</td><td>Feature 分支 → MR → Code Review</td></tr>
+        <tr><td>编译构建</td><td>GitLab CI</td><td>Maven 编译 + Docker 镜像构建</td></tr>
+        <tr><td>单元测试</td><td>JUnit 5 + JaCoCo</td><td>覆盖率报告生成</td></tr>
+        <tr><td>代码质量</td><td>SonarQube</td><td>静态代码分析 + 安全扫描</td></tr>
+        <tr><td>部署 DEV</td><td>ArgoCD</td><td>自动部署到 DEV 环境</td></tr>
+        <tr><td>部署 SIT</td><td>ArgoCD</td><td>QA 手动触发部署到 SIT</td></tr>
+        <tr><td>部署 PRE</td><td>ArgoCD</td><td>灰度发布前部署</td></tr>
+        <tr><td>部署 PROD</td><td>ArgoCD</td><td>灰度 10% → 50% → 100%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">第三方服务 Mock 策略</div>
+      <table>
+        <tr><th>第三方服务</th><th>Mock 方式</th><th>验证重点</th></tr>
+        <tr><td>微信/支付宝支付</td><td>Mock 支付回调</td><td>验签、幂等、状态更新</td></tr>
+        <tr><td>快递 100/菜鸟</td><td>Mock 物流轨迹推送</td><td>轨迹写入、事件触发</td></tr>
+        <tr><td>阿里云内容安全</td><td>Mock 审核结果</td><td>两级阈值、降级处理</td></tr>
+        <tr><td>公安实名 API</td><td>Mock 二要素/三要素</td><td>匹配/不匹配/限次</td></tr>
+        <tr><td>短信平台</td><td>Mock 发送</td><td>频率限制、验证码存储</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 9. 开发规范与协作 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">9</span> 开发规范与协作机制</div>
+  <div class="section-desc">确保 10+ 人团队高效协作的规范约定</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">代码规范</div>
+      <ul class="deliverable-list">
+        <li>后端遵循阿里巴巴 Java 开发手册 + DDD 分层架构（API/App/Domain/Infrastructure）</li>
+        <li>前端遵循 Vue 3 Composition API + <code>&lt;script setup&gt;</code> 语法</li>
+        <li>所有写操作 API 必须携带 <code>Idempotency-Key</code> 请求头</li>
+        <li>统一响应体：<code>{ code, message, data, timestamp }</code></li>
+        <li>错误码分段：用户域 20xxx / 商品域 30xxx / 订单域 40xxx / 资金域 50xxx / 售后域 60xxx / 营销域 70xxx</li>
+        <li>数据库表必须包含：雪花 ID、created_at、updated_at、version（乐观锁）</li>
+        <li>资金操作表必须包含：idempotency_key（UNIQUE）、唯一约束</li>
+        <li>Git 分支策略：main → develop → feature/xxx → MR → Code Review → 合并</li>
+        <li>提交信息格式：<code>type(scope): subject</code>（feat/fix/refactor/test/docs）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">协作机制</div>
+      <ul class="deliverable-list">
+        <li><strong>每日站会：</strong>09:30，每人汇报昨日完成/今日计划/阻塞问题</li>
+        <li><strong>Sprint 评审：</strong>每个 Sprint 结束日演示功能，QA 参与验证</li>
+        <li><strong>代码审查：</strong>所有 MR 必须至少 1 人 Review 后合并</li>
+        <li><strong>接口联调：</strong>前后端按 API 文档（Swagger/OpenAPI）联调，后端先出 Mock 接口</li>
+        <li><strong>缺陷跟踪：</strong>使用 GitLab Issues 管理，P0 缺陷群通知</li>
+        <li><strong>周报：</strong>每周五下午输出进度周报，同步里程碑达成情况</li>
+        <li><strong>技术评审：</strong>关键设计变更需 Tech Lead 评审通过</li>
+        <li><strong>知识库：</strong>使用飞书文档维护技术决策记录和 API 文档</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 10. 交付物清单 ========== -->
+<div class="section">
+  <div class="section-title"><span class="num">10</span> 交付物清单与验收标准</div>
+  <div class="section-desc">最终交付物清单，对应 M5 正式上线</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">交付物总览</div>
+    <table class="summary-table">
+      <tr><th>类别</th><th>交付物</th><th>数量</th><th>验收标准</th></tr>
+      <tr><td rowspan="3"><strong>后端代码</strong></td><td>15 个微服务源代码</td><td>15 个</td><td>可编译、可部署、注册到 Nacos</td></tr>
+      <tr><td>SQL DDL 脚本</td><td>10 个</td><td>9 库 49 表在生产执行成功</td></tr>
+      <tr><td>单元测试代码</td><td>—</td><td>行覆盖率 ≥ 80%，分支覆盖率 ≥ 70%</td></tr>
+      <tr><td rowspan="2"><strong>前端代码</strong></td><td>Vue 3 前端源代码</td><td>31 页面</td><td>桌面/平板/移动端响应式适配</td></tr>
+      <tr><td>前端公共组件库</td><td>—</td><td>布局/导航/商品卡/分页等可复用</td></tr>
+      <tr><td rowspan="4"><strong>基础设施</strong></td><td>K8s 部署清单（YAML）</td><td>15 套</td><td>ArgoCD 可自动部署</td></tr>
+      <tr><td>Docker 镜像</td><td>15 个</td><td>推送到私有镜像仓库</td></tr>
+      <tr><td>CI/CD Pipeline 配置</td><td>1 套</td><td>GitLab CI + ArgoCD 全链路可用</td></tr>
+      <tr><td>监控告警配置</td><td>1 套</td><td>Prometheus + Grafana + 钉钉告警</td></tr>
+      <tr><td rowspan="3"><strong>测试</strong></td><td>测试用例执行报告</td><td>170 条</td><td>P0/P1 100% 通过，P2 ≥ 95%</td></tr>
+      <tr><td>性能测试报告</td><td>1 份</td><td>NFR 指标全部达标</td></tr>
+      <tr><td>安全测试报告</td><td>1 份</td><td>无高危漏洞</td></tr>
+      <tr><td rowspan="2"><strong>文档</strong></td><td>API 接口文档（Swagger）</td><td>1 套</td><td>全部接口有文档</td></tr>
+      <tr><td>部署运维手册</td><td>1 份</td><td>包含部署/回滚/故障排查</td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout-blue">
+    <div class="callout-title">最终验收标准（M5 上线门禁）</div>
+    <p>① 15 个微服务全部健康运行 ② 31 个前端页面全部可用 ③ 170 条测试用例 P0/P1 100% 通过 ④ 性能指标全部达标（首屏 ≤ 2s / 搜索 ≤ 800ms / 推送 ≤ 2s / QPS ≥ 5000） ⑤ 安全测试无高危漏洞 ⑥ 4 大业务流程 E2E 全链路通过 ⑦ 三方对账无差异 ⑧ 业务方 UAT 签字确认 ⑨ 监控告警全套验证通过 ⑩ 回滚预案演练通过</p>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>硬件侠开发计划 v1.0 · 编制：开发小组长 · 2026-09-01</p>
+    <p>基于 PRD 需求文档、业务流程图、概要设计、详细设计、测试策略与计划、测试用例文档编制</p>
+  </div>
+</footer>
+
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  themeVariables: {
+    primaryColor: '#1a1d27',
+    primaryTextColor: '#e4e4e7',
+    primaryBorderColor: '#2a2e3a',
+    lineColor: '#4b5563',
+    secondaryColor: '#20242f',
+    tertiaryColor: '#1a1d27',
+    background: '#1a1d27',
+    mainBkg: '#1a1d27',
+    nodeBorder: '#2a2e3a',
+    clusterBkg: '#1a1d27',
+    clusterBorder: '#2a2e3a',
+    edgeLabelBackground: '#1a1d27'
+  },
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  }
+});
+</script>
+
+</body>
+</html>

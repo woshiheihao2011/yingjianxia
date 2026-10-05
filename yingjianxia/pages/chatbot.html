@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服快捷回复 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .critical-layout { box-sizing: border-box; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; transition: background .2s, transform .15s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-primary:active { transform: translateY(1px); }
+            .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+            .btn-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-secondary:active { transform: translateY(1px); }
+            .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-sm { height: 36px; padding: 0 14px; font-size: 14px; }
+            .card-surface { background: var(--brand-card); border: 1px solid var(--brand-line); border-radius: var(--brand-radius-lg); }
+            .input-brand { width: 100%; min-height: 44px; padding: 10px 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; transition: border-color .2s, box-shadow .2s; }
+            .input-brand::placeholder { color: var(--brand-ink-3); }
+            .input-brand:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .input-brand:disabled { opacity: .5; cursor: not-allowed; background: var(--brand-surface-2); }
+            textarea.input-brand { resize: vertical; }
+            .switch { position: relative; display: inline-flex; width: 44px; height: 24px; flex-shrink: 0; }
+            .switch input { opacity: 0; width: 0; height: 0; }
+            .switch-slider { position: absolute; cursor: pointer; inset: 0; background: var(--brand-surface-3); border-radius: var(--brand-radius-pill); transition: background .2s; }
+            .switch-slider::before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: var(--brand-ink); border-radius: 50%; transition: transform .2s; }
+            .switch input:checked + .switch-slider { background: var(--brand-primary); }
+            .switch input:checked + .switch-slider::before { transform: translateX(20px); background: var(--brand-primary-ink); }
+            .switch input:focus-visible + .switch-slider { box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .chat-bubble-buyer { background: var(--brand-surface-3); color: var(--brand-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm); }
+            .chat-bubble-bot { background: var(--brand-primary); color: var(--brand-primary-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm) var(--brand-radius-md); }
+            .preview-scroll { flex: 1; overflow-y: auto; }
+            .preview-scroll::-webkit-scrollbar { width: 6px; }
+            .preview-scroll::-webkit-scrollbar-thumb { background: var(--brand-line); border-radius: var(--brand-radius-pill); }
+            .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--brand-radius-sm); font-size: 12px; font-weight: 500; }
+            .phrase-card { border: 1px solid var(--brand-line); border-radius: var(--brand-radius-md); background: var(--brand-bg); transition: border-color .15s; }
+            .phrase-card:hover { border-color: var(--brand-primary); }
+            @media (max-width: 1023px) { .chatbot-grid { grid-template-columns: 1fr; } }
+        </style>
+
+        <!-- 顶部导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+        <div class="nav-spacer"></div>
+
+        <!-- 页面标题 -->
+        <section class="border-b border-border bg-card" data-dom-id="page-header">
+            <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-foreground flex items-center gap-3" data-dom-id="page-title">
+                        <i data-lucide="bot-message-square" class="w-7 h-7 text-primary"></i>
+                        客服快捷回复
+                    </h1>
+                    <p class="text-sm text-muted-foreground mt-1">为店铺配置自动回复与快捷短语，提升响应效率</p>
+                </div>
+                <button type="button" class="btn-primary" data-dom-id="save-btn" onclick="showSaveToast()">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>保存设置</span>
+                </button>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="chatbot-grid grid lg:grid-cols-3 gap-6 items-start">
+
+                <!-- 左侧配置区 -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- 自动回复总开关 -->
+                    <section class="card-surface p-5" data-dom-id="auto-reply-card">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-start gap-4">
+                                <div class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-primary/10 text-primary shrink-0">
+                                    <i data-lucide="zap" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-base font-semibold text-foreground">自动回复总开关</h2>
+                                    <p class="text-sm text-muted-foreground mt-0.5">开启后，系统将根据规则自动回复买家咨询</p>
+                                </div>
+                            </div>
+                            <label class="switch" aria-label="自动回复总开关">
+                                <input type="checkbox" id="masterToggle" checked data-dom-id="auto-reply-toggle" onchange="toggleMaster()">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <!-- 欢迎语设置 -->
+                    <section class="card-surface p-5" data-dom-id="welcome-card">
+                        <div class="flex items-center gap-3 mb-5">
+                            <i data-lucide="hand" class="w-5 h-5 text-primary"></i>
+                            <h2 class="text-base font-semibold text-foreground">欢迎语设置</h2>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2" for="welcomeMsg">首次咨询自动回复内容</label>
+                                <textarea id="welcomeMsg" rows="3" class="input-brand" placeholder="欢迎光临我的店铺，有什么可以帮您？" data-dom-id="welcome-content">您好，欢迎咨询！本店商品均经过实拍验机，支持平台担保交易，请问有什么可以帮您？</textarea>
+                                <p class="text-xs text-muted-foreground mt-2">首次收到买家消息时自动发送，每位买家每天只触发一次</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                                <label class="text-sm font-medium text-foreground shrink-0">再次触发时间间隔</label>
+                                <div class="flex items-center gap-3 flex-1">
+                                    <input type="number" id="welcomeInterval" value="24" min="1" max="168" class="input-brand w-24 text-center" data-dom-id="welcome-interval">
+                                    <span class="text-sm text-muted-foreground">小时</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 关键词回复 -->
+                    <section class="card-surface p-5" data-dom-id="keyword-card">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="message-square-text" class="w-5 h-5 text-primary"></i>
+                                <h2 class="text-base font-semibold text-foreground">关键词回复</h2>
+                            </div>
+                            <button type="button" class="btn-secondary btn-sm" data-dom-id="add-keyword-btn" onclick="addKeywordRow()">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>添加规则</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto -mx-5 px-5">
+                            <table class="w-full min-w-[640px]" data-dom-id="keyword-table">
+                                <thead>
+                                    <tr class="border-b border-border text-left">
+                                        <th class="pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">关键词</th>
+                                        <th class="pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">匹配类型</th>
+                                        <th class="pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">回复内容</th>
+                                        <th class="pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">状态</th>
+                                        <th class="pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="keywordList" class="text-sm">
+                                    <tr class="border-b border-border/50">
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="在吗" class="input-brand" data-dom-id="keyword-1">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <select class="input-brand h-10 py-0" data-dom-id="match-1">
+                                                <option value="exact">精确匹配</option>
+                                                <option value="fuzzy" selected>模糊匹配</option>
+                                            </select>
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="在的，请问有什么可以帮您？" class="input-brand" data-dom-id="reply-1">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <label class="switch" aria-label="启用规则">
+                                                <input type="checkbox" checked data-dom-id="status-1">
+                                                <span class="switch-slider"></span>
+                                            </label>
+                                        </td>
+                                        <td class="py-3 text-right">
+                                            <div class="inline-flex items-center gap-1">
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring" aria-label="编辑">
+                                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                                </button>
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-brand-error hover:bg-brand-error/10 focus-visible:ring-2 focus-visible:ring-ring" aria-label="删除" onclick="this.closest('tr').remove()">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-border/50">
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="保修" class="input-brand" data-dom-id="keyword-2">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <select class="input-brand h-10 py-0" data-dom-id="match-2">
+                                                <option value="exact">精确匹配</option>
+                                                <option value="fuzzy" selected>模糊匹配</option>
+                                            </select>
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="本店商品提供7天质量问题退换，30天保修服务。" class="input-brand" data-dom-id="reply-2">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <label class="switch" aria-label="启用规则">
+                                                <input type="checkbox" checked data-dom-id="status-2">
+                                                <span class="switch-slider"></span>
+                                            </label>
+                                        </td>
+                                        <td class="py-3 text-right">
+                                            <div class="inline-flex items-center gap-1">
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring" aria-label="编辑">
+                                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                                </button>
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-brand-error hover:bg-brand-error/10 focus-visible:ring-2 focus-visible:ring-ring" aria-label="删除" onclick="this.closest('tr').remove()">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-border/50">
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="顺丰" class="input-brand" data-dom-id="keyword-3">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <select class="input-brand h-10 py-0" data-dom-id="match-3">
+                                                <option value="exact">精确匹配</option>
+                                                <option value="fuzzy" selected>模糊匹配</option>
+                                            </select>
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <input type="text" value="默认发顺丰/京东，支持当面验机，发货前会拍实物视频。" class="input-brand" data-dom-id="reply-3">
+                                        </td>
+                                        <td class="py-3 pr-4">
+                                            <label class="switch" aria-label="启用规则">
+                                                <input type="checkbox" checked data-dom-id="status-3">
+                                                <span class="switch-slider"></span>
+                                            </label>
+                                        </td>
+                                        <td class="py-3 text-right">
+                                            <div class="inline-flex items-center gap-1">
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring" aria-label="编辑">
+                                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                                </button>
+                                                <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-brand-error hover:bg-brand-error/10 focus-visible:ring-2 focus-visible:ring-ring" aria-label="删除" onclick="this.closest('tr').remove()">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- 快捷短语 -->
+                    <section class="card-surface p-5" data-dom-id="phrases-card">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="notebook-pen" class="w-5 h-5 text-primary"></i>
+                                <h2 class="text-base font-semibold text-foreground">快捷短语分组</h2>
+                            </div>
+                            <button type="button" class="btn-secondary btn-sm" data-dom-id="add-phrase-btn" onclick="addPhraseGroup()">
+                                <i data-lucide="folder-plus" class="w-4 h-4"></i>
+                                <span>新建分组</span>
+                            </button>
+                        </div>
+
+                        <div class="space-y-6" data-dom-id="phrases-list">
+                            <!-- 售前咨询 -->
+                            <div data-dom-id="group-pre">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
+                                        <i data-lucide="help-circle" class="w-4 h-4 text-muted-foreground"></i>
+                                        售前咨询
+                                    </h3>
+                                    <button type="button" class="text-xs font-medium text-primary hover:text-[var(--brand-primary-hover)] flex items-center gap-1" data-dom-id="add-pre-phrase">
+                                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                        添加短语
+                                    </button>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-3">
+                                    <div class="phrase-card p-4" data-dom-id="phrase-pre-1">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">商品成色说明</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-pre-1">使用 128 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">商品为二手闲置，成色以实拍图为准，发货前会再次拍照确认。</p>
+                                    </div>
+                                    <div class="phrase-card p-4" data-dom-id="phrase-pre-2">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">是否正品</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-pre-2">使用 86 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">保证原装正品，支持任意渠道验货，假货包退。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 价格议价 -->
+                            <div data-dom-id="group-price">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
+                                        <i data-lucide="tag" class="w-4 h-4 text-muted-foreground"></i>
+                                        价格议价
+                                    </h3>
+                                    <button type="button" class="text-xs font-medium text-primary hover:text-[var(--brand-primary-hover)] flex items-center gap-1" data-dom-id="add-price-phrase">
+                                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                        添加短语
+                                    </button>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-3">
+                                    <div class="phrase-card p-4" data-dom-id="phrase-price-1">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">可小刀回复</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-price-1">使用 214 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">价格已经放到很低了，诚心要可以适当让一点，请直接给出心理价位。</p>
+                                    </div>
+                                    <div class="phrase-card p-4" data-dom-id="phrase-price-2">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">不议价说明</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-price-2">使用 56 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">本品一口价，不议价，包邮已经是最大优惠，请谅解。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 售后问题 -->
+                            <div data-dom-id="group-after">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
+                                        <i data-lucide="shield-check" class="w-4 h-4 text-muted-foreground"></i>
+                                        售后问题
+                                    </h3>
+                                    <button type="button" class="text-xs font-medium text-primary hover:text-[var(--brand-primary-hover)] flex items-center gap-1" data-dom-id="add-after-phrase">
+                                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                        添加短语
+                                    </button>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-3">
+                                    <div class="phrase-card p-4" data-dom-id="phrase-after-1">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">退换货流程</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-after-1">使用 42 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">签收7天内如有质量问题，请保留原包装并联系平台客服申请退换。</p>
+                                    </div>
+                                    <div class="phrase-card p-4" data-dom-id="phrase-after-2">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">驱动/测试指导</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-after-2">使用 31 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">建议先下载官网最新驱动，使用GPU-Z/CPU-Z验证硬件信息。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 物流查询 -->
+                            <div data-dom-id="group-logistics">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
+                                        <i data-lucide="truck" class="w-4 h-4 text-muted-foreground"></i>
+                                        物流查询
+                                    </h3>
+                                    <button type="button" class="text-xs font-medium text-primary hover:text-[var(--brand-primary-hover)] flex items-center gap-1" data-dom-id="add-logistics-phrase">
+                                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                        添加短语
+                                    </button>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-3">
+                                    <div class="phrase-card p-4" data-dom-id="phrase-logistics-1">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">发货时间</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-logistics-1">使用 95 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">付款后24小时内发货，发货后会把单号发给您，请留意消息。</p>
+                                    </div>
+                                    <div class="phrase-card p-4" data-dom-id="phrase-logistics-2">
+                                        <div class="flex items-start justify-between gap-3 mb-2">
+                                            <h4 class="text-sm font-semibold text-foreground">验货提醒</h4>
+                                            <span class="tag bg-muted text-muted-foreground" data-dom-id="usage-logistics-2">使用 73 次</span>
+                                        </div>
+                                        <p class="text-sm text-muted-foreground leading-relaxed">快递到达后建议当面验货，如有破损请拒收并联系我处理。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 右侧预览区 -->
+                <aside class="lg:col-span-1" data-dom-id="preview-card">
+                    <div class="card-surface overflow-hidden sticky top-24">
+                        <div class="p-4 border-b border-border bg-background flex items-center justify-between">
+                            <h2 class="text-base font-semibold text-foreground flex items-center gap-2">
+                                <i data-lucide="smartphone" class="w-5 h-5 text-primary"></i>
+                                效果预览
+                            </h2>
+                            <span class="text-xs text-muted-foreground">模拟买家视角</span>
+                        </div>
+                        <div class="h-[480px] flex flex-col bg-background">
+                            <div class="preview-scroll p-4 space-y-4" id="previewScroll" data-dom-id="preview-messages">
+                                <div class="text-center">
+                                    <span class="inline-block px-3 py-1 text-xs text-muted-foreground bg-muted rounded-full">今天</span>
+                                </div>
+
+                                <div class="flex gap-3" data-dom-id="preview-welcome">
+                                    <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                        <i data-lucide="bot" class="w-5 h-5 text-primary"></i>
+                                    </div>
+                                    <div class="max-w-[80%] space-y-1">
+                                        <div class="chat-bubble-bot px-4 py-2.5 text-sm leading-relaxed" data-dom-id="preview-welcome-text">
+                                            您好，欢迎咨询！本店商品均经过实拍验机，支持平台担保交易，请问有什么可以帮您？
+                                        </div>
+                                        <span class="text-xs text-muted-foreground">10:42</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-3 justify-end" data-dom-id="preview-buyer-1">
+                                    <div class="max-w-[80%] space-y-1 text-right">
+                                        <div class="chat-bubble-buyer px-4 py-2.5 text-sm leading-relaxed inline-block text-left">
+                                            显卡还在吗？能否小刀？
+                                        </div>
+                                        <span class="text-xs text-muted-foreground">10:43</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-3" data-dom-id="preview-reply-1">
+                                    <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                        <i data-lucide="bot" class="w-5 h-5 text-primary"></i>
+                                    </div>
+                                    <div class="max-w-[80%] space-y-1">
+                                        <div class="chat-bubble-bot px-4 py-2.5 text-sm leading-relaxed">
+                                            价格已经放到很低了，诚心要可以适当让一点，请直接给出心理价位。
+                                        </div>
+                                        <span class="text-xs text-muted-foreground">10:43</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 border-t border-border bg-card">
+                                <p class="text-xs text-muted-foreground mb-3">点击快速模拟买家消息：</p>
+                                <div class="flex flex-wrap gap-2" data-dom-id="preview-quick-actions">
+                                    <button type="button" class="inline-flex items-center px-3 py-1.5 rounded-full bg-muted text-xs text-foreground hover:bg-primary/10 hover:text-primary transition-colors" onclick="simulateBuyer('在吗')">在吗</button>
+                                    <button type="button" class="inline-flex items-center px-3 py-1.5 rounded-full bg-muted text-xs text-foreground hover:bg-primary/10 hover:text-primary transition-colors" onclick="simulateBuyer('保修多久')">保修多久</button>
+                                    <button type="button" class="inline-flex items-center px-3 py-1.5 rounded-full bg-muted text-xs text-foreground hover:bg-primary/10 hover:text-primary transition-colors" onclick="simulateBuyer('发什么快递')">发什么快递</button>
+                                    <button type="button" class="inline-flex items-center px-3 py-1.5 rounded-full bg-muted text-xs text-foreground hover:bg-primary/10 hover:text-primary transition-colors" onclick="simulateBuyer('成色怎么样')">成色怎么样</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- 保存成功提示 -->
+        <div id="saveToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden" data-dom-id="save-toast">
+            <div class="inline-flex items-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground shadow-2 font-semibold">
+                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                <span>设置已保存</span>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="py-6 border-t border-border bg-background" data-dom-id="page-footer">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+                <p>&copy; 2026 硬件侠. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="help.html" class="hover:text-foreground transition-colors">帮助中心</a>
+                    <a href="trust.html" class="hover:text-foreground transition-colors">信任与安全</a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            function toggleMaster() {
+                const enabled = document.getElementById('masterToggle').checked;
+                const inputs = document.querySelectorAll('#welcomeMsg, #welcomeInterval, #keywordList input, #keywordList select');
+                inputs.forEach(el => el.disabled = !enabled);
+            }
+
+            function addKeywordRow() {
+                const tbody = document.getElementById('keywordList');
+                const id = tbody.children.length + 1;
+                const row = document.createElement('tr');
+                row.className = 'border-b border-border/50';
+                row.innerHTML = `
+                    <td class="py-3 pr-4"><input type="text" placeholder="输入关键词" class="input-brand" data-dom-id="keyword-${id}"></td>
+                    <td class="py-3 pr-4">
+                        <select class="input-brand h-10 py-0" data-dom-id="match-${id}">
+                            <option value="exact">精确匹配</option>
+                            <option value="fuzzy" selected>模糊匹配</option>
+                        </select>
+                    </td>
+                    <td class="py-3 pr-4"><input type="text" placeholder="输入自动回复内容" class="input-brand" data-dom-id="reply-${id}"></td>
+                    <td class="py-3 pr-4">
+                        <label class="switch" aria-label="启用规则">
+                            <input type="checkbox" checked data-dom-id="status-${id}">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </td>
+                    <td class="py-3 text-right">
+                        <div class="inline-flex items-center gap-1">
+                            <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring" aria-label="编辑"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                            <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-brand-error hover:bg-brand-error/10 focus-visible:ring-2 focus-visible:ring-ring" aria-label="删除" onclick="this.closest('tr').remove()"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                lucide.createIcons();
+            }
+
+            function addPhraseGroup() {
+                alert('新建分组功能将在保存后生效');
+            }
+
+            function simulateBuyer(text) {
+                const scroll = document.getElementById('previewScroll');
+                const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+                const buyerMsg = document.createElement('div');
+                buyerMsg.className = 'flex gap-3 justify-end';
+                buyerMsg.innerHTML = `
+                    <div class="max-w-[80%] space-y-1 text-right">
+                        <div class="chat-bubble-buyer px-4 py-2.5 text-sm leading-relaxed inline-block text-left">${text}</div>
+                        <span class="text-xs text-muted-foreground">${time}</span>
+                    </div>
+                `;
+                scroll.appendChild(buyerMsg);
+
+                const replyMap = {
+                    '在吗': '在的，请问有什么可以帮您？',
+                    '保修多久': '本店商品提供7天质量问题退换，30天保修服务。',
+                    '发什么快递': '默认发顺丰/京东，支持当面验机，发货前会拍实物视频。',
+                    '成色怎么样': '商品为二手闲置，成色以实拍图为准，发货前会再次拍照确认。'
+                };
+
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'flex gap-3';
+                    botMsg.innerHTML = `
+                        <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0"><i data-lucide="bot" class="w-5 h-5 text-primary"></i></div>
+                        <div class="max-w-[80%] space-y-1">
+                            <div class="chat-bubble-bot px-4 py-2.5 text-sm leading-relaxed">${replyMap[text] || '收到您的消息，客服稍后会为您解答。'}</div>
+                            <span class="text-xs text-muted-foreground">${time}</span>
+                        </div>
+                    `;
+                    scroll.appendChild(botMsg);
+                    scroll.scrollTop = scroll.scrollHeight;
+                    lucide.createIcons();
+                }, 600);
+
+                scroll.scrollTop = scroll.scrollHeight;
+            }
+
+            function showSaveToast() {
+                const toast = document.getElementById('saveToast');
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 2500);
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

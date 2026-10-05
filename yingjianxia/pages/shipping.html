@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发货管理 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* Print colors */
+  --print-bg: #ffffff;
+  --print-ink: #000000;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .shipping-shell { padding-top: 64px; }
+            @media (max-width: 768px) { .shipping-shell { padding-top: 56px; } }
+            .status-pill {
+                display: inline-flex;
+                align-items: center;
+                height: 32px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-pill);
+                font-size: 13px;
+                font-weight: 500;
+                white-space: nowrap;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .status-pill.active {
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+                border-color: rgba(0, 212, 170, 0.25);
+            }
+            .status-pill:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .status-pill:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .order-card {
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+                transition: border-color .2s, box-shadow .2s;
+            }
+            .order-card:hover {
+                border-color: var(--brand-primary);
+                box-shadow: var(--brand-shadow-2);
+            }
+            .btn-sm-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+                font-size: 13px;
+                font-weight: 600;
+                transition: background .2s;
+                border: none;
+                cursor: pointer;
+            }
+            .btn-sm-primary:hover { background: var(--brand-primary-hover); }
+            .btn-sm-primary:disabled { opacity: .5; cursor: not-allowed; }
+            .btn-sm-secondary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-md);
+                background: transparent;
+                color: var(--brand-ink);
+                border: 1px solid var(--brand-line);
+                font-size: 13px;
+                font-weight: 500;
+                transition: background .2s, border-color .2s;
+                cursor: pointer;
+            }
+            .btn-sm-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .ship-checkbox {
+                width: 18px;
+                height: 18px;
+                accent-color: var(--brand-primary);
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(4px);
+            }
+            .modal-card {
+                width: 100%;
+                max-width: 480px;
+                max-height: 90vh;
+                overflow-y: auto;
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+                box-shadow: var(--brand-shadow-3);
+                padding: 24px;
+            }
+            .label-paper {
+                background: var(--print-bg);
+                color: var(--print-ink);
+                border-radius: var(--brand-radius-md);
+                padding: 20px;
+            }
+            .barcode {
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                gap: 2px;
+                height: 48px;
+            }
+            .barcode .bar { background: var(--print-ink); }
+            @media print {
+                main > *:not(#label-modal) { display: none !important; }
+                #label-modal { position: static !important; display: block !important; background: var(--print-bg) !important; padding: 0 !important; }
+                #label-modal .modal-card { box-shadow: none !important; border: none !important; max-width: none !important; max-height: none !important; background: var(--print-bg) !important; color: var(--print-ink) !important; }
+                .label-paper { border: none !important; }
+                body { background: var(--print-bg) !important; color: var(--print-ink) !important; }
+                .no-print { display: none !important; }
+            }
+        </style>
+
+        <a href="#shipping-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground">跳到主要内容</a>
+
+        <!-- 顶部固定导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <!-- 发货管理主体 -->
+        <div id="shipping-content" class="shipping-shell mx-auto max-w-7xl px-4 pb-24 pt-6 md:px-6 md:pt-8">
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-[var(--brand-ink)]">发货管理</h1>
+                    <p class="mt-1 text-sm text-[var(--brand-ink-2)]">处理订单发货、打印电子面单与跟踪物流</p>
+                </div>
+                <button type="button" onclick="batchShipFromHeader()" class="btn-sm-primary self-start">
+                    <i data-lucide="package-check" class="h-4 w-4"></i>
+                    批量发货
+                </button>
+            </div>
+
+            <!-- 订单状态标签 -->
+            <div class="mb-5 flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-[var(--brand-line)] pb-3" role="tablist" aria-label="发货状态筛选">
+                <button type="button" class="status-pill active" data-status="pending" onclick="setStatus('pending')">待发货</button>
+                <button type="button" class="status-pill" data-status="shipped" onclick="setStatus('shipped')">已发货</button>
+                <button type="button" class="status-pill" data-status="partial" onclick="setStatus('partial')">部分发货</button>
+                <button type="button" class="status-pill" data-status="delivered" onclick="setStatus('delivered')">已签收</button>
+            </div>
+
+            <!-- 搜索与筛选 -->
+            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--brand-ink-3)]"></i>
+                    <input type="search" id="order-search" placeholder="搜索订单号、商品名称或买家..." oninput="render()" class="h-10 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] pl-10 pr-4 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+                </div>
+                <div class="flex gap-3">
+                    <select id="date-sort" onchange="render()" class="h-10 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)]">
+                        <option value="desc">按时间倒序</option>
+                        <option value="asc">按时间正序</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 批量操作栏 -->
+            <div id="bulk-bar" style="display:none" class="mb-4 flex flex-col gap-3 rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center gap-4">
+                    <button type="button" onclick="toggleSelectAll()" class="inline-flex items-center gap-2 text-sm font-medium text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]">
+                        <i data-lucide="check-square" class="h-4 w-4"></i>
+                        <span id="select-all-text">全选</span>
+                    </button>
+                    <span class="text-sm text-[var(--brand-ink-2)]">已选 <strong id="selected-count" class="text-[var(--brand-primary)]">0</strong> 单</span>
+                </div>
+                <button type="button" onclick="batchShip()" class="btn-sm-primary">
+                    <i data-lucide="package-check" class="h-4 w-4"></i>
+                    批量发货
+                </button>
+            </div>
+
+            <!-- 订单列表 -->
+            <div id="order-list" class="space-y-4"></div>
+
+            <!-- 空状态 -->
+            <div id="empty-state" class="hidden flex-col items-center justify-center rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-16 text-center">
+                <i data-lucide="package-x" class="h-16 w-16 text-[var(--brand-ink-3)]"></i>
+                <h3 class="mt-4 text-lg font-medium text-[var(--brand-ink)]">暂无相关订单</h3>
+                <p class="mt-1 text-sm text-[var(--brand-ink-2)]">当前状态下没有需要处理的订单</p>
+            </div>
+
+            <!-- 分页 -->
+            <div class="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
+                <p class="text-sm text-[var(--brand-ink-2)]">共 <span class="font-mono font-semibold text-[var(--brand-ink)]" id="orders-count">0</span> 笔订单</p>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="page-link" aria-label="上一页">
+                        <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                    </button>
+                    <button type="button" class="page-link active">1</button>
+                    <button type="button" class="page-link">2</button>
+                    <button type="button" class="page-link" aria-label="下一页">
+                        <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 发货弹窗 -->
+        <div id="ship-modal" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="ship-title">
+            <div class="modal-card">
+                <div class="mb-4 flex items-center justify-between">
+                    <h2 id="ship-title" class="text-lg font-semibold text-[var(--brand-ink)]">填写发货信息</h2>
+                    <button type="button" onclick="closeShipModal()" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--brand-ink-2)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <form onsubmit="event.preventDefault(); confirmShip();">
+                    <input type="hidden" id="ship-order-id" />
+                    <input type="hidden" id="ship-order-ids" />
+                    <div class="space-y-4">
+                        <div>
+                            <label class="mb-1.5 block text-sm text-[var(--brand-ink-2)]">快递公司</label>
+                            <select id="ship-courier" class="h-10 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] px-3 text-sm text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)]">
+                                <option value="顺丰速运">顺丰速运</option>
+                                <option value="京东物流">京东物流</option>
+                                <option value="中通快递">中通快递</option>
+                                <option value="圆通速递">圆通速递</option>
+                                <option value="韵达快递">韵达快递</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm text-[var(--brand-ink-2)]">运单号</label>
+                            <input type="text" id="ship-tracking" placeholder="请输入运单号" class="h-10 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] px-3 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" required />
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm text-[var(--brand-ink-2)]">选择发货商品</label>
+                            <div id="ship-items" class="space-y-2"></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                        <button type="button" onclick="closeShipModal()" class="btn-sm-secondary justify-center">取消</button>
+                        <button type="submit" class="btn-sm-primary justify-center">
+                            <i data-lucide="package-check" class="h-4 w-4"></i>
+                            确认发货
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 电子面单预览弹窗 -->
+        <div id="label-modal" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="label-title">
+            <div class="modal-card max-w-md">
+                <div class="no-print mb-4 flex items-center justify-between">
+                    <h2 id="label-title" class="text-lg font-semibold text-[var(--brand-ink)]">电子面单预览</h2>
+                    <button type="button" onclick="closeLabelModal()" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--brand-ink-2)] transition-colors hover:bg-[var(--brand-surface-2)] hover:text-[var(--brand-ink)]">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <div id="label-preview" class="label-paper"></div>
+                <div class="no-print mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" onclick="closeLabelModal()" class="btn-sm-secondary justify-center">关闭</button>
+                    <button type="button" onclick="window.print()" class="btn-sm-primary justify-center">
+                        <i data-lucide="printer" class="h-4 w-4"></i>
+                        打印面单
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+            <div class="mx-auto max-w-7xl px-4 md:px-6">
+                <div class="grid gap-8 md:grid-cols-4">
+                    <div>
+                        <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+                            <i data-lucide="cpu" class="h-6 w-6"></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+                            <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">验机服务</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">帮助中心</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">交易规则</a></li>
+                            <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">防骗指南</a></li>
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">常见问题</a></li>
+                            <li><a href="messages.html" class="transition-colors hover:text-[var(--brand-primary)]">联系客服</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">关注我们</h4>
+                        <div class="mt-3 flex gap-3">
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微信">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微博">
+                                <i data-lucide="at-sign" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="Bilibili">
+                                <i data-lucide="play-circle" class="h-4 w-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪 ICP 备 XXXXXXXX 号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            const orders = [
+                {
+                    id: 'ORD20260829001',
+                    status: 'pending',
+                    buyer: '显卡发烧友',
+                    items: [{ name: '七彩虹 RTX 4070 战斧豪华版 12GB', image: '../assets/product-gpu-rtx4070.jpg', qty: 1, price: 3680, shipped: false }],
+                    address: '浙江省杭州市西湖区文三路 369 号数码港大厦 A 座 1202 室',
+                    time: '2026-08-29 09:15',
+                    tracking: ''
+                },
+                {
+                    id: 'ORD20260829002',
+                    status: 'pending',
+                    buyer: '装机小队',
+                    items: [{ name: 'Intel Core i5-13600K 盒装', image: '../assets/product-cpu-13600k.jpg', qty: 1, price: 1250, shipped: false }],
+                    address: '江苏省苏州市工业园区星湖街 328 号创意产业园 5 幢 806 室',
+                    time: '2026-08-29 11:42',
+                    tracking: ''
+                },
+                {
+                    id: 'ORD20260828003',
+                    status: 'pending',
+                    buyer: '内存收藏家',
+                    items: [{ name: '芝奇 DDR5 6000 32GB(16×2) 套装', image: '../assets/product-ram-ddr5.jpg', qty: 1, price: 620, shipped: false }],
+                    address: '广东省深圳市南山区科技园南区科苑路 15 号科兴科学园 B 栋 1203',
+                    time: '2026-08-28 16:08',
+                    tracking: ''
+                },
+                {
+                    id: 'ORD20260827004',
+                    status: 'shipped',
+                    buyer: '硬盘收藏家',
+                    items: [{ name: '三星 980 Pro 1TB NVMe', image: '../assets/product-ssd-980pro.jpg', qty: 1, price: 499, shipped: true }],
+                    address: '北京市海淀区中关村大街 1 号海龙大厦 908 室',
+                    time: '2026-08-27 14:33',
+                    tracking: '顺丰速运 SF1234567890123'
+                },
+                {
+                    id: 'ORD20260826005',
+                    status: 'partial',
+                    buyer: '主板玩家',
+                    items: [
+                        { name: '华硕 TUF GAMING B760M-PLUS WIFI', image: '../assets/product-motherboard-b760.jpg', qty: 1, price: 699, shipped: false },
+                        { name: '猫头鹰 NH-D15 双塔散热器', image: '../assets/product-cooler-nh-d15.jpg', qty: 1, price: 480, shipped: true }
+                    ],
+                    address: '四川省成都市高新区天府大道 1388 号天府软件园 E 区 702',
+                    time: '2026-08-26 10:20',
+                    tracking: '顺丰速运 SF9988776655443'
+                },
+                {
+                    id: 'ORD20260825006',
+                    status: 'delivered',
+                    buyer: '静音党小王',
+                    items: [{ name: '猫头鹰 NH-D15 双塔散热器', image: '../assets/product-cooler-nh-d15.jpg', qty: 1, price: 480, shipped: true }],
+                    address: '湖北省武汉市洪山区珞喻路 1037 号光谷世界城 1505 室',
+                    time: '2026-08-25 09:50',
+                    tracking: '京东物流 JD9876543210'
+                }
+            ];
+
+            let selectedIds = new Set();
+            let currentStatus = 'pending';
+
+            function formatPrice(n) {
+                return '¥' + n.toLocaleString('zh-CN');
+            }
+
+            function statusLabel(status) {
+                const map = { pending: '待发货', shipped: '已发货', partial: '部分发货', delivered: '已签收' };
+                return map[status] || status;
+            }
+
+            function statusBadgeClass(status) {
+                const map = {
+                    pending: 'bg-[var(--brand-state-info-subtle)] text-[var(--brand-state-info)]',
+                    shipped: 'bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]',
+                    partial: 'bg-[var(--brand-state-warning-subtle)] text-[var(--brand-state-warning)]',
+                    delivered: 'bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]'
+                };
+                return map[status] || 'bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)]';
+            }
+
+            function hasPendingItems(order) {
+                return order.status === 'pending' || (order.status === 'partial' && order.items.some(function(i) { return !i.shipped; }));
+            }
+
+            function setStatus(status) {
+                currentStatus = status;
+                document.querySelectorAll('.status-pill').forEach(function(pill) {
+                    pill.classList.toggle('active', pill.dataset.status === status);
+                });
+                render();
+            }
+
+            function getFilteredOrders() {
+                const term = (document.getElementById('order-search').value || '').toLowerCase();
+                const sort = document.getElementById('date-sort').value;
+                let list = orders.filter(function(o) {
+                    if (currentStatus !== 'all' && o.status !== currentStatus) return false;
+                    if (!term) return true;
+                    return o.id.toLowerCase().indexOf(term) !== -1 ||
+                        o.buyer.toLowerCase().indexOf(term) !== -1 ||
+                        o.items.some(function(i) { return i.name.toLowerCase().indexOf(term) !== -1; });
+                });
+                list.sort(function(a, b) {
+                    return sort === 'asc' ? a.time.localeCompare(b.time) : b.time.localeCompare(a.time);
+                });
+                return list;
+            }
+
+            function render() {
+                const list = getFilteredOrders();
+                const container = document.getElementById('order-list');
+                const empty = document.getElementById('empty-state');
+                document.getElementById('orders-count').textContent = list.length;
+
+                if (list.length === 0) {
+                    container.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    empty.classList.add('flex');
+                    document.getElementById('bulk-bar').style.display = 'none';
+                    lucide.createIcons();
+                    return;
+                }
+
+                empty.classList.add('hidden');
+                empty.classList.remove('flex');
+
+                const actionableIds = list.filter(hasPendingItems).map(function(o) { return o.id; });
+                const allSelected = actionableIds.length > 0 && actionableIds.every(function(id) { return selectedIds.has(id); });
+                document.getElementById('select-all-text').textContent = allSelected ? '取消全选' : '全选';
+                document.getElementById('selected-count').textContent = selectedIds.size;
+                document.getElementById('bulk-bar').style.display = actionableIds.length > 0 ? 'flex' : 'none';
+
+                container.innerHTML = list.map(function(order) {
+                    const total = order.items.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
+                    const firstItem = order.items.find(function(i) { return !i.shipped; }) || order.items[0];
+                    const extraCount = order.items.length > 1 ? ' 等 ' + order.items.length + ' 件商品' : '';
+                    const selectable = hasPendingItems(order);
+                    const checked = selectedIds.has(order.id) ? 'checked' : '';
+
+                    const shipBtn = selectable
+                        ? '<button type="button" onclick="openShipModal(\'' + order.id + '\')" class="btn-sm-primary"><i data-lucide="package-check" class="h-3.5 w-3.5"></i> ' + (order.status === 'partial' ? '继续发货' : '发货') + '</button>'
+                        : '';
+                    const logisticsBtn = order.status === 'shipped'
+                        ? '<a href="logistics.html?order=' + order.id + '" class="btn-sm-secondary"><i data-lucide="truck" class="h-3.5 w-3.5"></i> 查看物流</a>'
+                        : '';
+
+                    return (
+                        '<article class="order-card p-4 md:p-5" data-status="' + order.status + '">' +
+                            '<div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--brand-line)] pb-3">' +
+                                '<div class="flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">' +
+                                    (selectable ? '<input type="checkbox" class="ship-checkbox" ' + checked + ' onchange="toggleSelect(\'' + order.id + '\')" aria-label="选择订单">' : '') +
+                                    '<span class="font-mono text-[var(--brand-ink)]">' + order.id + '</span>' +
+                                    '<span class="flex items-center gap-1"><i data-lucide="calendar" class="h-3.5 w-3.5"></i> ' + order.time + '</span>' +
+                                '</div>' +
+                                '<span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ' + statusBadgeClass(order.status) + '">' + statusLabel(order.status) + '</span>' +
+                            '</div>' +
+                            '<div class="flex flex-col gap-4 py-4 md:flex-row md:items-start md:justify-between">' +
+                                '<div class="flex items-start gap-4 min-w-0">' +
+                                    '<img src="' + firstItem.image + '" alt="' + firstItem.name + '" class="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24 shrink-0" />' +
+                                    '<div class="min-w-0">' +
+                                        '<h3 class="font-medium text-[var(--brand-ink)] line-clamp-2">' + firstItem.name + extraCount + '</h3>' +
+                                        '<p class="mt-1 text-sm text-[var(--brand-ink-2)]"><i data-lucide="user" class="h-3.5 w-3.5 inline"></i> 买家：' + order.buyer + '</p>' +
+                                        '<p class="mt-1 text-sm text-[var(--brand-ink-2)] line-clamp-2"><i data-lucide="map-pin" class="h-3.5 w-3.5 inline"></i> ' + order.address + '</p>' +
+                                        (order.tracking ? '<p class="mt-1 text-sm text-[var(--brand-primary)]"><i data-lucide="truck" class="h-3.5 w-3.5 inline"></i> ' + order.tracking + '</p>' : '') +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="flex flex-col items-start gap-2 md:items-end shrink-0">' +
+                                    '<p class="font-mono text-lg font-bold text-[var(--brand-primary)]">' + formatPrice(total) + '</p>' +
+                                    '<p class="text-xs text-[var(--brand-ink-3)]">下单时间 ' + order.time + '</p>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="flex flex-wrap gap-2 border-t border-[var(--brand-line)] pt-3">' +
+                                shipBtn +
+                                logisticsBtn +
+                                '<button type="button" onclick="openLabelModal(\'' + order.id + '\')" class="btn-sm-secondary"><i data-lucide="printer" class="h-3.5 w-3.5"></i> 打印面单</button>' +
+                                '<button type="button" onclick="viewDetails(\'' + order.id + '\')" class="btn-sm-secondary"><i data-lucide="eye" class="h-3.5 w-3.5"></i> 查看详情</button>' +
+                            '</div>' +
+                        '</article>'
+                    );
+                }).join('');
+
+                lucide.createIcons();
+            }
+
+            function toggleSelect(id) {
+                if (selectedIds.has(id)) selectedIds.delete(id);
+                else selectedIds.add(id);
+                render();
+            }
+
+            function toggleSelectAll() {
+                const list = getFilteredOrders();
+                const actionable = list.filter(hasPendingItems).map(function(o) { return o.id; });
+                const allSelected = actionable.every(function(id) { return selectedIds.has(id); });
+                if (allSelected) {
+                    actionable.forEach(function(id) { selectedIds.delete(id); });
+                } else {
+                    actionable.forEach(function(id) { selectedIds.add(id); });
+                }
+                render();
+            }
+
+            function batchShipFromHeader() {
+                const list = getFilteredOrders();
+                const actionable = list.filter(hasPendingItems);
+                if (actionable.length === 0) {
+                    alert('当前没有可批量发货的订单');
+                    return;
+                }
+                actionable.forEach(function(o) { selectedIds.add(o.id); });
+                render();
+                batchShip();
+            }
+
+            function batchShip() {
+                if (selectedIds.size === 0) {
+                    alert('请至少选择一个待发货订单');
+                    return;
+                }
+                document.getElementById('ship-order-id').value = '';
+                document.getElementById('ship-order-ids').value = Array.from(selectedIds).join(',');
+                document.getElementById('ship-title').textContent = '批量发货（' + selectedIds.size + ' 单）';
+                document.getElementById('ship-courier').value = '顺丰速运';
+                document.getElementById('ship-tracking').value = '';
+                const itemsContainer = document.getElementById('ship-items');
+                itemsContainer.innerHTML = '<p class="text-sm text-[var(--brand-ink-2)]">将为选中的 ' + selectedIds.size + ' 个订单统一发货，每个订单的待发商品将标记为已发货。</p>';
+                document.getElementById('ship-modal').style.display = 'flex';
+                lucide.createIcons();
+            }
+
+            function openShipModal(id) {
+                const order = orders.find(function(o) { return o.id === id; });
+                if (!order) return;
+                document.getElementById('ship-order-id').value = id;
+                document.getElementById('ship-order-ids').value = '';
+                document.getElementById('ship-title').textContent = '发货 - ' + id;
+                document.getElementById('ship-courier').value = '顺丰速运';
+                document.getElementById('ship-tracking').value = '';
+
+                const itemsContainer = document.getElementById('ship-items');
+                itemsContainer.innerHTML = order.items.map(function(item) {
+                    const disabled = item.shipped ? 'disabled checked' : 'checked';
+                    const opacity = item.shipped ? 'opacity-50' : '';
+                    return (
+                        '<label class="flex items-center gap-3 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-3 ' + opacity + '">' +
+                            '<input type="checkbox" name="ship-item" value="' + item.name + '" ' + disabled + ' class="ship-checkbox" />' +
+                            '<img src="' + item.image + '" alt="" class="h-10 w-10 rounded-md object-cover" />' +
+                            '<div class="min-w-0 flex-1">' +
+                                '<p class="text-sm text-[var(--brand-ink)] line-clamp-1">' + item.name + ' × ' + item.qty + '</p>' +
+                                '<p class="text-xs text-[var(--brand-ink-2)]">' + (item.shipped ? '已发货' : '待发货') + '</p>' +
+                            '</div>' +
+                        '</label>'
+                    );
+                }).join('');
+
+                document.getElementById('ship-modal').style.display = 'flex';
+                lucide.createIcons();
+            }
+
+            function closeShipModal() {
+                document.getElementById('ship-modal').style.display = 'none';
+            }
+
+            function generateTracking(prefix) {
+                const code = 'SFJDZTYD'.indexOf(prefix[0]) >= 0 ? 'SF' : 'KD';
+                return code + Math.random().toString().slice(2, 14);
+            }
+
+            function updateOrderStatus(order, courier, tracking) {
+                const allShipped = order.items.every(function(i) { return i.shipped; });
+                if (allShipped) {
+                    order.status = order.status === 'partial' ? 'delivered' : 'shipped';
+                } else {
+                    order.status = 'partial';
+                }
+                order.tracking = courier + ' ' + tracking;
+            }
+
+            function confirmShip() {
+                const courier = document.getElementById('ship-courier').value;
+                let tracking = document.getElementById('ship-tracking').value.trim();
+                if (!tracking) tracking = generateTracking(courier);
+
+                const singleId = document.getElementById('ship-order-id').value;
+                const multiIds = document.getElementById('ship-order-ids').value;
+
+                if (singleId) {
+                    const order = orders.find(function(o) { return o.id === singleId; });
+                    const checked = Array.from(document.querySelectorAll('input[name="ship-item"]:checked')).map(function(cb) { return cb.value; });
+                    if (checked.length === 0) {
+                        alert('请选择要发货的商品');
+                        return;
+                    }
+                    order.items.forEach(function(item) {
+                        if (checked.indexOf(item.name) !== -1) item.shipped = true;
+                    });
+                    updateOrderStatus(order, courier, tracking);
+                } else if (multiIds) {
+                    const ids = multiIds.split(',');
+                    ids.forEach(function(id, idx) {
+                        const order = orders.find(function(o) { return o.id === id; });
+                        if (!order) return;
+                        order.items.forEach(function(item) { if (!item.shipped) item.shipped = true; });
+                        const t = tracking + (idx > 0 ? '-' + (idx + 1) : '');
+                        updateOrderStatus(order, courier, t);
+                    });
+                    selectedIds.clear();
+                }
+
+                closeShipModal();
+                render();
+                lucide.createIcons();
+            }
+
+            function openLabelModal(id) {
+                const order = orders.find(function(o) { return o.id === id; });
+                if (!order) return;
+                const preview = document.getElementById('label-preview');
+                const bars = [];
+                for (let i = 0; i < 36; i++) {
+                    const h = 20 + Math.floor(Math.random() * 28);
+                    const w = Math.random() > 0.7 ? 4 : 2;
+                    bars.push('<div class="bar" style="height:' + h + 'px;width:' + w + 'px"></div>');
+                }
+                preview.innerHTML = (
+                    '<div class="flex items-center justify-between border-b-2 border-black pb-2 mb-3">' +
+                        '<div class="flex items-center gap-2"><i data-lucide="package" class="h-5 w-5"></i><span class="text-xl font-bold">电子面单</span></div>' +
+                        '<span class="text-sm font-mono">' + (order.tracking || '待发货') + '</span>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-2 gap-4 text-sm">' +
+                        '<div>' +
+                            '<p class="font-bold">寄件人</p>' +
+                            '<p>硬件侠卖家</p>' +
+                            '<p>上海市浦东新区硬件大道 88 号</p>' +
+                            '<p class="font-mono">138 **** 1234</p>' +
+                        '</div>' +
+                        '<div>' +
+                            '<p class="font-bold">收件人</p>' +
+                            '<p>' + order.buyer + '</p>' +
+                            '<p>' + order.address + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="mt-5">' +
+                        '<div class="barcode">' + bars.join('') + '</div>' +
+                        '<p class="mt-1 text-center text-xs font-mono">' + order.id + '</p>' +
+                    '</div>' +
+                    '<div class="mt-3 text-xs text-[var(--brand-ink-3)]">' +
+                        '<p>商品：' + order.items.map(function(i) { return i.name + '×' + i.qty; }).join('，') + '</p>' +
+                        '<p>备注：易碎物品，请轻拿轻放</p>' +
+                    '</div>'
+                );
+                document.getElementById('label-modal').style.display = 'flex';
+                lucide.createIcons();
+            }
+
+            function closeLabelModal() {
+                document.getElementById('label-modal').style.display = 'none';
+            }
+
+            function viewDetails(id) {
+                alert('订单详情：' + id + '\n可跳转至订单中心查看完整信息。');
+            }
+
+            render();
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

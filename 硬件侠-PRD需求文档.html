@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>硬件侠 PRD - 产品需求文档</title>
+<style>
+:root {
+  --bg: #0B0C10;
+  --surface: #15161A;
+  --surface-2: #1E2026;
+  --surface-3: #252830;
+  --ink: #F0F1F5;
+  --ink-2: #9CA3AF;
+  --ink-3: #6B7280;
+  --line: #2A2D35;
+  --primary: #00D4AA;
+  --primary-hover: #00B894;
+  --primary-subtle: rgba(0, 212, 170, 0.12);
+  --primary-ink: #0B0C10;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+.layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 280px; position: fixed; top: 0; left: 0; bottom: 0; background: var(--surface); border-right: 1px solid var(--line); overflow-y: auto; z-index: 100; padding: 24px 0; }
+.sidebar-brand { padding: 0 24px 20px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.sidebar-brand .logo { font-size: 20px; font-weight: 700; color: var(--primary); }
+.sidebar-brand .subtitle { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.sidebar-nav { padding: 0 12px; }
+.sidebar-nav .nav-section-title { font-size: 11px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; padding: 16px 12px 6px; }
+.sidebar-nav a { display: block; padding: 7px 12px; color: var(--ink-2); text-decoration: none; font-size: 13px; border-radius: var(--radius-sm); transition: all .15s; }
+.sidebar-nav a:hover { color: var(--ink); background: var(--surface-2); }
+.sidebar-nav a.active { color: var(--primary); background: var(--primary-subtle); }
+.sidebar-nav a.sub { padding-left: 28px; font-size: 12px; }
+
+/* Main */
+.main { flex: 1; margin-left: 280px; max-width: 960px; padding: 48px 56px 120px; }
+.main h1 { font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.02em; }
+.main h1.brand { color: var(--primary); }
+.main h2 { font-size: 22px; font-weight: 600; color: var(--ink); margin-top: 56px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); letter-spacing: -0.01em; }
+.main h3 { font-size: 17px; font-weight: 600; color: var(--ink); margin-top: 36px; margin-bottom: 12px; }
+.main h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-top: 24px; margin-bottom: 8px; }
+.main p { font-size: 14px; color: var(--ink-2); margin-bottom: 12px; }
+.main p strong { color: var(--ink); font-weight: 600; }
+.main ul, .main ol { margin-bottom: 16px; padding-left: 20px; }
+.main li { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; }
+.main li strong { color: var(--ink); }
+
+/* Doc header */
+.doc-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 2px solid var(--primary); }
+.doc-header .badge { display: inline-block; padding: 4px 12px; background: var(--primary-subtle); color: var(--primary); border: 1px solid rgba(0,212,170,0.2); border-radius: 999px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+.doc-header .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+.doc-header .meta-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 12px 16px; }
+.doc-header .meta-label { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.doc-header .meta-value { font-size: 14px; color: var(--ink); font-weight: 500; margin-top: 4px; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 16px; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin-bottom: 16px; border: 1px solid var(--line); border-radius: var(--radius-md); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--surface-2); color: var(--ink-2); font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface-2); }
+td strong { color: var(--ink); }
+
+/* Badges */
+.badge-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+.badge-buyer { background: rgba(59,130,246,0.12); color: var(--info); }
+.badge-seller { background: rgba(0,212,170,0.12); color: var(--primary); }
+.badge-platform { background: rgba(245,158,11,0.12); color: var(--warning); }
+.badge-both { background: rgba(139,92,246,0.12); color: #A78BFA; }
+
+/* Role cards */
+.role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+.role-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; }
+.role-card h4 { margin-top: 0; }
+.role-card .role-tag { margin-bottom: 12px; }
+
+/* Architecture diagram */
+.arch-diagram { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 24px; }
+.arch-row { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+.arch-box { flex: 1; max-width: 200px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 16px; text-align: center; }
+.arch-box .arch-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+.arch-box .arch-items { font-size: 12px; color: var(--ink-2); line-height: 1.8; }
+.arch-connector { text-align: center; color: var(--ink-3); font-size: 20px; margin: 4px 0; }
+
+/* Callout */
+.callout { background: var(--primary-subtle); border-left: 3px solid var(--primary); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 16px 20px; margin-bottom: 16px; }
+.callout p { color: var(--ink); margin-bottom: 0; }
+
+/* Module header */
+.module-header { display: flex; align-items: center; gap: 12px; margin-top: 48px; margin-bottom: 16px; }
+.module-header .module-num { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--primary); color: var(--primary-ink); border-radius: 50%; font-size: 14px; font-weight: 700; }
+.module-header h2 { margin-top: 0; margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+
+/* Page reference */
+.page-ref { display: inline-block; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 2px 8px; font-size: 12px; font-family: var(--font-mono); color: var(--ink-2); margin: 0 2px; }
+
+/* State flow */
+.state-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.state-node { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); }
+.state-node.active { background: var(--primary-subtle); color: var(--primary); border-color: var(--primary); }
+.state-arrow { color: var(--ink-3); font-size: 14px; }
+
+@media (max-width: 1024px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 32px 20px 80px; }
+  .doc-header .meta-grid { grid-template-columns: repeat(2, 1fr); }
+  .role-grid { grid-template-columns: 1fr; }
+  .arch-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">硬件侠</div>
+    <div class="subtitle">产品需求文档 PRD v1.0</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">文档信息</div>
+    <a href="#doc-header" class="active">文档概览</a>
+    <div class="nav-section-title">产品概述</div>
+    <a href="#background">1. 需求背景</a>
+    <a href="#objectives">2. 需求目标</a>
+    <a href="#roles">3. 用户角色</a>
+    <a href="#architecture">4. 功能架构</a>
+    <div class="nav-section-title">功能需求</div>
+    <a href="#fr-auth">5.1 认证与账户</a>
+    <a href="#fr-browse">5.2 商品浏览与搜索</a>
+    <a href="#fr-product">5.3 商品详情与购买</a>
+    <a href="#fr-order">5.4 订单管理</a>
+    <a href="#fr-aftersales">5.5 售后与退款</a>
+    <a href="#fr-message">5.6 消息与社区</a>
+    <a href="#fr-sell">5.7 商品发布</a>
+    <a href="#fr-seller">5.8 卖家店铺运营</a>
+    <a href="#fr-shipping">5.9 物流与发货</a>
+    <a href="#fr-finance">5.10 财务管理</a>
+    <a href="#fr-promotion">5.11 营销与促销</a>
+    <a href="#fr-trust">5.12 信任与保障</a>
+    <a href="#fr-support">5.13 客服与帮助</a>
+    <a href="#fr-announce">5.14 公告与积分</a>
+    <div class="nav-section-title">非功能需求</div>
+    <a href="#nfr">6. 非功能需求</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+
+<!-- Document Header -->
+<div class="doc-header" id="doc-header">
+  <span class="badge">PRD v1.0</span>
+  <h1 class="brand">硬件侠 — 电脑配件二手交易平台</h1>
+  <p style="font-size: 16px; color: var(--ink-2);">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用</p>
+  <div class="meta-grid">
+    <div class="meta-item"><div class="meta-label">文档版本</div><div class="meta-value">v1.0</div></div>
+    <div class="meta-item"><div class="meta-label">产品阶段</div><div class="meta-value">0-to-1</div></div>
+    <div class="meta-item"><div class="meta-label">业务模型</div><div class="meta-value">Platform (C2C)</div></div>
+    <div class="meta-item"><div class="meta-label">行业领域</div><div class="meta-value">E-commerce / Hardware</div></div>
+  </div>
+</div>
+
+<!-- 1. Requirement Background -->
+<h2 id="background">1. 需求背景</h2>
+<p>电脑硬件二手交易长期存在三大痛点：<strong>信任缺失</strong>、<strong>资金安全无保障</strong>、<strong>售后扯皮</strong>。闲鱼等综合二手平台缺乏针对硬件的专业验机能力，买家无法判断 GPU 是否矿卡、CPU 是否超频缩缸、SSD 寿命剩余多少。卖家则面临恶意退款、资金到账慢等问题。</p>
+<p>硬件侠定位为<strong>垂直于电脑配件的二手交易平台</strong>，通过"平台验机 + 担保交易 + 7天退换"三大核心机制，在买卖双方之间建立信任桥梁。平台面向 PC 发烧友、装机用户、数码极客等群体，覆盖显卡、CPU、主板、内存、硬盘、散热器六大品类。</p>
+
+<div class="callout">
+  <p><strong>核心差异化：</strong>不是"又一个闲鱼"，而是"有验机报告的硬件二手平台"。验机报告是平台的护城河 —— 每件商品经过 12 项专业检测（外观、风扇、GPU核心、显存、压力测试、温度、接口等），生成可查看的检测报告，买家买得明白，卖家卖得安心。</p>
+</div>
+
+<!-- 2. Requirement Objectives -->
+<h2 id="objectives">2. 需求目标</h2>
+<table>
+  <thead><tr><th>目标维度</th><th>当前状态</th><th>目标</th><th>衡量方式</th></tr></thead>
+  <tbody>
+    <tr><td>信任建立</td><td>无专业验机渠道</td><td>每件商品附带 12 项验机报告</td><td>验机覆盖率 ≥ 95%</td></tr>
+    <tr><td>资金安全</td><td>私下交易无保障</td><td>平台担保交易，确认收货后放款</td><td>担保交易占比 ≥ 90%</td></tr>
+    <tr><td>售后体验</td><td>纠纷无人仲裁</td><td>7 天无理由退换 + 平台仲裁</td><td>纠纷解决率 ≥ 98%</td></tr>
+    <tr><td>卖家效率</td><td>手动管理、无数据</td><td>卖家数据中心 + 库存预警 + 自动客服</td><td>卖家月均发布时长 ≤ 10 分钟</td></tr>
+  </tbody>
+</table>
+
+<!-- 3. User Roles -->
+<h2 id="roles">3. 用户角色定义</h2>
+<p>平台采用 C2C 模式，买卖双方身份可自由切换。同一个账号既可以是买家也可以是卖家，核心交易页面（订单、评价、售后）均支持<strong>"我是买家 / 我是卖家"双角色切换</strong>。</p>
+
+<div class="role-grid">
+  <div class="role-card">
+    <span class="badge-tag badge-buyer">买家</span>
+    <h4>硬件买家</h4>
+    <p>寻找性价比高的二手配件，关注成色、保修、验机报告。核心诉求：买得明白、买得放心、坏了能退。</p>
+    <p style="font-size: 12px; color: var(--ink-3);">使用频率：中高频；技术能力：中高级</p>
+  </div>
+  <div class="role-card">
+    <span class="badge-tag badge-seller">卖家</span>
+    <h4>硬件卖家</h4>
+    <p>出售闲置或升级换下来的配件，关注发布效率、资金到账速度、店铺运营。核心诉求：卖得快、钱到得快、管得省心。</p>
+    <p style="font-size: 12px; color: var(--ink-3);">使用频率：高频；技术能力：高级</p>
+  </div>
+  <div class="role-card">
+    <span class="badge-tag badge-platform">平台</span>
+    <h4>平台运营</h4>
+    <p>审核商品发布、处理纠纷仲裁、管理公告与活动。核心诉求：平台秩序、信任生态。</p>
+    <p style="font-size: 12px; color: var(--ink-3);">使用频率：日常；技术能力：中级</p>
+  </div>
+  <div class="role-card">
+    <span class="badge-tag badge-platform">平台</span>
+    <h4>客服</h4>
+    <p>处理工单、快捷回复、协助纠纷处理。核心诉求：高效响应、标准化话术。</p>
+    <p style="font-size: 12px; color: var(--ink-3);">使用频率：日常；技术能力：中级</p>
+  </div>
+</div>
+
+<!-- 4. Functional Architecture -->
+<h2 id="architecture">4. 功能架构总览</h2>
+<p>平台共 <strong>31 个功能页面</strong>，划分为三大功能域：<strong>买家域</strong>（10 页）、<strong>卖家域</strong>（11 页）、<strong>平台支撑域</strong>（9 页），外加首页。<strong>认证模块</strong>为三域共享基础。</p>
+
+<div class="arch-diagram">
+  <div class="arch-row">
+    <div class="arch-box" style="max-width: 600px; border-color: var(--primary);">
+      <div class="arch-title">硬件侠 二手硬件交易平台</div>
+      <div class="arch-items">31 个功能页面 · C2C 交易模型 · 担保交易 + 验机报告</div>
+    </div>
+  </div>
+  <div class="arch-connector">|</div>
+  <div class="arch-row">
+    <div class="arch-box">
+      <div class="arch-title">买家域 (10页)</div>
+      <div class="arch-items">首页 · 浏览 · 搜索 · 商品详情<br>购物车 · 订单 · 评价 · 售后<br>消息私聊 · 硬件社区</div>
+    </div>
+    <div class="arch-box">
+      <div class="arch-title">卖家域 (11页)</div>
+      <div class="arch-items">发布商品 · 卖家店铺 · 我的发布<br>库存预警 · 发货管理 · 物流跟踪<br>数据中心 · 收支明细 · 钱包<br>店铺设置 · 营销活动</div>
+    </div>
+    <div class="arch-box">
+      <div class="arch-title">平台支撑域 (9页)</div>
+      <div class="arch-items">登录注册 · 个人中心 · 信任中心<br>帮助中心 · 客服工单 · 客服回复<br>公告通知 · 优惠券积分 · 举报中心</div>
+    </div>
+  </div>
+  <div class="arch-connector">|</div>
+  <div class="arch-row">
+    <div class="arch-box" style="max-width: 400px;">
+      <div class="arch-title">共享基础层</div>
+      <div class="arch-items">认证授权 · 担保交易 · 验机服务 · 消息推送 · 搜索引擎</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Functional Requirements Detail -->
+<h2 style="border-bottom: 2px solid var(--primary); padding-bottom: 16px;">5. 功能需求详情</h2>
+<p style="font-size: 16px; color: var(--ink);">以下按功能模块组织，每个模块包含功能概述、页面布局、业务逻辑、关键字段与状态流转。涉及页面以 <span class="page-ref">page.html</span> 标注。</p>
+
+<!-- 5.1 Auth -->
+<div class="module-header" id="fr-auth">
+  <span class="module-num">1</span>
+  <h2>认证与账户</h2>
+</div>
+<p><span class="page-ref">auth.html</span> <span class="page-ref">profile.html</span></p>
+
+<h3>页面布局</h3>
+<p>认证页面采用居中卡片布局，包含三个 Tab（登录 / 注册 / 找回密码），通过 JS 切换表单面板。个人中心页面包含用户信息头（头像、昵称、简介、认证标签）、统计卡片（信用分、成交数、月收入）、三个 Tab 面板（我的发布 / 我的订单 / 消息中心）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>登录注册流程：</strong>用户通过手机号或邮箱注册，注册需获取验证码（60 秒倒计时防刷），设置密码后需勾选用户协议。登录支持密码登录和第三方登录（微信 / QQ / 支付宝）。找回密码流程与注册类似，验证身份后重置密码。</p>
+<p><strong>个人中心：</strong>展示用户身份信息与认证状态（实名认证、优质卖家标签）。统计卡片实时反映信用分（基于历史交易和评价计算）、成交笔数、本月收入。三个 Tab 分别管理用户的发布商品（含审核中/在售/已售状态）、订单（买家视角）、站内消息（含未读红点提示）。消息支持"全部标记为已读"操作。</p>
+
+<h4>字段规则</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>规则</th></tr></thead>
+  <tbody>
+    <tr><td>手机号/邮箱</td><td>文本</td><td>是</td><td>手机号 11 位数字 / 邮箱格式校验</td></tr>
+    <tr><td>验证码</td><td>数字</td><td>是</td><td>6 位，60 秒倒计时，有效期 5 分钟</td></tr>
+    <tr><td>密码</td><td>文本</td><td>是</td><td>8-20 位，含字母和数字</td></tr>
+    <tr><td>用户协议</td><td>复选框</td><td>是</td><td>注册必须勾选</td></tr>
+    <tr><td>信用分</td><td>数值</td><td>-</td><td>系统计算，0-5 分，保留一位小数</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.2 Browse & Search -->
+<div class="module-header" id="fr-browse">
+  <span class="module-num">2</span>
+  <h2>商品浏览与搜索</h2>
+</div>
+<p><span class="page-ref">index.html</span> <span class="page-ref">browse.html</span> <span class="page-ref">search.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>首页</strong>包含 Hero 搜索区、热门分类（6 类卡片：显卡/CPU/主板/内存/硬盘/散热器）、精选好物（3 列商品卡）、平台保障（验机/担保/退换）、CTA 行动号召、Footer。</p>
+<p><strong>浏览页</strong>采用左右两栏布局：左侧筛选面板（分类复选框、成色单选、价格区间输入），右侧商品网格（1/2/3 列响应式）。顶部显示商品总数与价格排序下拉。移动端筛选折叠为 <code>&lt;details&gt;</code> 手风琴。</p>
+<p><strong>搜索页</strong>顶部为关键词标签（可清除）、结果计数、横向筛选栏（分类/价格/成色/所在地/排序下拉）、已选标签行（可逐个移除或清除全部）。支持<strong>网格/列表视图切换</strong>，列表视图展示更宽的图片和卖家评分。包含空状态（无结果时显示清除筛选按钮）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>筛选与排序：</strong>分类支持多选（显卡、CPU、主板、内存、硬盘、散热器），成色单选（全新/99新/9成新/战损版），价格区间为 min-max 数字输入。排序选项包括价格升降、最新发布、热度优先、新旧程度。搜索结果页的所在地筛选支持北京、上海、广州、深圳、成都、杭州。</p>
+<p><strong>商品卡信息：</strong>每张商品卡包含图片（4:3）、标题（2 行截断）、成色徽章（颜色编码）、价格（大号主色）、位置（地图图标）、发布时间、卖家名称。搜索结果额外显示卖家评分（星级）。</p>
+<p><strong>分类跳转：</strong>首页热门分类卡点击后跳转至 <code>browse.html?category=gpu</code>，携带分类参数自动筛选。</p>
+
+<h4>成色等级定义</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>成色</th><th>定义</th><th>徽章颜色</th></tr></thead>
+  <tbody>
+    <tr><td>全新</td><td>未拆封或未使用</td><td>蓝色</td></tr>
+    <tr><td>99新</td><td>拆封未使用或极少使用，包装齐全</td><td>主色绿</td></tr>
+    <tr><td>9成新</td><td>有轻微使用痕迹，功能正常</td><td>黄色</td></tr>
+    <tr><td>战损版</td><td>有明显使用痕迹，功能正常</td><td>灰色</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.3 Product Detail & Purchase -->
+<div class="module-header" id="fr-product">
+  <span class="module-num">3</span>
+  <h2>商品详情与购买</h2>
+</div>
+<p><span class="page-ref">product.html</span> <span class="page-ref">cart.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>商品详情页</strong>采用 60/40 上部布局 + 下方详情区。左侧为图片画廊（主图 + 4 张缩略图，点击切换），右侧为商品信息（成色徽章、标题、商品 ID、价格卡含原价划线、购买时间/保修/箱说/拆修信息网格、卖家卡、立即购买/联系卖家按钮、浏览/想要/发布时间统计）。下方分左右两栏：左侧为规格参数表 + 卖家描述，右侧为<strong>验机报告</strong>（12 项检测全部通过提示 + 评级 + 检测清单 + 查看完整报告按钮）。</p>
+<p><strong>购物车页</strong>采用左右两栏：左侧为商品列表（每项含复选框、图片、标题、规格、价格、数量加减控件、删除按钮），右侧为结算侧栏（收货地址、订单摘要、支付方式、提交订单按钮）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>验机报告（核心差异化功能）：</strong>每件商品经过 12 项专业检测，在商品详情页展示检测清单，包含外观无划痕磕碰、风扇运转正常、GPU核心无维修、显存颗粒正常、3DMark 压力测试（通过率 99.2%）、温度稳定性、接口输出测试等。验机报告评级为"优"，买家可查看完整报告。验机报告由平台检测中心出具，不可由卖家编辑。</p>
+<p><strong>购买流程：</strong>用户点击"立即购买"跳转购物车，或加入购物车后统一结算。购物车支持全选/单选、数量增减、单件删除。结算侧栏显示收货地址（可切换/新增）、订单摘要（商品总额、运费、优惠、应付合计）、支付方式（余额支付/微信/支付宝）。提交订单后进入担保交易流程，货款由平台托管。</p>
+<p><strong>联系卖家：</strong>点击"联系卖家"跳转至 messages.html，自动创建或打开与该卖家的会话，并在聊天头部嵌入当前商品卡片。</p>
+
+<h4>验机检测项</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>序号</th><th>检测项</th><th>结果示例</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>外观无划痕磕碰</td><td>通过</td></tr>
+    <tr><td>2</td><td>风扇运转正常</td><td>通过</td></tr>
+    <tr><td>3</td><td>GPU核心无维修</td><td>通过</td></tr>
+    <tr><td>4</td><td>显存颗粒正常</td><td>通过</td></tr>
+    <tr><td>5</td><td>3DMark 压力测试</td><td>99.2% 通过率</td></tr>
+    <tr><td>6</td><td>温度稳定性</td><td>通过</td></tr>
+    <tr><td>7</td><td>接口输出测试</td><td>通过</td></tr>
+    <tr><td>8-12</td><td>其他检测项</td><td>通过</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.4 Order Management -->
+<div class="module-header" id="fr-order">
+  <span class="module-num">4</span>
+  <h2>订单管理</h2>
+</div>
+<p><span class="page-ref">orders.html</span> <span class="page-ref">reviews.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>订单中心</strong>顶部为角色切换器（我是买家 / 我是卖家），下方为状态筛选 Tab（全部/待付款/待发货/待收货/已完成/售后中）和搜索栏（订单号/商品名称 + 时间范围 + 排序）。订单卡片包含商品图片、标题、卖家/买家名称、单价 × 数量、总价、操作按钮组。包含空状态提示和分页。</p>
+<p><strong>评价管理</strong>同样支持买卖双角色切换。买家侧含"待评价/已评价"两个 Tab，待评价列表有"去评价"按钮，已评价展示星级、标签、评论文本、图片、卖家回复。卖家侧展示评分统计（综合评分、好评率、累计评价）和收到的评价列表，支持"回复评价"。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>订单状态流转（买家视角）：</strong></p>
+<div class="state-flow">
+  <span class="state-node active">待付款</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">待发货</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">待收货</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">已完成</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">售后中</span>
+</div>
+
+<p>每个状态对应的操作按钮：待付款（付款/取消订单）、待发货（提醒发货/查看详情）、待收货（查看物流/确认收货）、已完成（评价/申请售后）、售后中（查看进度/联系客服）。卖家视角：待发货（去发货）、已完成（查看详情）。</p>
+
+<p><strong>评价规则：</strong>评价为 5 星制，可选标签（物流快/成色好/沟通顺畅/包装严实/描述相符），支持图文评价和匿名评价。买家可追评。卖家可回复评价。评价数据影响卖家信用分和好评率。</p>
+
+<h4>订单状态流转表</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>当前状态</th><th>角色</th><th>可执行操作</th><th>下一状态</th><th>触发条件</th></tr></thead>
+  <tbody>
+    <tr><td>待付款</td><td>买家</td><td>付款 / 取消订单</td><td>待发货 / 已取消</td><td>支付成功 / 主动取消</td></tr>
+    <tr><td>待发货</td><td>卖家</td><td>去发货</td><td>待收货</td><td>填写快递信息</td></tr>
+    <tr><td>待收货</td><td>买家</td><td>查看物流 / 确认收货</td><td>已完成</td><td>确认收货</td></tr>
+    <tr><td>已完成</td><td>买家</td><td>评价 / 申请售后</td><td>售后中</td><td>提交售后申请</td></tr>
+    <tr><td>已完成</td><td>买家</td><td>评价</td><td>已评价</td><td>提交评价</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.5 After-sales -->
+<div class="module-header" id="fr-aftersales">
+  <span class="module-num">5</span>
+  <h2>售后与退款</h2>
+</div>
+<p><span class="page-ref">aftersales.html</span></p>
+
+<h3>页面布局</h3>
+<p>页面分为两个 Tab："申请售后"和"售后进度"。申请售后 Tab 采用左右两栏：左侧为申请表单（选择订单商品 → 售后类型 → 申请原因 → 问题描述 → 上传凭证 → 退款金额），右侧为售后规则提示和帮助入口。售后进度 Tab 包含角色切换器、状态筛选 Tab 和进度卡片列表（含垂直时间线）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>售后类型：</strong>仅退款、退货退款、换货三种。申请原因包括：商品与描述不符、商品存在质量问题、配件缺失/漏发、疑似假冒/非正品、运输途中损坏、买错了/不需要了、其他原因。退款金额不可超过订单实付金额。凭证支持最多 6 张图片（JPG/PNG，单张最大 10MB）。</p>
+<p><strong>售后规则：</strong>7 天内可申请退换，退货需保持商品完好，平台 1-3 个工作日审核。审核通过后，退货退款/换货需买家寄回商品，仅退款直接进入退款流程。卖家可同意或拒绝售后申请，拒绝时需提供理由。平台可介入仲裁。</p>
+
+<h4>售后状态流转</h4>
+<div class="state-flow">
+  <span class="state-node active">审核中</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">已通过</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">待退货</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node">已完成</span>
+</div>
+<div class="state-flow">
+  <span class="state-node active">审核中</span>
+  <span class="state-arrow">→</span>
+  <span class="state-node" style="border-color: var(--error); color: var(--error);">已拒绝</span>
+</div>
+
+<!-- 5.6 Messages & Community -->
+<div class="module-header" id="fr-message">
+  <span class="module-num">6</span>
+  <h2>消息与社区</h2>
+</div>
+<p><span class="page-ref">messages.html</span> <span class="page-ref">community.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>消息页面</strong>采用全屏布局（calc(100vh - 64px)），左侧为会话列表（320px 宽，含头像、昵称、最后消息、时间、未读徽章），右侧为聊天详情（头部含联系人信息和嵌入的商品卡、消息气泡区、底部输入区含图片按钮和发送按钮）。移动端通过返回按钮在列表/详情间切换。</p>
+<p><strong>社区页面</strong>包含 Hero 搜索区（含统计数据：攻略数/达人数/讨论数）、粘性分类 Tab（全部/装机指南/避坑攻略/硬件评测/二手验机/问答互助/晒单）、左侧主内容区（精选攻略卡片 + 最新帖子列表 + 分页 + 发帖表单）、右侧边栏（热门话题排行 + 社区达人榜 + 最新活动）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>消息私聊：</strong>会话列表按最后消息时间排序，未读消息以红色数字徽章标记。聊天支持文本和图片消息，消息气泡区分左右（对方左/自己右），按日期分组显示。聊天头部嵌入商品卡片，点击可跳转商品详情。从商品详情页"联系卖家"进入时自动定位或创建对应会话。</p>
+<p><strong>社区：</strong>帖子分类为 6 类，支持图文发布（标题 + 分类下拉 + 正文 + 图片拖拽上传）。帖子卡片显示作者、时间、分类标签、标题、摘要、点赞/评论/浏览统计。支持最新/最热排序。侧边栏热门话题为实时排行，达人榜展示等级（Lv.7-9）和发布数/获赞数。活动支持进行中/报名中/已结束三种状态。</p>
+
+<!-- 5.7 Sell -->
+<div class="module-header" id="fr-sell">
+  <span class="module-num">7</span>
+  <h2>商品发布</h2>
+</div>
+<p><span class="page-ref">sell.html</span></p>
+
+<h3>页面布局</h3>
+<p>单列表单页面。从上到下依次为：图片上传区（拖拽上传，最多 9 张，单张 10MB）、商品详情表单（标题/分类/价格/成色/原价/购买渠道/箱说全复选框/商品描述）、验机报告同意项（复选框：已上传或同意平台验机报告）、提交按钮。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>发布流程：</strong>卖家上传商品图片（至少 1 张），填写商品标题（2-30 字）、选择分类（显卡/CPU/主板/内存/硬盘/散热器）、设置价格和成色（全新/99新/9成新/战损版）、可选填原价和购买渠道（官方自营/京东/天猫/淘宝/线下实体店/其他）。商品描述为多行文本。<strong>发布前必须勾选验机报告同意项</strong>，表示已上传验机报告或同意由平台验机。提交后商品进入"审核中"状态。</p>
+
+<h4>字段规则</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>长度/范围</th><th>默认值</th></tr></thead>
+  <tbody>
+    <tr><td>商品图片</td><td>图片</td><td>是</td><td>1-9 张，每张 ≤ 10MB</td><td>-</td></tr>
+    <tr><td>商品标题</td><td>文本</td><td>是</td><td>2-30 字</td><td>-</td></tr>
+    <tr><td>分类</td><td>下拉</td><td>是</td><td>6 选 1</td><td>-</td></tr>
+    <tr><td>价格</td><td>数值</td><td>是</td><td>> 0</td><td>-</td></tr>
+    <tr><td>成色</td><td>单选</td><td>是</td><td>全新/99新/9成新/战损版</td><td>99新</td></tr>
+    <tr><td>原价</td><td>数值</td><td>否</td><td>> 0</td><td>-</td></tr>
+    <tr><td>购买渠道</td><td>下拉</td><td>否</td><td>6 选 1</td><td>-</td></tr>
+    <tr><td>箱说全</td><td>复选框</td><td>否</td><td>-</td><td>未勾选</td></tr>
+    <tr><td>商品描述</td><td>多行文本</td><td>否</td><td>-</td><td>-</td></tr>
+    <tr><td>验机同意</td><td>复选框</td><td>是</td><td>-</td><td>未勾选</td></tr>
+  </tbody>
+</table></div>
+
+<h4>商品状态流转</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>当前状态</th><th>可执行操作</th><th>下一状态</th><th>触发条件</th></tr></thead>
+  <tbody>
+    <tr><td>审核中</td><td>等待审核</td><td>在售 / 审核拒绝</td><td>平台审核通过 / 拒绝</td></tr>
+    <tr><td>在售</td><td>编辑 / 下架 / 删除 / 分享 / 刷新</td><td>已售 / 下架</td><td>交易完成 / 主动下架</td></tr>
+    <tr><td>已售</td><td>查看详情</td><td>-</td><td>-</td></tr>
+    <tr><td>下架</td><td>重新上架 / 删除</td><td>在售</td><td>重新上架</td></tr>
+    <tr><td>草稿</td><td>编辑 / 发布 / 删除</td><td>审核中</td><td>提交发布</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.8 Seller Shop & Operations -->
+<div class="module-header" id="fr-seller">
+  <span class="module-num">8</span>
+  <h2>卖家店铺运营</h2>
+</div>
+<p><span class="page-ref">seller.html</span> <span class="page-ref">listings.html</span> <span class="page-ref">inventory.html</span> <span class="page-ref">analytics.html</span> <span class="page-ref">store-settings.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>卖家店铺页</strong>包含封面头图（渐变 + 对角线纹理）、头像（带认证标记）、店铺名称、关注/私信按钮、统计卡片（评分/粉丝/成交量/在售数）、三个 Tab（在售商品 / 成交记录 / 买家评价）。</p>
+<p><strong>我的发布页</strong>包含状态筛选 Tab（全部/在售/已售/草稿/下架/审核中）、搜索 + 排序栏、批量操作栏（全选/批量下架/批量删除）、商品卡片网格（含状态徽章、浏览量、收藏数、操作按钮）。</p>
+<p><strong>库存预警页</strong>包含 4 张统计卡（总SKU/充足/紧张/缺货）、筛选栏（状态Tab + 分类下拉 + 搜索）、桌面端表格（商品信息/当前库存/预警阈值/建议补货量/最近售出/状态）、移动端卡片布局。</p>
+<p><strong>数据中心页</strong>包含时间范围选择（7天/30天/90天）、6 张指标卡（成交额/订单数/浏览量/访客数/转化率/退款率，含同比涨跌）、SVG 折线图（收入+订单趋势）、商品排名列表、流量来源进度条、买家画像（性别饼图 + 地区分布 + 设备使用）。</p>
+<p><strong>店铺设置页</strong>采用三栏布局：左侧实时预览卡片，右侧 5 个设置区块（基本信息/联系信息/营业设置/店铺公告/高级设置），含头像封面上传、营业时间、退货地址、砍价/面交开关等。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>店铺管理：</strong>卖家可设置店铺名称、简介、头像、封面、客服联系方式（电话/微信QQ）、营业时间、发货/退货地址、默认快递（顺丰/圆通/中通/韵达/EMS）。高级设置包含接受砍价、支持面交、发货时效承诺（24h/48h/72h）。所有设置实时同步到左侧预览卡片。</p>
+<p><strong>库存预警：</strong>当商品库存低于预警阈值时标记为"紧张"（黄色），库存为 0 时标记为"缺货"（红色）。系统计算建议补货量 = 预警阈值 × 1.5 - 当前库存（向下取整）。支持单件修改库存和阈值、批量补货。</p>
+<p><strong>数据分析：</strong>6 项核心指标均显示同比涨跌（绿色上升/红色下降）。商品排名按成交额降序，显示销量和收入。流量来源含搜索/分类浏览/推荐/直接访问，以进度条展示占比。买家画像包含性别分布（饼图）、地区 Top3、设备使用分布。</p>
+
+<!-- 5.9 Shipping & Logistics -->
+<div class="module-header" id="fr-shipping">
+  <span class="module-num">9</span>
+  <h2>物流与发货</h2>
+</div>
+<p><span class="page-ref">shipping.html</span> <span class="page-ref">logistics.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>发货管理页</strong>包含状态 Tab（待发货/已发货/部分发货/已签收）、搜索 + 排序栏、批量选择栏、订单列表（动态生成）、空状态、分页。含两个模态弹窗：发货弹窗（快递公司下拉 + 运单号输入 + 选择发货商品）和面单预览弹窗（含打印按钮）。</p>
+<p><strong>物流跟踪页</strong>包含返回按钮 + 订单号、订单商品卡、承运信息（快递公司 + 运单号 + 复制按钮）、垂直物流时间线（已揽收 → 运输中 → 到达分拣中心 → 派送中 → 已签收）、收件人信息卡、底部固定操作栏（联系快递员 / 确认收货）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>发货流程：</strong>卖家在发货管理页对待发货订单进行发货操作，选择快递公司（顺丰/京东/中通/圆通/韵达）、填写运单号、选择发货商品（支持部分发货）。发货后订单状态变为"已发货"或"部分发货"。支持批量发货和电子面单打印预览。</p>
+<p><strong>物流跟踪：</strong>系统通过快递公司 API 实时获取物流轨迹，以垂直时间线展示。时间线节点含状态名称、时间、地点描述。已完成节点为绿色，当前节点高亮，未来节点灰色。买家可在物流跟踪页确认收货，确认后触发担保放款。确认收货前有二次确认弹窗。</p>
+
+<h4>发货状态流转</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>状态</th><th>含义</th><th>触发条件</th></tr></thead>
+  <tbody>
+    <tr><td>待发货</td><td>买家已付款，等待卖家发货</td><td>订单支付成功</td></tr>
+    <tr><td>部分发货</td><td>多商品订单部分已发</td><td>卖家选择部分商品发货</td></tr>
+    <tr><td>已发货</td><td>全部商品已发出</td><td>卖家完成全部发货</td></tr>
+    <tr><td>已签收</td><td>买家确认收货</td><td>买家确认 / 系统自动确认（超时）</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.10 Finance -->
+<div class="module-header" id="fr-finance">
+  <span class="module-num">10</span>
+  <h2>财务管理</h2>
+</div>
+<p><span class="page-ref">wallet.html</span> <span class="page-ref">transactions.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>钱包页</strong>包含余额卡片区（总余额/冻结金额/可用余额，支持眼睛图标隐藏/显示余额）、快捷操作按钮（充值/提现/转账）、支付方式列表（银行卡/支付宝/微信，含解绑按钮）+ 最近交易列表、安全设置卡片区（实名认证/支付密码/交易限额）、多个操作模态弹窗。</p>
+<p><strong>收支明细页</strong>包含 3 张汇总卡（本月收入/本月支出/累计收入）、筛选栏（类型Tab：全部/收入/支出/退款/充值/提现 + 搜索 + 日期范围 + 排序）、可展开的交易记录列表（每条含类型图标、描述、金额、时间，点击展开显示交易详情：交易类型/买卖家/订单号/交易时间/手续费/支付方式）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>担保交易资金流：</strong>买家付款 → 资金进入平台担保账户（冻结）→ 卖家发货 → 买家确认收货 → 资金解冻并转入卖家可用余额 → 卖家可提现。冻结金额在确认收货前不可动用。提现需实名认证和支付密码，到账时间 T+1。</p>
+<p><strong>充值/提现/转账：</strong>充值支持预设金额（¥50/100/200/500）和自定义金额，通过绑定的支付方式完成。提现到银行卡或支付宝，单笔限额 ¥50,000，单日限额 ¥200,000。转账支持转给平台内其他用户。</p>
+
+<h4>交易类型</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>类型</th><th>说明</th><th>金额方向</th></tr></thead>
+  <tbody>
+    <tr><td>收入</td><td>商品售出，担保放款</td><td>+（绿色）</td></tr>
+    <tr><td>支出</td><td>购买商品付款</td><td>-（红色）</td></tr>
+    <tr><td>退款</td><td>售后退款退回</td><td>+（绿色）</td></tr>
+    <tr><td>充值</td><td>账户充值</td><td>+（绿色）</td></tr>
+    <tr><td>提现</td><td>提现到银行卡/支付宝</td><td>-（红色）</td></tr>
+    <tr><td>冻结</td><td>担保交易冻结</td><td>-（橙色）</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.11 Marketing -->
+<div class="module-header" id="fr-promotion">
+  <span class="module-num">11</span>
+  <h2>营销与促销</h2>
+</div>
+<p><span class="page-ref">promotions.html</span> <span class="page-ref">coupons.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>营销活动页</strong>包含 4 张效果指标卡（曝光量/领取量/使用量/带动成交额）、活动类型 Tab（全部/优惠券/限时折扣/满减/包邮）、创建活动表单（优惠券创建 + 限时折扣创建，含价格预览面板）、活动列表表格（含搜索、状态徽章、操作按钮）。</p>
+<p><strong>优惠券/积分页</strong>包含积分卡片区（当前积分 + 每日任务 + 兑换/明细按钮）、优惠券 Tab（可用/已使用/已过期）、领券中心、积分兑换区、积分明细列表。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>优惠券创建：</strong>卖家可创建优惠券，设置券名称、面额、使用门槛、发放总量、每人限领、适用商品范围、有效期。限时折扣可选择商品并设置折扣率（9折/8.5折/8折/7.5折/7折），含活动库存和有效期。创建后可在活动列表中管理（编辑/暂停/查看数据/删除）。</p>
+<p><strong>优惠券使用：</strong>买家在购物车结算时可选择已领取的优惠券，系统自动计算最优减免。优惠券按适用品类匹配（如显卡品类券仅限显卡商品）。已使用和已过期的券在对应 Tab 中展示。</p>
+<p><strong>积分体系：</strong>用户通过每日签到、浏览商品、分享商品等任务获取积分。积分可兑换无门槛券、运费抵扣券或实物礼品。积分明细记录收入/支出流水。100 积分 ≈ ¥1 抵扣价值。</p>
+
+<h4>活动状态</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>状态</th><th>徽章颜色</th><th>含义</th></tr></thead>
+  <tbody>
+    <tr><td>进行中</td><td>绿色</td><td>当前时间在有效期内</td></tr>
+    <tr><td>未开始</td><td>蓝色</td><td>活动尚未到开始时间</td></tr>
+    <tr><td>已结束</td><td>灰色</td><td>活动已过结束时间</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.12 Trust -->
+<div class="module-header" id="fr-trust">
+  <span class="module-num">12</span>
+  <h2>信任与保障</h2>
+</div>
+<p><span class="page-ref">trust.html</span> <span class="page-ref">reports.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>信任中心页</strong>包含 Hero 区（标题 + 统计数据：累计验机数/担保交易金额/纠纷解决率）、四大保障卡片（平台验机/担保交易/实名认证/纠纷仲裁）、验机流程时间线（5 步骤）、安全提示（防骗指南 + 举报入口）、FAQ 可折叠面板。</p>
+<p><strong>举报中心页</strong>包含举报须知提示卡、类型筛选 Tab（全部/商品违规/虚假交易/诈骗/盗图/恶意辱骂/其他）、左侧举报表单（类型下拉 + 被举报对象 + 编号/链接 + 原因 + 描述 + 证据上传 + 匿名复选框）、右侧举报记录列表（含状态和处理结果）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>信任体系三大支柱：</strong></p>
+<ul>
+  <li><strong>平台验机：</strong>每件商品经 12 项专业检测，生成验机报告，买家可在商品详情页查看完整报告。验机流程：下单 → 寄送检测中心 → 专业检测 → 生成报告 → 签收。</li>
+  <li><strong>担保交易：</strong>平台托管货款，买家确认收货后放款给卖家。担保交易金额累计 ¥9.8 亿。</li>
+  <li><strong>7 天退换：</strong>到手 7 天内与描述不符可申请退换，平台 1-3 工作日审核，纠纷解决率 98.7%。</li>
+</ul>
+<p><strong>举报机制：</strong>用户可举报商品违规、虚假交易、诈骗、盗图、恶意辱骂等行为。需选择被举报对象类型（商品/用户/订单）、填写对象编号或链接、选择举报原因、描述详情并上传证据图片（最多 6 张）。支持匿名举报。举报记录显示受理中/已处理/待处理状态及处理结果。</p>
+
+<!-- 5.13 Support -->
+<div class="module-header" id="fr-support">
+  <span class="module-num">13</span>
+  <h2>客服与帮助</h2>
+</div>
+<p><span class="page-ref">help.html</span> <span class="page-ref">tickets.html</span> <span class="page-ref">chatbot.html</span></p>
+
+<h3>页面布局</h3>
+<p><strong>帮助中心页</strong>包含搜索框、6 个问题分类卡片（新手入门/买卖流程/支付与提现/物流与售后/账号安全/平台规则）、8 个可折叠 FAQ、5 个快速入口卡片。</p>
+<p><strong>客服工单页</strong>包含状态筛选 Tab（全部/处理中/待回复/已解决/已关闭）、可展开的工单列表（含工单号、状态、关联订单、问题描述、附件、沟通记录气泡、补充回复表单）、提交新工单表单（问题类型/关联订单/标题/描述/图片上传/联系方式）。</p>
+<p><strong>客服快捷回复页</strong>采用左右两栏：左侧配置区（自动回复总开关 + 欢迎语设置 + 关键词回复表格 + 快捷短语分组），右侧预览区（模拟买家视角的聊天界面 + 快速模拟按钮）。</p>
+
+<h3>业务逻辑</h3>
+<p><strong>工单系统：</strong>用户提交工单后进入"处理中"状态，客服回复后变为"待回复"（等待用户补充），用户回复后回到"处理中"，问题解决后标记"已解决"，超时未补充标记"已关闭"。工单详情可展开查看完整沟通记录（客服和用户消息以气泡区分）。工单关联订单号，便于客服快速定位问题。</p>
+<p><strong>快捷回复配置：</strong>卖家可为店铺配置自动回复。总开关控制全局启用/禁用。欢迎语在买家首次发消息时自动发送，可设置再次触发间隔（默认 24 小时）。关键词回复为表格配置：关键词 → 匹配类型（精确/模糊）→ 回复内容 → 启用状态。快捷短语按分组管理（售前咨询/价格议价/售后问题/物流查询），每条记录使用次数。右侧预览区实时展示配置效果，支持模拟买家消息测试。</p>
+
+<h4>工单状态流转</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>当前状态</th><th>触发条件</th><th>下一状态</th></tr></thead>
+  <tbody>
+    <tr><td>处理中</td><td>客服回复</td><td>待回复</td></tr>
+    <tr><td>待回复</td><td>用户补充材料</td><td>处理中</td></tr>
+    <tr><td>处理中</td><td>问题解决</td><td>已解决</td></tr>
+    <tr><td>待回复</td><td>7 天无补充</td><td>已关闭</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 5.14 Announcements -->
+<div class="module-header" id="fr-announce">
+  <span class="module-num">14</span>
+  <h2>公告与积分</h2>
+</div>
+<p><span class="page-ref">announcements.html</span></p>
+
+<h3>页面布局</h3>
+<p>包含标题 + 搜索框、分类 Tab（全部/平台公告/活动通知/政策更新/系统维护）、置顶公告区（2 张大卡片）、最新公告列表（6 条卡片，含分类徽章、日期、阅读量）、订阅设置（邮件通知/站内信通知 toggle）、分页导航、公告详情弹窗（<code>&lt;dialog&gt;</code> 元素，含标题/徽章/日期/阅读量/正文/附件/相关公告）。</p>
+
+<h3>业务逻辑</h3>
+<p>公告分四类：平台公告（日常通知）、活动通知（营销活动）、政策更新（规则变更）、系统维护（停机公告）。置顶公告始终显示在最前。点击公告卡片打开详情弹窗，弹窗内展示完整正文、附件列表和相关公告推荐。用户可设置订阅偏好，选择邮件或站内信接收通知。分页支持 8 页。</p>
+
+<h4>公告分类与徽章</h4>
+<div class="table-wrap"><table>
+  <thead><tr><th>分类</th><th>徽章颜色</th><th>典型内容</th></tr></thead>
+  <tbody>
+    <tr><td>平台公告</td><td>蓝色 (info)</td><td>服务安排、专项治理</td></tr>
+    <tr><td>活动通知</td><td>绿色 (primary)</td><td>装机狂欢、邀请奖励</td></tr>
+    <tr><td>政策更新</td><td>黄色 (warning)</td><td>服务协议更新、规范调整</td></tr>
+    <tr><td>系统维护</td><td>红色 (error)</td><td>支付系统维护</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 6. Non-Functional Requirements -->
+<h2 id="nfr">6. 非功能需求</h2>
+
+<h3>性能</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>指标</th><th>要求</th></tr></thead>
+  <tbody>
+    <tr><td>首屏加载</td><td>≤ 2 秒（4G 网络）</td></tr>
+    <tr><td>页面切换</td><td>≤ 500ms（SPA 路由）</td></tr>
+    <tr><td>搜索响应</td><td>≤ 800ms（含筛选）</td></tr>
+    <tr><td>图片加载</td><td>懒加载 + WebP 格式 + CDN 加速</td></tr>
+    <tr><td>消息延迟</td><td>≤ 2 秒（WebSocket 推送）</td></tr>
+  </tbody>
+</table></div>
+
+<h3>安全</h3>
+<ul>
+  <li>实名认证：卖家必须完成实名认证方可发布商品</li>
+  <li>支付安全：支付密码 + 短信验证双重验证，单笔/单日限额控制</li>
+  <li>数据加密：HTTPS 全站加密，敏感信息（手机号/地址）脱敏展示</li>
+  <li>防欺诈：交易风控系统，异常行为检测（批量发布/频繁退款等）</li>
+  <li>内容审核：商品发布人工/机器审核，违规商品自动下架</li>
+</ul>
+
+<h3>可用性</h3>
+<ul>
+  <li>响应式设计：适配桌面（≥1024px）、平板（768-1023px）、移动端（≤767px）</li>
+  <li>深色主题：全站深色科技风，与硬件发烧友审美匹配</li>
+  <li>无障碍：键盘导航、焦点环、aria 标签、语义化 HTML</li>
+  <li>离线提示：网络断开时显示友好提示，不丢失已输入数据</li>
+</ul>
+
+<h3>兼容性</h3>
+<ul>
+  <li>浏览器：Chrome 90+、Firefox 88+、Safari 14+、Edge 90+</li>
+  <li>移动端：iOS 14+、Android 10+（响应式 Web，非原生 App）</li>
+  <li>技术栈：Tailwind CSS v4 + Lucide Icons + 原生 JS（无重框架依赖）</li>
+</ul>
+
+</main>
+</div>
+</body>
+</html>

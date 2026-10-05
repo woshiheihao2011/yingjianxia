@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卖家数据中心 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .critical-layout { box-sizing: border-box; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; transition: background .2s, transform .15s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-primary:active { transform: translateY(1px); }
+            .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+            .btn-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-secondary:active { transform: translateY(1px); }
+            .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .metric-card { background: var(--brand-card); border: 1px solid var(--brand-line); border-radius: var(--brand-radius-md); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: border-color .2s; }
+            .metric-card:hover { border-color: var(--brand-primary); }
+            .chart-card { background: var(--brand-card); border: 1px solid var(--brand-line); border-radius: var(--brand-radius-md); padding: 20px; }
+            .range-btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border-radius: var(--brand-radius-md); font-size: 14px; font-weight: 500; color: var(--brand-ink-2); background: var(--brand-surface-2); border: 1px solid var(--brand-line); transition: color .2s, background .2s; }
+            .range-btn:hover { color: var(--brand-ink); background: var(--brand-surface-3); }
+            .range-btn.active { color: var(--brand-primary-ink); background: var(--brand-primary); border-color: var(--brand-primary); }
+            .trend-up { color: var(--brand-state-success); }
+            .trend-down { color: var(--brand-state-error); }
+            .progress-track { height: 8px; border-radius: var(--brand-radius-pill); background: var(--brand-surface-3); overflow: hidden; }
+            .progress-fill { height: 100%; border-radius: var(--brand-radius-pill); background: var(--brand-primary); }
+        </style>
+
+        <!-- 顶部导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+        <div class="nav-spacer"></div>
+
+        <!-- 页面标题 + 时间范围 -->
+        <section class="py-8 bg-background border-b border-border">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-foreground">卖家数据中心</h1>
+                        <p class="text-sm text-muted-foreground mt-1">实时掌握店铺经营动态，用数据驱动成交增长</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2" role="group" aria-label="时间范围">
+                        <button class="range-btn" type="button">近 7 天</button>
+                        <button class="range-btn active" type="button">近 30 天</button>
+                        <button class="range-btn" type="button">近 90 天</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心指标 -->
+        <section class="py-8 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <div class="metric-card" data-dom-id="metric-revenue">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">成交额</span>
+                            <i data-lucide="banknote" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">¥128,450</div>
+                        <div class="flex items-center gap-1 text-xs trend-up">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+12.5%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" data-dom-id="metric-orders">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">订单数</span>
+                            <i data-lucide="shopping-bag" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">386</div>
+                        <div class="flex items-center gap-1 text-xs trend-up">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+8.2%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" data-dom-id="metric-views">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">浏览量</span>
+                            <i data-lucide="eye" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">24.3k</div>
+                        <div class="flex items-center gap-1 text-xs trend-up">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+15.7%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" data-dom-id="metric-visitors">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">访客数</span>
+                            <i data-lucide="users" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">8,920</div>
+                        <div class="flex items-center gap-1 text-xs trend-up">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+6.4%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" data-dom-id="metric-conversion">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">转化率</span>
+                            <i data-lucide="percent" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">4.33%</div>
+                        <div class="flex items-center gap-1 text-xs trend-up">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                            <span>+0.4%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                    <div class="metric-card" data-dom-id="metric-refund">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">退款率</span>
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="text-2xl font-bold text-foreground">1.81%</div>
+                        <div class="flex items-center gap-1 text-xs trend-down">
+                            <i data-lucide="trending-down" class="w-3.5 h-3.5"></i>
+                            <span>-0.3%</span>
+                            <span class="text-muted-foreground ml-1">环比</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 趋势图表 -->
+        <section class="py-8 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="chart-card lg:col-span-2" data-dom-id="trend-chart">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-foreground">近 30 天成交额 / 订单趋势</h2>
+                            <div class="flex items-center gap-4 text-xs">
+                                <span class="flex items-center gap-1.5 text-muted-foreground"><span class="w-3 h-1 rounded-full bg-primary"></span>成交额</span>
+                                <span class="flex items-center gap-1.5 text-muted-foreground"><span class="w-3 h-1 rounded-full" style="background:var(--brand-state-info)"></span>订单数</span>
+                            </div>
+                        </div>
+                        <div class="relative w-full aspect-[16/7]">
+                            <svg viewBox="0 0 800 240" class="w-full h-full" preserveAspectRatio="none" aria-label="近 30 天趋势折线图">
+                                <defs>
+                                    <linearGradient id="revGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" style="stop-color:var(--brand-primary)" stop-opacity="0.25"/>
+                                        <stop offset="100%" style="stop-color:var(--brand-primary)" stop-opacity="0"/>
+                                    </linearGradient>
+                                    <linearGradient id="ordGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" style="stop-color:var(--brand-state-info)" stop-opacity="0.18"/>
+                                        <stop offset="100%" style="stop-color:var(--brand-state-info)" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <g stroke="var(--brand-line)" stroke-width="1">
+                                    <line x1="0" y1="200" x2="800" y2="200"/>
+                                    <line x1="0" y1="150" x2="800" y2="150"/>
+                                    <line x1="0" y1="100" x2="800" y2="100"/>
+                                    <line x1="0" y1="50" x2="800" y2="50"/>
+                                </g>
+                                <path d="M0,180 L26,172 L53,160 L80,155 L106,140 L133,132 L160,125 L186,118 L213,110 L240,100 L266,95 L293,90 L320,82 L346,78 L373,70 L400,65 L426,58 L453,50 L480,48 L506,55 L533,62 L560,58 L586,50 L613,45 L640,40 L666,35 L693,30 L720,25 L746,22 L773,18 L800,15 L800,200 L0,200 Z" fill="url(#revGradient)"/>
+                                <path d="M0,180 L26,172 L53,160 L80,155 L106,140 L133,132 L160,125 L186,118 L213,110 L240,100 L266,95 L293,90 L320,82 L346,78 L373,70 L400,65 L426,58 L453,50 L480,48 L506,55 L533,62 L560,58 L586,50 L613,45 L640,40 L666,35 L693,30 L720,25 L746,22 L773,18 L800,15" fill="none" style="stroke:var(--brand-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M0,195 L26,188 L53,182 L80,178 L106,172 L133,168 L160,162 L186,158 L213,150 L240,145 L266,140 L293,135 L320,130 L346,128 L373,122 L400,118 L426,112 L453,108 L480,105 L506,110 L533,115 L560,112 L586,108 L613,104 L640,100 L666,96 L693,92 L720,90 L746,86 L773,84 L800,80 L800,200 L0,200 Z" fill="url(#ordGradient)"/>
+                                <path d="M0,195 L26,188 L53,182 L80,178 L106,172 L133,168 L160,162 L186,158 L213,150 L240,145 L266,140 L293,135 L320,130 L346,128 L373,122 L400,118 L426,112 L453,108 L480,105 L506,110 L533,115 L560,112 L586,108 L613,104 L640,100 L666,96 L693,92 L720,90 L746,86 L773,84 L800,80" fill="none" style="stroke:var(--brand-state-info)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <g fill="var(--brand-ink-3)" font-size="10" font-family="var(--brand-font-sans)">
+                                    <text x="0" y="218">7/30</text>
+                                    <text x="196" y="218">8/08</text>
+                                    <text x="392" y="218">8/18</text>
+                                    <text x="588" y="218">8/24</text>
+                                    <text x="764" y="218">8/29</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-dom-id="top-products">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-foreground">热销商品排行</h2>
+                            <a href="listings.html" class="text-xs text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring rounded">管理商品</a>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded text-xs font-bold bg-primary text-primary-foreground flex items-center justify-center">1</span>
+                                <img src="../assets/product-gpu-rtx4070.jpg" alt="RTX 4070" class="w-12 h-12 rounded object-cover border border-border">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-foreground truncate">七彩虹 RTX 4070 战斧豪华版</p>
+                                    <p class="text-xs text-muted-foreground">销量 92 · ¥338,560</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded text-xs font-bold bg-surface-3 text-foreground flex items-center justify-center" style="background:var(--brand-surface-3)">2</span>
+                                <img src="../assets/product-cpu-13600k.jpg" alt="i5-13600K" class="w-12 h-12 rounded object-cover border border-border">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-foreground truncate">Intel Core i5-13600K 盒装</p>
+                                    <p class="text-xs text-muted-foreground">销量 74 · ¥92,500</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded text-xs font-bold bg-surface-3 text-foreground flex items-center justify-center" style="background:var(--brand-surface-3)">3</span>
+                                <img src="../assets/product-ram-ddr5.jpg" alt="DDR5 内存" class="w-12 h-12 rounded object-cover border border-border">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-foreground truncate">芝奇 DDR5 6000 32GB 套装</p>
+                                    <p class="text-xs text-muted-foreground">销量 58 · ¥35,960</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded text-xs font-bold text-muted-foreground flex items-center justify-center border border-border">4</span>
+                                <img src="../assets/product-ssd-980pro.jpg" alt="三星 980 Pro" class="w-12 h-12 rounded object-cover border border-border">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-foreground truncate">三星 980 Pro 1TB NVMe</p>
+                                    <p class="text-xs text-muted-foreground">销量 45 · ¥21,150</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded text-xs font-bold text-muted-foreground flex items-center justify-center border border-border">5</span>
+                                <img src="../assets/product-motherboard-b760.jpg" alt="B760 主板" class="w-12 h-12 rounded object-cover border border-border">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-foreground truncate">华硕 TUF B760M-PLUS</p>
+                                    <p class="text-xs text-muted-foreground">销量 31 · ¥10,540</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 流量来源与买家画像 -->
+        <section class="py-8 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="chart-card" data-dom-id="traffic-sources">
+                        <h2 class="text-lg font-bold text-foreground mb-6">流量来源分析</h2>
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="flex items-center gap-2 text-foreground"><i data-lucide="search" class="w-4 h-4 text-primary"></i>搜索</span>
+                                    <span class="text-muted-foreground">42%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="flex items-center gap-2 text-foreground"><i data-lucide="layout-grid" class="w-4 h-4 text-brand-info"></i>分类浏览</span>
+                                    <span class="text-muted-foreground">28%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:28%;background:var(--brand-state-info)"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="flex items-center gap-2 text-foreground"><i data-lucide="sparkles" class="w-4 h-4 text-brand-warning"></i>推荐</span>
+                                    <span class="text-muted-foreground">18%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:18%;background:var(--brand-state-warning)"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between text-sm mb-2">
+                                    <span class="flex items-center gap-2 text-foreground"><i data-lucide="link" class="w-4 h-4 text-brand-primary"></i>Direct</span>
+                                    <span class="text-muted-foreground">12%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:12%;background:var(--brand-primary)"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" data-dom-id="buyer-persona">
+                        <h2 class="text-lg font-bold text-foreground mb-6">买家画像简览</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <span class="text-sm text-muted-foreground block mb-3">性别分布</span>
+                                <svg viewBox="0 0 64 64" class="w-24 h-24 mx-auto" aria-label="性别分布饼图">
+                                    <circle cx="32" cy="32" r="28" fill="none" stroke="var(--brand-surface-3)" stroke-width="10"/>
+                                    <circle cx="32" cy="32" r="28" fill="none" style="stroke:var(--brand-primary)" stroke-width="10" stroke-dasharray="88 176" transform="rotate(-90 32 32)"/>
+                                    <circle cx="32" cy="32" r="28" fill="none" style="stroke:var(--brand-state-info)" stroke-width="10" stroke-dasharray="62 176" stroke-dashoffset="-88" transform="rotate(-90 32 32)"/>
+                                    <circle cx="32" cy="32" r="28" fill="none" style="stroke:var(--brand-state-warning)" stroke-width="10" stroke-dasharray="26 176" stroke-dashoffset="-150" transform="rotate(-90 32 32)"/>
+                                </svg>
+                                <div class="mt-3 flex flex-wrap justify-center gap-2 text-xs">
+                                    <span class="text-foreground"><span class="inline-block w-2 h-2 rounded-full bg-primary mr-1"></span>男 50%</span>
+                                    <span class="text-foreground"><span class="inline-block w-2 h-2 rounded-full bg-brand-info mr-1"></span>女 35%</span>
+                                    <span class="text-foreground"><span class="inline-block w-2 h-2 rounded-full bg-brand-warning mr-1"></span>未知 15%</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-sm text-muted-foreground block mb-3">热门地域</span>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-foreground">广东</span>
+                                        <span class="text-muted-foreground">22%</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill" style="width:22%"></div></div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-foreground">江苏</span>
+                                        <span class="text-muted-foreground">16%</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill" style="width:16%"></div></div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-foreground">浙江</span>
+                                        <span class="text-muted-foreground">14%</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill" style="width:14%"></div></div>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-sm text-muted-foreground block mb-3">常用设备</span>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 rounded-md bg-background border border-border">
+                                        <span class="flex items-center gap-2 text-sm text-foreground"><i data-lucide="monitor" class="w-4 h-4 text-primary"></i>桌面端</span>
+                                        <span class="text-sm font-medium text-foreground">62%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 rounded-md bg-background border border-border">
+                                        <span class="flex items-center gap-2 text-sm text-foreground"><i data-lucide="smartphone" class="w-4 h-4 text-brand-info"></i>移动端</span>
+                                        <span class="text-sm font-medium text-foreground">35%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 rounded-md bg-background border border-border">
+                                        <span class="flex items-center gap-2 text-sm text-foreground"><i data-lucide="tablet" class="w-4 h-4 text-brand-warning"></i>平板</span>
+                                        <span class="text-sm font-medium text-foreground">3%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据导出 -->
+        <section class="py-8 bg-background">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-lg border border-border bg-card">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="file-spreadsheet" class="w-8 h-8 text-primary shrink-0"></i>
+                        <div>
+                            <h3 class="font-semibold text-foreground">导出经营报表</h3>
+                            <p class="text-sm text-muted-foreground mt-1">下载当前时间范围内的订单、流量与商品数据，支持 CSV / Excel 格式。</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary shrink-0" type="button">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        导出数据
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="py-14 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-foreground">
+                        <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                        <span class="text-lg font-bold">硬件侠</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">卖家服务</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="seller.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">卖家中心</a></li>
+                        <li><a href="analytics.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">数据中心</a></li>
+                        <li><a href="orders.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">订单管理</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="trust.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                        <li><a href="trust.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                        <li><a href="aftersales.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li>客服邮箱：support@yingjianxia.com</li>
+                        <li>工作时间：周一至周日 9:00-21:00</li>
+                        <li><a href="help.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">帮助中心</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                © 2026 硬件侠. All rights reserved.
+            </div>
+        </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>硬件侠 - 业务线测试报告与需求问题清单</title>
+    <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #161821;
+            --bg-card: #1c1f2b;
+            --bg-hover: #232634;
+            --text-primary: #e4e6eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: #2d3142;
+            --accent: #7c5cfc;
+            --accent-light: #a78bfa;
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --info: #3b82f6;
+            --info-bg: rgba(59, 130, 246, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1c1f2b 0%, #2a2d3d 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(124, 92, 252, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #7c5cfc, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .meta-item .label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-item .value {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card .number {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .summary-card .label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .summary-card.pass .number { color: var(--success); }
+        .summary-card.fail .number { color: var(--danger); }
+        .summary-card.blocked .number { color: var(--warning); }
+        .summary-card.total .number { color: var(--accent); }
+
+        /* Section */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .icon-seller { background: rgba(124, 92, 252, 0.15); color: var(--accent); }
+        .icon-buyer { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .icon-audit { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .icon-platform { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+
+        /* Test Table */
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .test-table th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .test-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .test-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .test-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-pass {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge-fail {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-blocked {
+            background: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-info {
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Priority badges */
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-p0 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .priority-p1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .priority-p2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .priority-p3 { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+
+        /* Issue Cards */
+        .issue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .issue-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--danger);
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+
+        .issue-card.p1 { border-left-color: var(--warning); }
+        .issue-card.p2 { border-left-color: var(--info); }
+        .issue-card.p3 { border-left-color: var(--text-muted); }
+
+        .issue-card .issue-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .issue-card .issue-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .issue-card .issue-body {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .issue-card .issue-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .issue-card .issue-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Responsive */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 12px 8px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 22px; }
+            .section { padding: 16px; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .summary-card .number { font-size: 28px; }
+        }
+
+        /* Anchor link */
+        .nav-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .nav-bar a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .nav-bar a:hover {
+            background: rgba(124, 92, 252, 0.1);
+        }
+
+        /* Account info */
+        .account-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 0;
+        }
+
+        .account-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .account-card .role {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .account-card .phone {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .account-card .status {
+            margin-top: 8px;
+        }
+
+        .code-block {
+            background: #0d0e14;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #a78bfa;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>硬件侠 — 业务线测试报告与需求问题清单</h1>
+            <p class="subtitle">对硬件侠二手交易平台进行全面功能测试，排查业务线打通情况、功能缺失及需求类问题</p>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="label">测试日期</div>
+                    <div class="value">2026-09-09</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">测试环境</div>
+                    <div class="value">localhost:5173</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">测试角色</div>
+                    <div class="value">卖家 / 买家 / 审核</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">文档编号</div>
+                    <div class="value">需求-0909094414</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav Bar -->
+        <div class="nav-bar">
+            <a href="#summary">总览</a>
+            <a href="#accounts">测试账号</a>
+            <a href="#seller">卖家侧</a>
+            <a href="#buyer">买家侧</a>
+            <a href="#audit">审核侧</a>
+            <a href="#platform">平台支撑</a>
+            <a href="#issues">问题清单</a>
+            <a href="#recommendations">修复建议</a>
+        </div>
+
+        <!-- Summary -->
+        <div id="summary" class="section">
+            <h2 class="section-title">测试总览</h2>
+            <div class="summary-grid">
+                <div class="summary-card pass">
+                    <div class="number">10</div>
+                    <div class="label">通过 (PASS)</div>
+                </div>
+                <div class="summary-card fail">
+                    <div class="number">22</div>
+                    <div class="label">失败 (FAIL)</div>
+                </div>
+                <div class="summary-card blocked">
+                    <div class="number">7</div>
+                    <div class="label">阻塞 (BLOCKED)</div>
+                </div>
+                <div class="summary-card total">
+                    <div class="number">39</div>
+                    <div class="label">测试项总计</div>
+                </div>
+            </div>
+            <p style="color: var(--text-secondary); margin-top: 16px; font-size: 14px;">
+                本次测试覆盖卖家侧、买家侧、审核侧和平台支撑域四大业务线，共39个测试项。其中10项通过，22项失败，7项因登录或预算限制被阻塞。<strong style="color: var(--danger);">核心交易链路存在严重阻断</strong>，买家账号无法登录、卖家管理后台全部不可用、商品数据异常，需优先修复。
+            </p>
+        </div>
+
+        <!-- Accounts -->
+        <div id="accounts" class="section">
+            <h2 class="section-title">测试账号信息</h2>
+            <div class="account-grid">
+                <div class="account-card">
+                    <div class="role">卖家用户</div>
+                    <div class="phone">13800001111</div>
+                    <div style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">密码: 12345678</div>
+                    <div class="status"><span class="badge badge-pass">PASS 登录成功</span></div>
+                </div>
+                <div class="account-card">
+                    <div class="role">买家用户</div>
+                    <div class="phone">13900001234</div>
+                    <div style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">密码: 12345678</div>
+                    <div class="status"><span class="badge badge-fail">FAIL 账号或密码错误</span></div>
+                </div>
+                <div class="account-card">
+                    <div class="role">审核用户</div>
+                    <div class="phone">13900001234</div>
+                    <div style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">密码: 12345678</div>
+                    <div class="status"><span class="badge badge-fail">FAIL 与买家账号相同，无法登录</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seller Side -->
+        <div id="seller" class="section">
+            <h2 class="section-title">
+                <span class="icon icon-seller">S</span>
+                卖家侧业务线测试结果
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
+                账号 13800001111 登录成功。发布商品和消息中心功能正常，但卖家管理后台完全不可用 —— <strong style="color: var(--danger);">/seller 路由返回404，所有子页面因 shopId 参数类型错误无法加载</strong>。
+            </p>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px;">#</th>
+                            <th>功能模块</th>
+                            <th>访问路径</th>
+                            <th>状态</th>
+                            <th>问题描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>卖家登录</td>
+                            <td>/auth</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>登录成功，跳转回首页，显示已登录状态</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>发布商品</td>
+                            <td>/sell</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>5步发布流程向导正常，类目选择（显卡/CPU/主板/内存/硬盘/散热器等）完整</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>卖家中心首页</td>
+                            <td>/seller</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在，返回404"页面走丢了"，卖家工作台未开发或路径错误</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>商品管理</td>
+                            <td>/seller/products</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>"店铺信息加载失败" — 参数 shopId 类型错误，期望值 Long，实际传入 String</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>库存管理</td>
+                            <td>/seller/inventory</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>订单管理</td>
+                            <td>/seller/orders</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>发货管理</td>
+                            <td>/seller/shipping</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>数据中心</td>
+                            <td>/seller/dashboard</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>钱包/收支</td>
+                            <td>/seller/wallet</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>店铺设置</td>
+                            <td>/seller/settings</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>营销活动</td>
+                            <td>/seller/marketing</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>同上 — shopId 参数类型错误</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>消息中心</td>
+                            <td>/messages</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，包含全部/买家消息/卖家消息/系统通知分类，有未读提示</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Buyer Side -->
+        <div id="buyer" class="section">
+            <h2 class="section-title">
+                <span class="icon icon-buyer">B</span>
+                买家侧业务线测试结果
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
+                <strong style="color: var(--danger);">买家账号 13900001234 登录失败</strong>（提示"账号或密码错误"），导致所有需登录的页面无法测试。首页、社区、信任中心等公开页面可正常访问，但搜索返回0条结果、商品详情数据严重异常（价格¥0、无图片、无验机报告）、分类过滤不生效。
+            </p>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px;">#</th>
+                            <th>功能模块</th>
+                            <th>访问路径</th>
+                            <th>状态</th>
+                            <th>问题描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>买家登录</td>
+                            <td>/auth</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>提示"账号或密码错误"，买家账号无法登录</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>首页</td>
+                            <td>/</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>轮播图、搜索栏、12个分类导航、热销商品、精选新品正常展示</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>商品搜索</td>
+                            <td>/search?q=显卡</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>搜索"显卡"返回0条结果，搜索功能数据异常</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>分类入口</td>
+                            <td>/category</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404，实际分类路径为 /browse?category=xxx</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>分类浏览</td>
+                            <td>/browse?category=cpu</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>页面正常，显示15件商品，含价格、成色、卖家信息。<strong style="color:var(--warning)">但所有分类显示相同商品，分类过滤不生效</strong></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>商品详情</td>
+                            <td>/product/1</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>价格显示¥0、图片显示"暂无图片"、卖家显示"未知店铺"、无验机报告模块</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>购物车</td>
+                            <td>/cart</td>
+                            <td><span class="badge badge-fail">FAIL</span></td>
+                            <td>商品状态为"加载中"、价格¥0、店铺为"未知店铺"</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>订单列表</td>
+                            <td>/orders</td>
+                            <td><span class="badge badge-blocked">BLOCKED</span></td>
+                            <td>未登录被重定向至 /auth?redirect=/orders</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>售后退款</td>
+                            <td>/aftersales</td>
+                            <td><span class="badge badge-blocked">BLOCKED</span></td>
+                            <td>未登录被重定向至登录页</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>个人中心</td>
+                            <td>/profile</td>
+                            <td><span class="badge badge-blocked">BLOCKED</span></td>
+                            <td>未登录被重定向至登录页</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>收货地址</td>
+                            <td>/profile/address</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>消息中心</td>
+                            <td>/messages</td>
+                            <td><span class="badge badge-blocked">BLOCKED</span></td>
+                            <td>未登录被重定向至登录页</td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td>社区</td>
+                            <td>/community</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，包含搜索框、分类标签、精选攻略</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>评价管理</td>
+                            <td>/profile/reviews</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td>信任中心</td>
+                            <td>/trust</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，包含平台保障说明与统计数据</td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td>帮助中心</td>
+                            <td>/help</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，包含问题分类与热门问题</td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td>积分</td>
+                            <td>/points</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td>收藏</td>
+                            <td>/favorites</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>显示2件收藏商品，但商品图片显示"无图"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Audit Side -->
+        <div id="audit" class="section">
+            <h2 class="section-title">
+                <span class="icon icon-audit">A</span>
+                审核侧业务线测试结果
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
+                审核账号与买家账号相同（13900001234），同样无法登录。使用卖家账号（13800001111）访问审核相关页面，<strong style="color: var(--success);">审核中心 /audit 可正常加载</strong>，包含待审核/全部/已通过/已拒绝标签页和商品审核/帖子审核/举报处理/提现审核四个模块。但管理后台 /admin 及所有子页面返回404。
+            </p>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px;">#</th>
+                            <th>功能模块</th>
+                            <th>访问路径</th>
+                            <th>状态</th>
+                            <th>问题描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>审核中心</td>
+                            <td>/audit</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，含待审核/全部/已通过/已拒绝标签页，下拉框含商品审核/帖子审核/举报处理/提现审核4个选项，当前"暂无待审核记录"</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>管理后台</td>
+                            <td>/admin</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>审核入口</td>
+                            <td>/review</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>商品审核</td>
+                            <td>/admin/products</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>验机审核</td>
+                            <td>/admin/inspection</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>验机页面</td>
+                            <td>/inspection</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>订单管理(后台)</td>
+                            <td>/admin/orders</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>用户管理</td>
+                            <td>/admin/users</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在返回404</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Platform Support -->
+        <div id="platform" class="section">
+            <h2 class="section-title">
+                <span class="icon icon-platform">P</span>
+                平台支撑域测试结果
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">
+                社区、信任中心和帮助中心正常可用。但关于我们、公告、工单、优惠券等页面均返回404。
+            </p>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px;">#</th>
+                            <th>功能模块</th>
+                            <th>访问路径</th>
+                            <th>状态</th>
+                            <th>问题描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>社区</td>
+                            <td>/community</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，标题"硬件社区 - 硬件侠"，含搜索框、分类标签、精选攻略</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>信任中心</td>
+                            <td>/trust</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，含平台保障说明与统计数据</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>帮助中心</td>
+                            <td>/help</td>
+                            <td><span class="badge badge-pass">PASS</span></td>
+                            <td>正常加载，含问题分类与热门问题</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>关于我们</td>
+                            <td>/about</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>公告</td>
+                            <td>/notice</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>工单</td>
+                            <td>/ticket</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>优惠券</td>
+                            <td>/coupon</td>
+                            <td><span class="badge badge-fail">FAIL 404</span></td>
+                            <td>路由不存在</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Issue List -->
+        <div id="issues" class="section">
+            <h2 class="section-title">需求问题清单（按优先级排序）</h2>
+            <div class="issue-list">
+                <!-- P0 Issues -->
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <span class="issue-title">P0-01 买家/审核账号无法登录</span>
+                        <span class="priority priority-p0">P0 阻断</span>
+                    </div>
+                    <div class="issue-body">
+                        买家账号 13900001234 / 密码 12345678 登录时提示"账号或密码错误"。审核账号与之相同。<strong>该问题直接阻断买家侧全部需登录功能</strong>（订单、售后、个人中心、消息等），是最优先修复项。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 买家侧全链路</span>
+                        <span>可能原因: 数据库中未创建该测试账号 / 密码加密不一致 / 账号状态异常</span>
+                    </div>
+                </div>
+
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <span class="issue-title">P0-02 卖家管理后台全部不可用（shopId 参数类型错误）</span>
+                        <span class="priority priority-p0">P0 阻断</span>
+                    </div>
+                    <div class="issue-body">
+                        /seller 返回404，/seller/products、/seller/inventory、/seller/orders、/seller/shipping、/seller/dashboard、/seller/wallet、/seller/settings、/seller/marketing 均报"店铺信息加载失败 — 参数 shopId 类型错误，期望值 Long"。<strong>卖家管理后台完全瘫痪</strong>，影响商品管理、库存、订单、发货、财务等8个核心模块。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 卖家侧8个管理页面</span>
+                        <span>可能原因: 前端传递 shopId 为 String 类型，后端接口期望 Long 类型，类型转换缺失</span>
+                    </div>
+                    <div class="code-block">错误信息: "参数 shopId 类型错误，期望值 Long"</div>
+                </div>
+
+                <div class="issue-card">
+                    <div class="issue-header">
+                        <span class="issue-title">P0-03 商品详情页数据严重异常</span>
+                        <span class="priority priority-p0">P0 阻断</span>
+                    </div>
+                    <div class="issue-body">
+                        /product/1 页面价格显示 ¥0、商品图片显示"暂无图片"、卖家信息显示"未知店铺"、无验机报告模块。商品详情是交易链路的核心页面，数据异常将导致买家无法做出购买决策。<strong>购物车页面同样受影响</strong>（商品状态"加载中"、价格¥0、店铺"未知店铺"）。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 商品详情、购物车、交易全链路</span>
+                        <span>可能原因: 商品数据未正确关联店铺信息 / 图片URL字段为空 / 价格字段默认值0未覆盖</span>
+                    </div>
+                </div>
+
+                <!-- P1 Issues -->
+                <div class="issue-card p1">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-01 搜索功能返回0条结果</span>
+                        <span class="priority priority-p1">P1 严重</span>
+                    </div>
+                    <div class="issue-body">
+                        /search?q=显卡 搜索页面正常加载但返回0条结果。首页已展示有显卡类目商品，说明商品数据存在，但搜索接口未正确匹配。搜索是买家找货的核心入口，需排查搜索服务的索引和查询逻辑。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 买家搜索</span>
+                        <span>可能原因: ES索引未建立 / 搜索关键词匹配逻辑有误 / 搜索接口连接的服务异常</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p1">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-02 分类过滤不生效</span>
+                        <span class="priority priority-p1">P1 严重</span>
+                    </div>
+                    <div class="issue-body">
+                        /browse?category=cpu、/browse?category=gpu、/browse?category=motherboard、/browse?category=memory、/browse?category=storage 均显示相同的15件商品，未按分类参数过滤。分类导航点击可跳转但结果不区分品类，买家无法精准找货。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 买家分类浏览</span>
+                        <span>可能原因: 前端未将 category 参数传递给后端 / 后端查询未加分类过滤条件 / 分类映射表缺失</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p1">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-03 商品图片加载异常</span>
+                        <span class="priority priority-p1">P1 严重</span>
+                    </div>
+                    <div class="issue-body">
+                        部分商品图片显示为"??????"（乱码/编码问题），收藏列表中商品图片显示"无图"，商品详情页图片显示"暂无图片"。图片是商品展示的关键元素，缺失严重影响用户体验。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 商品列表、商品详情、收藏列表</span>
+                        <span>可能原因: 图片URL字段为空或格式错误 / 图片服务器未启动 / CDN配置有误 / 字符编码问题</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p1">
+                    <div class="issue-header">
+                        <span class="issue-title">P1-04 验机报告模块缺失</span>
+                        <span class="priority priority-p1">P1 严重</span>
+                    </div>
+                    <div class="issue-body">
+                        商品详情页无验机报告模块。根据PRD需求，验机报告是硬件侠平台的核心差异化功能，包含12项完整性检查、等级验证和overallResult算法。/inspection 和 /admin/inspection 页面均返回404，验机相关业务线完全缺失。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 商品详情、验机流程、审核流程</span>
+                        <span>可能原因: 验机相关前端页面未开发 / 验机服务未对接 / 验机报告数据模型未落地</span>
+                    </div>
+                </div>
+
+                <!-- P2 Issues -->
+                <div class="issue-card p2">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-01 多个页面路由404</span>
+                        <span class="priority priority-p2">P2 功能缺失</span>
+                    </div>
+                    <div class="issue-body">
+                        以下页面路由均不存在，返回404：
+                        <ul style="margin-top: 8px; padding-left: 20px;">
+                            <li><strong>买家侧</strong>：/category（分类入口）、/profile/address（收货地址）、/profile/reviews（评价管理）、/points（积分）</li>
+                            <li><strong>审核侧</strong>：/admin（管理后台）、/review（审核入口）、/admin/products（商品审核）、/admin/inspection（验机审核）、/admin/orders（订单管理）、/admin/users（用户管理）、/inspection（验机页面）</li>
+                            <li><strong>平台支撑</strong>：/about（关于我们）、/notice（公告）、/ticket（工单）、/coupon（优惠券）</li>
+                        </ul>
+                        共计15个页面路由未注册，需确认是前端路由未配置还是页面组件未开发。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 15个页面</span>
+                        <span>可能原因: 前端路由表未注册对应路径 / 页面组件尚未开发</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p2">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-02 卖家中心入口缺失</span>
+                        <span class="priority priority-p2">P2 功能缺失</span>
+                    </div>
+                    <div class="issue-body">
+                        /seller 返回404，且首页导航栏未发现卖家中心入口。卖家登录后无统一的管理工作台页面，影响卖家操作体验。需开发卖家中心首页并添加导航入口。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 卖家侧导航</span>
+                        <span>可能原因: 卖家中心页面组件未开发 / 路由路径不一致（可能应为 /seller/dashboard 而非 /seller）</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p2">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-03 分类页面面包屑异常</span>
+                        <span class="priority priority-p2">P2 UI缺陷</span>
+                    </div>
+                    <div class="issue-body">
+                        主板分类（/browse?category=motherboard）和内存分类（/browse?category=memory）页面面包屑显示异常，未正确显示对应分类名称。分类筛选器高亮状态也不正确。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 分类浏览页面</span>
+                        <span>可能原因: 分类名称映射表缺失 / 面包屑组件未正确读取当前分类参数</span>
+                    </div>
+                </div>
+
+                <div class="issue-card p2">
+                    <div class="issue-header">
+                        <span class="issue-title">P2-04 审核账号与买家账号相同</span>
+                        <span class="priority priority-p2">P2 需求确认</span>
+                    </div>
+                    <div class="issue-body">
+                        用户提供的审核账号和买家账号均为 13900001234，无法区分角色。需确认审核账号是否应为不同的手机号，或该账号是否在数据库中被赋予了审核角色权限。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 审核侧全链路</span>
+                        <span>建议: 提供独立的审核账号 / 确认账号角色权限配置</span>
+                    </div>
+                </div>
+
+                <!-- P3 Issues -->
+                <div class="issue-card p3">
+                    <div class="issue-header">
+                        <span class="issue-title">P3-01 审核中心无待审核数据</span>
+                        <span class="priority priority-p3">P3 数据问题</span>
+                    </div>
+                    <div class="issue-body">
+                        审核中心（/audit）页面正常加载，但显示"暂无待审核记录"。虽有商品审核/帖子审核/举报处理/提现审核四个模块入口，但无实际审核数据。需确认是否有待审核的商品或内容。
+                    </div>
+                    <div class="issue-meta">
+                        <span>影响范围: 审核流程验证</span>
+                        <span>建议: 发布商品后触发审核流程，验证审核中心数据流转</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div id="recommendations" class="section">
+            <h2 class="section-title">修复建议与优先级路线图</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <h3 style="color: var(--danger); font-size: 16px; margin-bottom: 10px;">第一阶段（P0 阻断问题 — 立即修复）</h3>
+                    <table class="test-table">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>问题</th>
+                                <th>修复建议</th>
+                                <th>负责域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P0-01</td>
+                                <td>买家/审核账号无法登录</td>
+                                <td>1. 检查数据库 user 表是否存在 13900001234 账号记录<br>2. 验证密码加密方式是否一致（BCrypt/MD5）<br>3. 确认账号状态字段（deleted/locked）<br>4. 如账号不存在，执行SQL创建测试买家账号</td>
+                                <td>user-service</td>
+                            </tr>
+                            <tr>
+                                <td>P0-02</td>
+                                <td>卖家后台 shopId 参数类型错误</td>
+                                <td>1. 前端检查 shopId 获取逻辑，确认从用户信息还是店铺接口获取<br>2. 后端接口增加 String→Long 类型转换（@InitBinder 或 Long.parseLong）<br>3. 统一 shopId 数据类型规范<br>4. 修复 /seller 路由404问题</td>
+                                <td>user-service / product-service / 前端</td>
+                            </tr>
+                            <tr>
+                                <td>P0-03</td>
+                                <td>商品详情数据异常</td>
+                                <td>1. 检查 product-service 商品查询接口返回数据完整性<br>2. 确认商品-店铺关联查询是否正常（ShopFeignClient）<br>3. 验证图片URL字段是否正确写入数据库<br>4. 确认价格字段默认值逻辑<br>5. 补充验机报告模块到商品详情页</td>
+                                <td>product-service / inspection-service / 前端</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--warning); font-size: 16px; margin-bottom: 10px;">第二阶段（P1 严重问题 — 本周修复）</h3>
+                    <table class="test-table">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>问题</th>
+                                <th>修复建议</th>
+                                <th>负责域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P1-01</td>
+                                <td>搜索返回0条结果</td>
+                                <td>1. 检查搜索服务（product-service 搜索接口）是否正常运行<br>2. 确认ES索引是否建立和同步<br>3. 验证搜索关键词匹配逻辑（full-text search）<br>4. 检查搜索接口的SQL查询条件</td>
+                                <td>product-service</td>
+                            </tr>
+                            <tr>
+                                <td>P1-02</td>
+                                <td>分类过滤不生效</td>
+                                <td>1. 前端确认 /browse 页面是否正确传递 category 参数给后端<br>2. 后端检查商品列表查询是否根据 category 参数过滤<br>3. 确认分类映射关系（cpu→CPU处理器, gpu→显卡, motherboard→主板等）<br>4. 检查分类ID与商品关联字段</td>
+                                <td>product-service / 前端</td>
+                            </tr>
+                            <tr>
+                                <td>P1-03</td>
+                                <td>商品图片加载异常</td>
+                                <td>1. 检查图片URL字段在数据库中的值<br>2. 确认图片服务器/CDN是否正常运行<br>3. 修复"??????"编码问题（可能是Base64编码或URL编码异常）<br>4. 设置默认占位图</td>
+                                <td>product-service / 前端</td>
+                            </tr>
+                            <tr>
+                                <td>P1-04</td>
+                                <td>验机报告模块缺失</td>
+                                <td>1. 开发验机报告前端页面组件<br>2. 对接 inspection-service 验机报告查询接口<br>3. 在商品详情页增加验机报告Tab<br>4. 开发 /inspection 和 /admin/inspection 路由页面</td>
+                                <td>inspection-service / 前端</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--info); font-size: 16px; margin-bottom: 10px;">第三阶段（P2 功能缺失 — 下周修复）</h3>
+                    <table class="test-table">
+                        <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>问题</th>
+                                <th>修复建议</th>
+                                <th>负责域</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P2-01</td>
+                                <td>15个页面路由404</td>
+                                <td>1. 前端路由表注册缺失路径<br>2. 优先开发买家侧缺失页面（收货地址、评价管理、积分）<br>3. 开发审核侧管理后台页面<br>4. 开发平台支撑页面（关于我们、公告、工单、优惠券）</td>
+                                <td>前端 / 各微服务</td>
+                            </tr>
+                            <tr>
+                                <td>P2-02</td>
+                                <td>卖家中心入口缺失</td>
+                                <td>1. 确认卖家中心路由路径（/seller 或 /seller/dashboard）<br>2. 开发卖家工作台首页组件<br>3. 在导航栏增加卖家中心入口（登录卖家账号时显示）</td>
+                                <td>前端</td>
+                            </tr>
+                            <tr>
+                                <td>P2-03</td>
+                                <td>面包屑异常</td>
+                                <td>1. 完善分类名称映射表<br>2. 面包屑组件读取当前 category 参数并映射为中文名称<br>3. 修复分类筛选器高亮逻辑</td>
+                                <td>前端</td>
+                            </tr>
+                            <tr>
+                                <td>P2-04</td>
+                                <td>审核账号与买家相同</td>
+                                <td>1. 确认审核账号是否应为独立手机号<br>2. 或确认该账号是否具备审核角色权限<br>3. 提供独立的审核测试账号</td>
+                                <td>user-service</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Line Coverage -->
+        <div class="section">
+            <h2 class="section-title">业务线打通情况汇总</h2>
+            <div class="table-wrapper">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>业务线</th>
+                            <th>对应微服务</th>
+                            <th>状态</th>
+                            <th>打通情况</th>
+                            <th>阻断问题</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>用户认证</td>
+                            <td>user-service</td>
+                            <td><span class="badge badge-fail">部分打通</span></td>
+                            <td>卖家登录正常，买家/审核账号登录失败</td>
+                            <td>买家账号不存在或密码不一致</td>
+                        </tr>
+                        <tr>
+                            <td>商品发布</td>
+                            <td>product-service</td>
+                            <td><span class="badge badge-pass">已打通</span></td>
+                            <td>发布页面正常，类目选择完整</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>商品浏览</td>
+                            <td>product-service</td>
+                            <td><span class="badge badge-fail">部分打通</span></td>
+                            <td>首页推荐正常，分类浏览可访问但过滤不生效</td>
+                            <td>分类过滤逻辑缺失 / 搜索0结果</td>
+                        </tr>
+                        <tr>
+                            <td>商品详情</td>
+                            <td>product-service / inspection-service</td>
+                            <td><span class="badge badge-fail">未打通</span></td>
+                            <td>页面可访问但数据异常（价格¥0/无图片/无验机报告）</td>
+                            <td>数据关联断裂 / 验机模块缺失</td>
+                        </tr>
+                        <tr>
+                            <td>购物车</td>
+                            <td>order-service / product-service</td>
+                            <td><span class="badge badge-fail">未打通</span></td>
+                            <td>页面可访问但商品数据异常</td>
+                            <td>依赖商品详情数据修复</td>
+                        </tr>
+                        <tr>
+                            <td>订单交易</td>
+                            <td>order-service</td>
+                            <td><span class="badge badge-blocked">未测试</span></td>
+                            <td>因买家账号无法登录，未测试下单流程</td>
+                            <td>依赖买家登录修复</td>
+                        </tr>
+                        <tr>
+                            <td>卖家管理</td>
+                            <td>product-service / user-service</td>
+                            <td><span class="badge badge-fail">未打通</span></td>
+                            <td>/seller 404，所有管理页面 shopId 类型错误</td>
+                            <td>路由缺失 / shopId 类型转换</td>
+                        </tr>
+                        <tr>
+                            <td>审核流程</td>
+                            <td>audit-service / inspection-service</td>
+                            <td><span class="badge badge-info">部分打通</span></td>
+                            <td>审核中心页面可用，但无数据，验机审核页面缺失</td>
+                            <td>无待审核数据 / 验机页面404</td>
+                        </tr>
+                        <tr>
+                            <td>售后退款</td>
+                            <td>aftersales-service</td>
+                            <td><span class="badge badge-blocked">未测试</span></td>
+                            <td>因买家账号无法登录，未测试售后流程</td>
+                            <td>依赖买家登录修复</td>
+                        </tr>
+                        <tr>
+                            <td>消息中心</td>
+                            <td>message-service</td>
+                            <td><span class="badge badge-pass">已打通</span></td>
+                            <td>消息列表正常，含分类标签和未读提示</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>社区</td>
+                            <td>community-service</td>
+                            <td><span class="badge badge-pass">已打通</span></td>
+                            <td>社区页面正常加载</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>信任中心</td>
+                            <td>—</td>
+                            <td><span class="badge badge-pass">已打通</span></td>
+                            <td>信任中心页面正常</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>帮助中心</td>
+                            <td>—</td>
+                            <td><span class="badge badge-pass">已打通</span></td>
+                            <td>帮助中心页面正常</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>物流跟踪</td>
+                            <td>logistics-service</td>
+                            <td><span class="badge badge-blocked">未测试</span></td>
+                            <td>因卖家发货管理页面不可用，未测试</td>
+                            <td>依赖卖家管理修复</td>
+                        </tr>
+                        <tr>
+                            <td>资金托管</td>
+                            <td>escrow-service / payment-service</td>
+                            <td><span class="badge badge-blocked">未测试</span></td>
+                            <td>因钱包页面不可用，未测试</td>
+                            <td>依赖卖家管理修复</td>
+                        </tr>
+                        <tr>
+                            <td>评价系统</td>
+                            <td>evaluation-service</td>
+                            <td><span class="badge badge-fail">未打通</span></td>
+                            <td>评价管理页面404，商品详情评价Tab无数据</td>
+                            <td>页面路由缺失</td>
+                        </tr>
+                        <tr>
+                            <td>营销活动</td>
+                            <td>marketing-service</td>
+                            <td><span class="badge badge-fail">未打通</span></td>
+                            <td>营销活动页面shopId类型错误，优惠券页面404</td>
+                            <td>依赖卖家管理修复</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
+            <p>硬件侠 — 业务线测试报告 | 文档编号: 需求-0909094414 | 生成时间: 2026-09-09</p>
+            <p style="margin-top: 8px;">本文档供前后端开发、测试人员参考，按优先级P0→P3依次修复</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息 / 私聊 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .critical-layout { box-sizing: border-box; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .msg-page { height: calc(100vh - 64px); min-height: 600px; }
+            .msg-list { width: 100%; }
+            .msg-detail { display: none; }
+            .msg-shell.show-detail .msg-list { display: none; }
+            .msg-shell.show-detail .msg-detail { display: flex; }
+            @media (min-width: 768px) {
+                .msg-list { width: 320px; display: flex !important; }
+                .msg-detail { display: flex !important; }
+            }
+            .chat-bubble-me { background: var(--brand-primary); color: var(--brand-primary-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm) var(--brand-radius-md); }
+            .chat-bubble-them { background: var(--brand-surface-3); color: var(--brand-ink); border-radius: var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-md) var(--brand-radius-sm); }
+            .msg-input { width: 100%; min-height: 44px; max-height: 120px; padding: 10px 14px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; resize: none; }
+            .msg-input::placeholder { color: var(--brand-ink-3); }
+            .msg-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .conv-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background .15s; }
+            .conv-item:hover { background: var(--brand-surface-2); }
+            .conv-item.active { background: var(--brand-primary-subtle); }
+            .conv-avatar { width: 44px; height: 44px; border-radius: var(--brand-radius-pill); object-fit: cover; background: var(--brand-surface-3); }
+            .unread-badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--brand-radius-pill); background: var(--brand-primary); color: var(--brand-primary-ink); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+            .msg-product-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--brand-radius-md); background: var(--brand-surface-2); border: 1px solid var(--brand-line); }
+            .chat-scroll { flex: 1; overflow-y: auto; }
+            .chat-scroll::-webkit-scrollbar { width: 6px; }
+            .chat-scroll::-webkit-scrollbar-thumb { background: var(--brand-line); border-radius: var(--brand-radius-pill); }
+        </style>
+
+        <!-- 顶部导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+        <div class="nav-spacer"></div>
+
+        <!-- 消息中心 -->
+        <section class="msg-page max-w-7xl mx-auto px-4 py-6" data-dom-id="messages-shell">
+            <div class="msg-shell flex w-full h-full rounded-xl overflow-hidden border border-border bg-card shadow-2" id="msgShell">
+                <!-- 左侧会话列表 -->
+                <aside class="msg-list flex-col border-r border-border bg-card" aria-label="会话列表">
+                    <div class="p-4 border-b border-border">
+                        <h1 class="text-lg font-bold text-foreground">消息中心</h1>
+                        <p class="text-xs text-muted-foreground mt-1">与买家/卖家沟通交易细节</p>
+                    </div>
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="conv-item active" data-dom-id="conv-active" onclick="showChat()">
+                            <img src="../assets/avatar-seller.jpg" alt="数码老张" class="conv-avatar">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-semibold text-foreground truncate">数码老张</span>
+                                    <span class="text-xs text-muted-foreground shrink-0">10:42</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 mt-1">
+                                    <span class="text-sm text-muted-foreground truncate">显卡还在吗？能否小刀？</span>
+                                    <span class="unread-badge">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conv-item" onclick="showChat()">
+                            <img src="../assets/avatar-user.jpg" alt="极客阿杰" class="conv-avatar">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-semibold text-foreground truncate">极客阿杰</span>
+                                    <span class="text-xs text-muted-foreground shrink-0">昨天</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 mt-1">
+                                    <span class="text-sm text-muted-foreground truncate">明天下午可以当面验机。</span>
+                                    <span class="unread-badge">1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conv-item" onclick="showChat()">
+                            <img src="../assets/avatar-seller.jpg" alt="装机小队" class="conv-avatar">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-semibold text-foreground truncate">装机小队</span>
+                                    <span class="text-xs text-muted-foreground shrink-0">周一</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 mt-1">
+                                    <span class="text-sm text-muted-foreground truncate">好的，发货前我再拍视频给你。</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conv-item" onclick="showChat()">
+                            <img src="../assets/avatar-user.jpg" alt="硬件小白" class="conv-avatar">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="font-semibold text-foreground truncate">硬件小白</span>
+                                    <span class="text-xs text-muted-foreground shrink-0">12/20</span>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 mt-1">
+                                    <span class="text-sm text-muted-foreground truncate">谢谢老哥，已经收到了。</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- 右侧聊天窗口 -->
+                <section class="msg-detail flex-col flex-1 bg-background" aria-label="聊天详情">
+                    <!-- 顶部对方信息与商品卡片 -->
+                    <div class="flex items-center justify-between gap-4 p-4 border-b border-border bg-card">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <button type="button" class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring" onclick="showList()" aria-label="返回会话列表">
+                                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                            </button>
+                            <img src="../assets/avatar-seller.jpg" alt="数码老张" class="w-10 h-10 rounded-full object-cover bg-muted">
+                            <div class="min-w-0">
+                                <div class="font-semibold text-foreground truncate">数码老张</div>
+                                <div class="text-xs text-muted-foreground">3分钟前在线</div>
+                            </div>
+                        </div>
+                        <a href="product.html?id=gpu-rtx4070" class="msg-product-card hover:border-primary transition-colors focus-visible:ring-2 focus-visible:ring-ring" data-dom-id="chat-product-card">
+                            <img src="../assets/product-gpu-rtx4070.jpg" alt="RTX 4070" class="w-12 h-12 rounded-md object-cover bg-muted">
+                            <div class="min-w-0">
+                                <div class="text-sm font-medium text-foreground truncate">七彩虹 RTX 4070 战斧豪华版</div>
+                                <div class="text-sm font-bold text-primary">¥3,680</div>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-muted-foreground shrink-0"></i>
+                        </a>
+                    </div>
+
+                    <!-- 聊天记录 -->
+                    <div class="chat-scroll p-4 space-y-6" data-dom-id="chat-messages">
+                        <div class="text-center">
+                            <span class="inline-block px-3 py-1 text-xs text-muted-foreground bg-muted rounded-full">今天</span>
+                        </div>
+
+                        <!-- 对方消息 -->
+                        <div class="flex gap-3">
+                            <img src="../assets/avatar-seller.jpg" alt="数码老张" class="w-9 h-9 rounded-full object-cover bg-muted shrink-0">
+                            <div class="max-w-[75%] space-y-1">
+                                <div class="chat-bubble-them px-4 py-2.5 text-sm leading-relaxed">
+                                    你好，这块 RTX 4070 还在吗？
+                                </div>
+                                <span class="text-xs text-muted-foreground">10:38</span>
+                            </div>
+                        </div>
+
+                        <!-- 我的消息 -->
+                        <div class="flex gap-3 justify-end">
+                            <div class="max-w-[75%] space-y-1 text-right">
+                                <div class="chat-bubble-me px-4 py-2.5 text-sm leading-relaxed">
+                                    在的，箱说全，上海本地可以自提。
+                                </div>
+                                <span class="text-xs text-muted-foreground">10:39</span>
+                            </div>
+                            <img src="../assets/avatar-user.jpg" alt="我" class="w-9 h-9 rounded-full object-cover bg-muted shrink-0">
+                        </div>
+
+                        <!-- 对方消息 -->
+                        <div class="flex gap-3">
+                            <img src="../assets/avatar-seller.jpg" alt="数码老张" class="w-9 h-9 rounded-full object-cover bg-muted shrink-0">
+                            <div class="max-w-[75%] space-y-1">
+                                <div class="chat-bubble-them px-4 py-2.5 text-sm leading-relaxed">
+                                    能否小刀？同城我自提。
+                                </div>
+                                <span class="text-xs text-muted-foreground">10:42</span>
+                            </div>
+                        </div>
+
+                        <!-- 我的图片消息 -->
+                        <div class="flex gap-3 justify-end">
+                            <div class="max-w-[75%] space-y-1 text-right">
+                                <div class="chat-bubble-me p-2 overflow-hidden">
+                                    <img src="../assets/product-gpu-rtx4070.jpg" alt="显卡实拍" class="w-48 h-auto rounded-md object-cover">
+                                </div>
+                                <span class="text-xs text-muted-foreground">10:45</span>
+                            </div>
+                            <img src="../assets/avatar-user.jpg" alt="我" class="w-9 h-9 rounded-full object-cover bg-muted shrink-0">
+                        </div>
+                    </div>
+
+                    <!-- 底部输入框 -->
+                    <div class="p-4 border-t border-border bg-card" data-dom-id="chat-input-area">
+                        <form class="flex items-end gap-3" onsubmit="event.preventDefault();">
+                            <button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring shrink-0" aria-label="发送图片">
+                                <i data-lucide="image-plus" class="w-5 h-5"></i>
+                            </button>
+                            <div class="flex-1">
+                                <textarea class="msg-input" rows="1" placeholder="输入消息…" aria-label="消息输入框"></textarea>
+                            </div>
+                            <button type="submit" class="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-md bg-primary text-primary-foreground font-semibold hover:bg-[var(--brand-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0" data-dom-id="chat-send-btn">
+                                <span>发送</span>
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- 简化页脚 -->
+        <footer class="py-6 border-t border-border bg-background">
+            <div class="max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
+                <p>&copy; 2026 硬件侠. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script>
+            function showChat() {
+                document.getElementById('msgShell').classList.add('show-detail');
+            }
+            function showList() {
+                document.getElementById('msgShell').classList.remove('show-detail');
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

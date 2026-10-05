@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告通知 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .announcement-shell { min-height: 100vh; display: flex; flex-direction: column; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .tab-btn { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: var(--brand-radius-pill); font-size: 14px; font-weight: 500; white-space: nowrap; transition: all .2s; color: var(--brand-ink-2); background: var(--brand-surface-2); border: 1px solid transparent; }
+            .tab-btn:hover { color: var(--brand-ink); background: var(--brand-surface-3); }
+            .tab-btn.active { color: var(--brand-primary-ink); background: var(--brand-primary); }
+            .tab-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .announcement-card { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); transition: border-color .2s, transform .2s; cursor: pointer; }
+            .announcement-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+            .announcement-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .pinned-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 220px; padding: 24px; border-radius: var(--brand-radius-lg); background: linear-gradient(135deg, var(--brand-surface-2) 0%, var(--brand-surface) 100%); border: 1px solid var(--brand-line); overflow: hidden; transition: border-color .2s, transform .2s; cursor: pointer; }
+            .pinned-card:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+            .pinned-card::before { content: ''; position: absolute; top: 0; right: 0; width: 180px; height: 180px; background: radial-gradient(circle, rgba(0, 212, 170, .18) 0%, transparent 70%); pointer-events: none; }
+            .pinned-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .badge { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--brand-radius-pill); font-size: 12px; font-weight: 600; }
+            .badge-primary { background: var(--brand-primary-subtle); color: var(--brand-primary); }
+            .badge-info { background: var(--brand-state-info-subtle); color: var(--brand-state-info); }
+            .badge-warning { background: var(--brand-state-warning-subtle); color: var(--brand-state-warning); }
+            .badge-success { background: var(--brand-state-success-subtle); color: var(--brand-state-success); }
+            .badge-error { background: var(--brand-state-error-subtle); color: var(--brand-state-error); }
+            .pagination-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 12px; border-radius: var(--brand-radius-md); font-size: 14px; font-weight: 500; color: var(--brand-ink-2); background: var(--brand-card); border: 1px solid var(--brand-line); transition: all .2s; }
+            .pagination-btn:hover:not(:disabled) { border-color: var(--brand-primary); color: var(--brand-ink); }
+            .pagination-btn.active { background: var(--brand-primary); color: var(--brand-primary-ink); border-color: var(--brand-primary); }
+            .pagination-btn:disabled { opacity: .5; cursor: not-allowed; }
+            .announcement-modal { width: calc(100% - 32px); max-width: 768px; margin: auto; padding: 0; color: var(--brand-ink); background: var(--brand-card); border: 1px solid var(--brand-line); border-radius: var(--brand-radius-lg); box-shadow: var(--brand-shadow-3); }
+            .announcement-modal::backdrop { background: rgba(0, 0, 0, .65); backdrop-filter: blur(2px); }
+            .toggle { appearance: none; width: 44px; height: 24px; border-radius: 999px; background: var(--brand-surface-3); position: relative; cursor: pointer; outline: none; border: 1px solid var(--brand-line); flex-shrink: 0; }
+            .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--brand-ink); transition: transform .2s; }
+            .toggle:checked { background: var(--brand-primary); border-color: var(--brand-primary); }
+            .toggle:checked::after { transform: translateX(20px); background: var(--brand-primary-ink); }
+            .toggle:focus-visible { box-shadow: 0 0 0 2px var(--brand-ring); }
+        </style>
+
+        <div class="announcement-shell">
+            <!-- 顶部导航 -->
+                <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+            <div class="nav-spacer"></div>
+
+            <!-- 页面标题 + 搜索 -->
+            <section class="bg-background border-b border-border">
+                <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+                    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-3">公告通知</h1>
+                            <p class="text-muted-foreground">了解平台最新动态、活动通知与政策更新</p>
+                        </div>
+                        <form class="relative w-full md:max-w-sm" role="search" aria-label="公告搜索">
+                            <input data-dom-id="announcement-search" type="search" placeholder="搜索公告标题或关键词…" class="w-full h-11 pl-10 pr-4 rounded-md bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 公告分类标签 -->
+            <section class="bg-background border-b border-border sticky top-16 z-30">
+                <div class="max-w-7xl mx-auto px-4 py-4">
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" role="tablist" aria-label="公告分类">
+                        <button class="tab-btn active" role="tab" aria-selected="true" data-category="all" data-dom-id="tab-all">全部</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-category="platform" data-dom-id="tab-platform">平台公告</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-category="activity" data-dom-id="tab-activity">活动通知</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-category="policy" data-dom-id="tab-policy">政策更新</button>
+                        <button class="tab-btn" role="tab" aria-selected="false" data-category="maintenance" data-dom-id="tab-maintenance">系统维护</button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex-1 bg-background">
+                <!-- 置顶公告区 -->
+                <section class="py-10 md:py-12">
+                    <div class="max-w-7xl mx-auto px-4">
+                        <div class="flex items-center gap-2 mb-6">
+                            <i data-lucide="pin" class="w-5 h-5 text-primary"></i>
+                            <h2 class="text-xl md:text-2xl font-bold text-foreground">置顶公告</h2>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <article class="pinned-card" tabindex="0" role="button" aria-haspopup="dialog"
+                                data-title="硬件侠 2026 年度平台服务协议更新"
+                                data-badge="政策更新"
+                                data-date="2026-08-10"
+                                data-views="32,451"
+                                data-body="<p class='mb-4'>为了进一步保障买卖双方的合法权益，优化平台交易体验，我们已对《硬件侠平台服务协议》进行了全面修订。新版协议将于 2026 年 9 月 1 日起正式生效。</p><p class='mb-4'>本次调整主要涉及以下内容：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>明确买卖双方的权利义务与违约责任；</li><li>完善验机报告与售后退换流程；</li><li>强化对虚假描述、假冒伪劣商品的处罚措施；</li><li>优化个人信息保护与数据使用条款。</li></ul><p>请各位用户及时查阅新版协议，继续使用硬件侠服务即视为同意更新后的内容。如有疑问，请联系官方客服。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <span class="badge badge-success">置顶</span>
+                                        <span class="badge badge-primary">政策更新</span>
+                                    </div>
+                                    <h3 class="text-xl md:text-2xl font-bold text-foreground mb-3">硬件侠 2026 年度平台服务协议更新</h3>
+                                    <p class="text-muted-foreground line-clamp-2 mb-4">新版服务协议将于 2026 年 9 月 1 日正式生效，涉及交易保障、售后流程与个人信息保护等重要调整。</p>
+                                    <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                        <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i>2026-08-10</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="eye" class="w-4 h-4"></i>32,451 阅读</span>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="pinned-card" tabindex="0" role="button" aria-haspopup="dialog"
+                                data-title="国庆假期客服与发货安排通知"
+                                data-badge="平台公告"
+                                data-date="2026-08-15"
+                                data-views="18,927"
+                                data-body="<p class='mb-4'>2026 年国庆假期期间（10 月 1 日至 10 月 7 日），硬件侠将照常为您提供服务，但客服响应与物流时效将有所调整，敬请留意。</p><p class='mb-4'>具体安排如下：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>客服在线时间调整为 10:00-18:00，咨询回复可能略有延迟；</li><li>节日期间订单可正常下单付款，卖家发货时间以商品详情页说明为准；</li><li>部分快递公司揽收时效延长 1-3 天，建议买卖双方提前沟通；</li><li>售后申请可正常提交，审核处理将于 10 月 8 日起陆续进行。</li></ul><p>感谢您对硬件侠的理解与支持，祝您假期愉快。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <span class="badge badge-success">置顶</span>
+                                        <span class="badge badge-info">平台公告</span>
+                                    </div>
+                                    <h3 class="text-xl md:text-2xl font-bold text-foreground mb-3">国庆假期客服与发货安排通知</h3>
+                                    <p class="text-muted-foreground line-clamp-2 mb-4">国庆期间客服与物流时效将有所调整，请买卖双方提前沟通发货与售后安排。</p>
+                                    <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                        <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i>2026-08-15</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="eye" class="w-4 h-4"></i>18,927 阅读</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 公告列表 -->
+                <section class="py-10 md:py-12 border-t border-border">
+                    <div class="max-w-7xl mx-auto px-4">
+                        <h2 class="text-xl md:text-2xl font-bold text-foreground mb-6">最新公告</h2>
+                        <div id="announcement-list" class="space-y-4">
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="platform"
+                                data-title="硬件侠担保交易服务升级公告"
+                                data-badge="平台公告"
+                                data-date="2026-08-28"
+                                data-views="8,932"
+                                data-body="<p class='mb-4'>为进一步提升交易安全性，硬件侠担保交易服务已完成全面升级。升级后，资金托管、确认收货、自动放款等关键节点将更加透明可控。</p><p class='mb-4'>主要变化包括：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>买家付款后资金由平台全程托管，卖家发货更放心；</li><li>新增「延迟收货」功能，买家可在物流异常时申请延后确认；</li><li>自动放款时间由 7 天延长至 10 天，给买家更充足的验机时间；</li><li>交易纠纷处理时效由 48 小时缩短至 24 小时。</li></ul><p>本次升级对所有用户自动生效，无需手动操作。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-info">平台公告</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>8,932</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">硬件侠担保交易服务升级公告</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">资金托管、确认收货与自动放款规则优化，为买卖双方提供更安全的交易保障。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-28</span>
+                                </div>
+                            </article>
+
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="activity"
+                                data-title="开学季装机狂欢，全场免邮券限时领"
+                                data-badge="活动通知"
+                                data-date="2026-08-25"
+                                data-views="15,201"
+                                data-body="<p class='mb-4'>新学期新装备！硬件侠开学季装机狂欢活动正式上线，即日起至 2026 年 9 月 10 日，全场可领取免邮券与满减券。</p><p class='mb-4'>活动规则：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>每日登录可领取 1 张免邮券，单次最高抵扣 15 元运费；</li><li>订单满 500 元减 30 元，满 1000 元减 80 元，可与卖家优惠叠加；</li><li>分享活动页至社交平台，额外获得 1 张 50 元无门槛券；</li><li>活动期间成交订单可参与抽奖，奖品包含机械键盘、游戏鼠标等。</li></ul><p>优惠券可在「我的钱包」-「优惠券」中查看，数量有限，先到先得。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-warning">活动通知</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>15,201</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">开学季装机狂欢，全场免邮券限时领</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">即日起至 9 月 10 日，登录即领免邮券与满减券，分享再得 50 元无门槛券。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-25</span>
+                                </div>
+                            </article>
+
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="policy"
+                                data-title="卖家实名认证与发布规范调整"
+                                data-badge="政策更新"
+                                data-date="2026-08-22"
+                                data-views="6,430"
+                                data-body="<p class='mb-4'>为营造更可信的交易环境，平台将对卖家实名认证与商品发布规范进行调整。新规将于 2026 年 9 月 1 日起执行。</p><p class='mb-4'>重点调整：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>新注册卖家需完成实名认证后方可发布商品；</li><li>商品标题与描述中不得出现站外联系方式或诱导线下交易内容；</li><li>高价值商品（单价 2000 元以上）需上传购买凭证或 SN 码照片；</li><li>违规商品将直接下架，情节严重的账号将限制发布权限。</li></ul><p>已发布商品将分批复核，请卖家及时补充资料，避免影响正常展示。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-primary">政策更新</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>6,430</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">卖家实名认证与发布规范调整</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">9 月起新卖家需完成实名认证，高价值商品需补充凭证，违规内容将严格处理。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-22</span>
+                                </div>
+                            </article>
+
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="maintenance"
+                                data-title="8 月 30 日凌晨支付系统进行维护"
+                                data-badge="系统维护"
+                                data-date="2026-08-20"
+                                data-views="4,112"
+                                data-body="<p class='mb-4'>为提升支付系统稳定性，硬件侠将于 2026 年 8 月 30 日 00:00 至 04:00 进行支付通道维护。</p><p class='mb-4'>维护期间影响：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>下单支付、提现、退款等资金操作将暂时不可用；</li><li>商品浏览、聊天、订单查看等其它功能不受影响；</li><li>维护结束后，未完成的支付订单将自动关闭，请重新下单。</li></ul><p>建议您提前安排交易与提现时间，给您带来的不便敬请谅解。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-error">系统维护</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>4,112</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">8 月 30 日凌晨支付系统进行维护</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">8 月 30 日 00:00-04:00 支付通道暂停服务，请提前安排交易与提现。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-20</span>
+                                </div>
+                            </article>
+
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="platform"
+                                data-title="关于打击虚假描述的专项治理公告"
+                                data-badge="平台公告"
+                                data-date="2026-08-18"
+                                data-views="9,876"
+                                data-body="<p class='mb-4'>近期平台发现部分商品存在虚假成色、虚标参数、隐瞒故障等问题，严重损害了买家权益。为此，硬件侠即日起启动「真实描述」专项治理行动。</p><p class='mb-4'>治理措施：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>通过 AI 识别与人工复核，重点排查显卡、CPU、主板等高价值品类；</li><li>对虚假描述商品执行下架、扣分、限制流量等处罚；</li><li>建立「真实描述」标签，鼓励卖家上传检测截图与 SN 码；</li><li>买家可通过订单详情一键举报，平台 24 小时内响应处理。</li></ul><p>我们呼吁所有卖家如实描述商品，共同维护硬件侠的交易信任环境。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-info">平台公告</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>9,876</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">关于打击虚假描述的专项治理公告</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">启动「真实描述」专项治理，重点排查高价值品类，严惩虚假描述行为。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-18</span>
+                                </div>
+                            </article>
+
+                            <article class="announcement-card" tabindex="0" role="button" aria-haspopup="dialog" data-category="activity"
+                                data-title="邀请好友得现金红包活动上线"
+                                data-badge="活动通知"
+                                data-date="2026-08-15"
+                                data-views="11,234"
+                                data-body="<p class='mb-4'>邀请好友加入硬件侠，双方均可获得现金红包奖励。活动长期有效，多邀多得。</p><p class='mb-4'>参与方式：</p><ul class='list-disc pl-5 space-y-2 mb-4'><li>在「我的」-「邀请有礼」中复制专属邀请链接；</li><li>好友通过链接完成注册并实名认证，邀请人获得 5 元现金红包；</li><li>好友完成首单交易，邀请人再得 15 元现金红包；</li><li>红包实时到账钱包，可直接提现或用于平台消费。</li></ul><p>活动细则请查看邀请页面说明，恶意刷量将被取消资格。</p>"
+                                onclick="openAnnouncement(this)" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="badge badge-warning">活动通知</span>
+                                    <span class="text-xs text-muted-foreground ml-auto flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i>11,234</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-foreground">邀请好友得现金红包活动上线</h3>
+                                <p class="text-sm text-muted-foreground line-clamp-2">分享专属邀请链接，好友注册并完成首单，双方均可获得现金红包。</p>
+                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span>2026-08-15</span>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div id="empty-state" class="hidden py-16 text-center">
+                            <i data-lucide="file-x" class="w-12 h-12 text-muted-foreground mx-auto mb-4"></i>
+                            <p class="text-muted-foreground">该分类下暂无公告</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 订阅设置 -->
+                <section class="py-10 md:py-12 border-t border-border">
+                    <div class="max-w-7xl mx-auto px-4">
+                        <div class="rounded-xl bg-card border border-border p-6 md:p-8">
+                            <div class="flex items-center gap-3 mb-6">
+                                <i data-lucide="bell" class="w-6 h-6 text-primary"></i>
+                                <h2 class="text-xl font-bold text-foreground">订阅设置</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <label class="flex items-start gap-4 cursor-pointer group" data-dom-id="subscribe-email">
+                                    <input type="checkbox" checked class="toggle" aria-label="接收邮件通知">
+                                    <div>
+                                        <div class="font-medium text-foreground group-hover:text-primary transition-colors">邮件通知</div>
+                                        <div class="text-sm text-muted-foreground">重要公告与活动第一时间发送至注册邮箱</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-start gap-4 cursor-pointer group" data-dom-id="subscribe-message">
+                                    <input type="checkbox" checked class="toggle" aria-label="接收站内信通知">
+                                    <div>
+                                        <div class="font-medium text-foreground group-hover:text-primary transition-colors">站内信通知</div>
+                                        <div class="text-sm text-muted-foreground">在消息中心接收公告推送</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 分页 -->
+                <section class="py-8 border-t border-border">
+                    <div class="max-w-7xl mx-auto px-4">
+                        <nav class="flex items-center justify-center gap-2" aria-label="公告分页">
+                            <button class="pagination-btn" disabled aria-label="上一页"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <button class="pagination-btn active" aria-label="第 1 页" aria-current="page">1</button>
+                            <button class="pagination-btn" aria-label="第 2 页">2</button>
+                            <button class="pagination-btn" aria-label="第 3 页">3</button>
+                            <span class="text-muted-foreground px-2">...</span>
+                            <button class="pagination-btn" aria-label="第 8 页">8</button>
+                            <button class="pagination-btn" aria-label="下一页"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        </nav>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 页脚 -->
+            <footer class="py-14 bg-background border-t border-border mt-auto">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-foreground">
+                            <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                            <span class="text-lg font-bold">硬件侠</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li>客服邮箱：support@yingjianxia.com</li>
+                            <li>工作时间：周一至周日 9:00-21:00</li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                    © 2026 硬件侠. All rights reserved.
+                </div>
+            </footer>
+        </div>
+
+        <!-- 公告详情弹窗 -->
+        <dialog id="announcement-modal" class="announcement-modal" aria-labelledby="modal-title">
+            <div class="p-6 md:p-8 max-h-[80vh] overflow-y-auto">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <div>
+                        <span id="modal-badge" class="badge badge-info mb-2">平台公告</span>
+                        <h2 id="modal-title" class="text-2xl font-bold text-foreground">公告标题</h2>
+                    </div>
+                    <button type="button" onclick="document.getElementById('announcement-modal').close()" class="inline-flex items-center justify-center w-9 h-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="关闭">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
+                    <span class="inline-flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i><span id="modal-date">2026-08-28</span></span>
+                    <span class="inline-flex items-center gap-1"><i data-lucide="eye" class="w-4 h-4"></i><span id="modal-views">0 阅读</span></span>
+                </div>
+
+                <div id="modal-body" class="text-foreground/90 leading-relaxed space-y-4">
+                    <p>公告正文内容</p>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-border">
+                    <h3 class="font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-4 h-4 text-primary"></i>附件
+                    </h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" class="inline-flex items-center gap-2 text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring rounded">
+                                <i data-lucide="download" class="w-4 h-4"></i>硬件侠平台服务协议（2026 版）.pdf
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="inline-flex items-center gap-2 text-sm text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring rounded">
+                                <i data-lucide="download" class="w-4 h-4"></i>卖家发布规范一览表.pdf
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-border">
+                    <h3 class="font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <i data-lucide="megaphone" class="w-4 h-4 text-primary"></i>相关公告
+                    </h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">国庆假期客服与发货安排通知</a></li>
+                        <li><a href="#" class="text-sm text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">卖家实名认证与发布规范调整</a></li>
+                        <li><a href="#" class="text-sm text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">8 月 30 日凌晨支付系统进行维护</a></li>
+                    </ul>
+                </div>
+            </div>
+        </dialog>
+
+        <script>
+            (function () {
+                const modal = document.getElementById('announcement-modal');
+                const titleEl = document.getElementById('modal-title');
+                const badgeEl = document.getElementById('modal-badge');
+                const dateEl = document.getElementById('modal-date');
+                const viewsEl = document.getElementById('modal-views');
+                const bodyEl = document.getElementById('modal-body');
+                const tabs = document.querySelectorAll('.tab-btn');
+                const cards = document.querySelectorAll('#announcement-list .announcement-card');
+                const emptyState = document.getElementById('empty-state');
+
+                window.openAnnouncement = function (el) {
+                    titleEl.textContent = el.dataset.title || '';
+                    badgeEl.textContent = el.dataset.badge || '公告';
+                    dateEl.textContent = el.dataset.date || '';
+                    viewsEl.textContent = (el.dataset.views || '0') + ' 阅读';
+                    bodyEl.innerHTML = el.dataset.body || '<p>暂无详情</p>';
+
+                    badgeEl.className = 'badge mb-2';
+                    const badge = el.dataset.badge;
+                    if (badge === '平台公告') badgeEl.classList.add('badge-info');
+                    else if (badge === '活动通知') badgeEl.classList.add('badge-warning');
+                    else if (badge === '政策更新') badgeEl.classList.add('badge-primary');
+                    else if (badge === '系统维护') badgeEl.classList.add('badge-error');
+                    else badgeEl.classList.add('badge-info');
+
+                    modal.showModal();
+                };
+
+                tabs.forEach(function (tab) {
+                    tab.addEventListener('click', function () {
+                        tabs.forEach(function (t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+                        tab.classList.add('active');
+                        tab.setAttribute('aria-selected', 'true');
+
+                        const category = tab.dataset.category;
+                        let visible = 0;
+                        cards.forEach(function (card) {
+                            if (category === 'all' || card.dataset.category === category) {
+                                card.style.display = '';
+                                visible++;
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                        emptyState.classList.toggle('hidden', visible > 0);
+                    });
+                });
+
+                modal.addEventListener('click', function (e) {
+                    const rect = modal.getBoundingClientRect();
+                    if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+                        modal.close();
+                    }
+                });
+            })();
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

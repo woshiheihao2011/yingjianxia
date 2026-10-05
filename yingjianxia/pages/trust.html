@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平台信任中心 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-weight: 600; transition: background .2s, transform .15s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-primary:active { transform: translateY(1px); }
+            .btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 24px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-weight: 600; transition: background .2s, border-color .2s, transform .15s; }
+            .btn-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-secondary:active { transform: translateY(1px); }
+            .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .guarantee-card { display: flex; flex-direction: column; gap: 16px; padding: 28px; border-radius: var(--brand-radius-lg); background: var(--brand-card); border: 1px solid var(--brand-line); transition: transform .2s, border-color .2s; }
+            .guarantee-card:hover { transform: translateY(-4px); border-color: var(--brand-primary); }
+            .guarantee-card .icon-wrap { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: var(--brand-radius-md); background: var(--brand-primary-subtle); color: var(--brand-primary); }
+            .guarantee-card .icon-wrap i { width: 24px; height: 24px; }
+            .timeline-line { position: absolute; left: 24px; top: 48px; bottom: 0; width: 2px; background: var(--brand-line); }
+            .timeline-step { position: relative; padding-left: 72px; padding-bottom: 32px; }
+            .timeline-step:last-child { padding-bottom: 0; }
+            .timeline-dot { position: absolute; left: 12px; top: 4px; width: 24px; height: 24px; border-radius: 50%; background: var(--brand-primary); color: var(--brand-primary-ink); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+            .timeline-dot i { width: 14px; height: 14px; }
+            .faq-details { border-radius: var(--brand-radius-md); border: 1px solid var(--brand-line); background: var(--brand-card); overflow: hidden; }
+            .faq-details > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; font-weight: 500; color: var(--brand-ink); }
+            .faq-details > summary::-webkit-details-marker { display: none; }
+            .faq-details > summary i { width: 18px; height: 18px; color: var(--brand-ink-3); transition: transform .2s; flex-shrink: 0; }
+            .faq-details[open] > summary i { transform: rotate(180deg); }
+            .faq-content { padding: 0 20px 18px; color: var(--brand-ink-2); font-size: 14px; line-height: 1.7; }
+            @media (max-width: 768px) {
+                .timeline-line { left: 16px; }
+                .timeline-step { padding-left: 52px; }
+                .timeline-dot { left: 4px; }
+            }
+        </style>
+
+        <!-- 顶部导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+        <div class="nav-spacer"></div>
+
+        <!-- Hero -->
+        <section class="relative overflow-hidden bg-background">
+            <div class="max-w-7xl mx-auto px-4 py-16 lg:py-24">
+                <div class="text-center max-w-3xl mx-auto space-y-6">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground" data-dom-id="trust-hero-title">放心交易，平台全程护航</h1>
+                    <p class="text-base md:text-lg text-muted-foreground">从验机到收货，每一道环节都有硬件侠守护。真实检测、资金托管、实名认证、纠纷仲裁，让二手硬件交易更安心。</p>
+                    <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                        <a href="browse.html" class="btn-primary">去逛硬件</a>
+                        <a href="sell.html" class="btn-secondary">发布闲置</a>
+                    </div>
+                </div>
+
+                <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+                    <div class="rounded-xl border border-border bg-card p-6 text-center" data-dom-id="trust-stat-inspection">
+                        <div class="text-3xl md:text-4xl font-bold text-primary font-mono">128,600+</div>
+                        <div class="mt-2 text-sm text-muted-foreground">累计验机数</div>
+                    </div>
+                    <div class="rounded-xl border border-border bg-card p-6 text-center" data-dom-id="trust-stat-amount">
+                        <div class="text-3xl md:text-4xl font-bold text-primary font-mono">¥9.8 亿</div>
+                        <div class="mt-2 text-sm text-muted-foreground">担保交易金额</div>
+                    </div>
+                    <div class="rounded-xl border border-border bg-card p-6 text-center" data-dom-id="trust-stat-resolve">
+                        <div class="text-3xl md:text-4xl font-bold text-primary font-mono">98.7%</div>
+                        <div class="mt-2 text-sm text-muted-foreground">纠纷解决率</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 四大保障 -->
+        <section class="py-16 lg:py-20 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-foreground">四大交易保障</h2>
+                    <p class="mt-3 text-muted-foreground">多重机制叠加，买卖双方权益都能被看见和保护</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="guarantee-card" data-dom-id="guarantee-inspection">
+                        <div class="icon-wrap"><i data-lucide="clipboard-check"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-foreground text-lg">平台验机</h3>
+                            <p class="mt-2 text-sm text-muted-foreground leading-relaxed">硬件统一寄送至平台检测中心，外观、功能、SN 码逐项核对，杜绝货不对板。</p>
+                        </div>
+                    </div>
+                    <div class="guarantee-card" data-dom-id="guarantee-escrow">
+                        <div class="icon-wrap"><i data-lucide="shield-check"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-foreground text-lg">担保交易</h3>
+                            <p class="mt-2 text-sm text-muted-foreground leading-relaxed">买家付款后资金由平台托管，确认收货或验机通过后再放款，交易零风险。</p>
+                        </div>
+                    </div>
+                    <div class="guarantee-card" data-dom-id="guarantee-verified">
+                        <div class="icon-wrap"><i data-lucide="user-check"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-foreground text-lg">实名认证</h3>
+                            <p class="mt-2 text-sm text-muted-foreground leading-relaxed">卖家需通过实名与人脸认证，信用档案透明可查，骗子无处藏身。</p>
+                        </div>
+                    </div>
+                    <div class="guarantee-card" data-dom-id="guarantee-arbitration">
+                        <div class="icon-wrap"><i data-lucide="scale"></i></div>
+                        <div>
+                            <h3 class="font-semibold text-foreground text-lg">纠纷仲裁</h3>
+                            <p class="mt-2 text-sm text-muted-foreground leading-relaxed">交易出现争议可申请平台介入，专业客服依据凭证公平裁决，最快 24 小时结案。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 验机流程 -->
+        <section class="py-16 lg:py-20 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-foreground">专业验机流程</h2>
+                        <p class="mt-3 text-muted-foreground">每一笔走平台验机的订单，都会经过以下标准化检测步骤，确保你收到的硬件与描述一致。</p>
+                        <div class="mt-8 hidden lg:block rounded-xl border border-border bg-card p-6">
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="shield" class="w-6 h-6 text-primary mt-0.5 shrink-0"></i>
+                                <div>
+                                    <h4 class="font-semibold text-foreground">平台担保承诺</h4>
+                                    <p class="mt-2 text-sm text-muted-foreground leading-relaxed">若检测报告与实物严重不符，或商品存在未披露功能性故障，买家可在签收后 7 天内申请退换或全额退款。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-step" data-dom-id="timeline-order">
+                            <div class="timeline-dot">1</div>
+                            <h3 class="font-semibold text-foreground">买家下单并选择平台验机</h3>
+                            <p class="mt-2 text-sm text-muted-foreground">下单时勾选"平台验机"服务，货款进入托管账户。</p>
+                        </div>
+                        <div class="timeline-step" data-dom-id="timeline-ship">
+                            <div class="timeline-dot">2</div>
+                            <h3 class="font-semibold text-foreground">卖家寄送至检测中心</h3>
+                            <p class="mt-2 text-sm text-muted-foreground">卖家按平台地址发货，物流信息实时同步，买家可随时查看。</p>
+                        </div>
+                        <div class="timeline-step" data-dom-id="timeline-inspect">
+                            <div class="timeline-dot">3</div>
+                            <h3 class="font-semibold text-foreground">工程师专业检测</h3>
+                            <p class="mt-2 text-sm text-muted-foreground">48 小时内完成外观、接口、性能、温度等多维度测试。</p>
+                        </div>
+                        <div class="timeline-step" data-dom-id="timeline-report">
+                            <div class="timeline-dot">4</div>
+                            <h3 class="font-semibold text-foreground">生成电子检测报告</h3>
+                            <p class="mt-2 text-sm text-muted-foreground">报告含实拍图、跑分数据、SN 核对结果，买家确认后进入下一步。</p>
+                        </div>
+                        <div class="timeline-step" data-dom-id="timeline-dispatch">
+                            <div class="timeline-dot"><i data-lucide="check"></i></div>
+                            <h3 class="font-semibold text-foreground">确认发货并签收</h3>
+                            <p class="mt-2 text-sm text-muted-foreground">买家确认报告无误后，平台打包发货，签收后进入 7 天保障期。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 安全提示 -->
+        <section class="py-16 lg:py-20 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="rounded-2xl border border-border bg-card p-6 md:p-8" data-dom-id="safety-guide">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-md bg-primary-subtle text-primary">
+                                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-foreground">防骗指南</h2>
+                        </div>
+                        <ul class="space-y-3 text-sm text-muted-foreground">
+                            <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-primary mt-0.5 shrink-0"></i><span>拒绝任何脱离平台的私下转账或扫码付款请求。</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-primary mt-0.5 shrink-0"></i><span>收货时务必拍摄完整开箱视频，保留物流外包装。</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-primary mt-0.5 shrink-0"></i><span>优先选择带有"平台验机"标识的商品，检测报告即凭证。</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="check-circle" class="w-4 h-4 text-primary mt-0.5 shrink-0"></i><span>对价格明显低于市场价的商品保持警惕，谨防 bait-and-switch。</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="rounded-2xl border border-border bg-card p-6 md:p-8" data-dom-id="report-entry">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-md bg-primary-subtle text-primary">
+                                <i data-lucide="flag" class="w-5 h-5"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-foreground">举报入口</h2>
+                        </div>
+                        <p class="text-sm text-muted-foreground leading-relaxed mb-6">发现虚假描述、欺诈行为或违规商品？你可以通过以下渠道快速举报，平台将在 2 小时内响应。</p>
+                        <div class="space-y-3">
+                            <a href="messages.html" class="btn-primary w-full md:w-auto">联系在线客服</a>
+                            <a href="mailto:support@yingjianxia.com?subject=举报违规商品" class="btn-secondary w-full md:w-auto">邮件举报：support@yingjianxia.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section class="py-16 lg:py-20 bg-background border-t border-border">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl md:text-3xl font-bold text-foreground">常见问题</h2>
+                    <p class="mt-3 text-muted-foreground">关于交易保障你可能还想知道</p>
+                </div>
+                <div class="space-y-4">
+                    <details class="faq-details" data-dom-id="faq-1">
+                        <summary>平台验机需要额外付费吗？<i data-lucide="chevron-down"></i></summary>
+                        <div class="faq-content">平台验机服务费按商品成交价的 3% 收取，由买家在下单时支付。若交易未达成或验机未通过导致退款，该费用将全额退还。</div>
+                    </details>
+                    <details class="faq-details" data-dom-id="faq-2">
+                        <summary>验机不通过怎么办？<i data-lucide="chevron-down"></i></summary>
+                        <div class="faq-content">若检测发现商品与卖家描述严重不符或存在功能性故障，平台会自动终止交易并全额退款给买家，同时通知卖家取回商品。</div>
+                    </details>
+                    <details class="faq-details" data-dom-id="faq-3">
+                        <summary>担保交易的款项多久到账？<i data-lucide="chevron-down"></i></summary>
+                        <div class="faq-content">买家确认收货或系统自动确认收货后，款项将在 24 小时内结算至卖家账户。若交易触发纠纷仲裁，到账时间以仲裁结果为准。</div>
+                    </details>
+                    <details class="faq-details" data-dom-id="faq-4">
+                        <summary>如何申请纠纷仲裁？<i data-lucide="chevron-down"></i></summary>
+                        <div class="faq-content">进入"订单中心"找到对应订单，点击"申请平台介入"，上传聊天记录、开箱视频、检测报告等凭证，客服会在 24 小时内联系双方处理。</div>
+                    </details>
+                    <details class="faq-details" data-dom-id="faq-5">
+                        <summary>实名认证信息会被泄露吗？<i data-lucide="chevron-down"></i></summary>
+                        <div class="faq-content">平台采用加密存储与脱敏展示，实名信息仅用于身份核验与风控，不会向交易对方披露，亦不会用于任何第三方营销。</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-14 bg-background border-t border-border">
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-foreground">
+                        <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                        <span class="text-lg font-bold">硬件侠</span>
+                    </div>
+                    <p class="text-sm text-muted-foreground">发烧友信的过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="trust.html" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">信任中心</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li>客服邮箱：support@yingjianxia.com</li>
+                        <li>工作时间：周一至周日 9:00-21:00</li>
+                        <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                © 2026 硬件侠. All rights reserved.
+            </div>
+        </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车 / 结算 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .cart-page { padding-top: 64px; }
+            @media (max-width: 768px) { .cart-page { padding-top: 56px; } }
+            .qty-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--brand-line); background-color: var(--brand-surface-2); color: var(--brand-ink); border-radius: var(--brand-radius-sm); transition: border-color .15s, color .15s; }
+            .qty-btn:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+            .qty-input { width: 48px; height: 32px; text-align: center; background-color: var(--brand-surface); border-top: 1px solid var(--brand-line); border-bottom: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; }
+            .pay-option { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-radius: var(--brand-radius-md); border: 1px solid var(--brand-line); background-color: var(--brand-surface-2); cursor: pointer; transition: border-color .15s, background-color .15s; }
+            .pay-option:hover { border-color: var(--brand-primary); }
+            .pay-option input { width: 18px; height: 18px; accent-color: var(--brand-primary); cursor: pointer; }
+            .summary-row { display: flex; justify-content: space-between; font-size: 14px; }
+            @media (max-width: 640px) { .cart-item-inner { flex-direction: column; } .cart-thumb { width: 100%; height: auto; aspect-ratio: 16/10; } }
+        </style>
+
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <div class='cart-page min-h-screen bg-[var(--brand-bg)]'>
+            <section class='border-b border-[var(--brand-line)] bg-[var(--brand-surface)]'>
+                <div class='mx-auto max-w-7xl px-4 py-6 md:py-8'>
+                    <h1 class='text-2xl font-bold text-[var(--brand-ink)]'>我的购物车</h1>
+                    <p class='mt-1 text-sm text-[var(--brand-ink-2)]'>共 3 件商品</p>
+                </div>
+            </section>
+
+            <div class='mx-auto max-w-7xl px-4 py-6 md:py-8'>
+                <div class='flex flex-col gap-6 lg:flex-row'>
+                    <div class='min-w-0 flex-1 space-y-4'>
+                        <div class='flex items-center justify-between rounded-xl border border-[var(--brand-line)] bg-[var(--brand-surface)] px-4 py-3'>
+                            <label class='flex cursor-pointer items-center gap-2 text-sm text-[var(--brand-ink-2)]'>
+                                <input type='checkbox' checked style='accent-color: var(--brand-primary); width: 18px; height: 18px;' />
+                                全选
+                            </label>
+                            <button type='button' class='flex items-center gap-1 text-sm text-[var(--brand-ink-2)] transition-colors hover:text-[var(--brand-state-error)]'>
+                                <i data-lucide='trash-2' class='h-4 w-4'></i>
+                                删除
+                            </button>
+                        </div>
+
+                        <div class='cart-item-inner flex gap-4 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4'>
+                            <input type='checkbox' checked class='mt-1 h-4 w-4 shrink-0' style='accent-color: var(--brand-primary);' />
+                            <div class='cart-thumb h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[var(--brand-surface-2)]'>
+                                <img src='../assets/product-gpu-rtx4070.jpg' alt='华硕 RTX 4070 DUAL 12G' class='h-full w-full object-cover' />
+                            </div>
+                            <div class='min-w-0 flex-1'>
+                                <div>
+                                    <h3 class='font-medium text-[var(--brand-ink)]'>华硕 RTX 4070 DUAL 12G 二手显卡</h3>
+                                    <p class='mt-1 text-xs text-[var(--brand-ink-3)]'>规格：12GB GDDR6X · 99新 · 箱说全</p>
+                                </div>
+                                <div class='mt-4 flex flex-wrap items-center justify-between gap-3'>
+                                    <div class='flex items-center'>
+                                        <button type='button' class='qty-btn' aria-label='减少'><i data-lucide='minus' class='h-4 w-4'></i></button>
+                                        <input type='number' value='1' min='1' class='qty-input' />
+                                        <button type='button' class='qty-btn' aria-label='增加'><i data-lucide='plus' class='h-4 w-4'></i></button>
+                                    </div>
+                                    <div class='text-right'>
+                                        <div class='text-lg font-bold text-[var(--brand-primary)]'>¥3,200</div>
+                                        <div class='text-xs text-[var(--brand-ink-3)]'>单价 ¥3,200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type='button' aria-label='删除' class='self-start rounded-md p-2 text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]'>
+                                <i data-lucide='trash-2' class='h-5 w-5'></i>
+                            </button>
+                        </div>
+
+                        <div class='cart-item-inner flex gap-4 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4'>
+                            <input type='checkbox' checked class='mt-1 h-4 w-4 shrink-0' style='accent-color: var(--brand-primary);' />
+                            <div class='cart-thumb h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[var(--brand-surface-2)]'>
+                                <img src='../assets/product-cpu-13600k.jpg' alt='Intel i5-13600K' class='h-full w-full object-cover' />
+                            </div>
+                            <div class='min-w-0 flex-1'>
+                                <div>
+                                    <h3 class='font-medium text-[var(--brand-ink)]'>Intel Core i5-13600K 盒装处理器</h3>
+                                    <p class='mt-1 text-xs text-[var(--brand-ink-3)]'>规格：14核20线程 · 95新 · 原装散热器未用</p>
+                                </div>
+                                <div class='mt-4 flex flex-wrap items-center justify-between gap-3'>
+                                    <div class='flex items-center'>
+                                        <button type='button' class='qty-btn' aria-label='减少'><i data-lucide='minus' class='h-4 w-4'></i></button>
+                                        <input type='number' value='1' min='1' class='qty-input' />
+                                        <button type='button' class='qty-btn' aria-label='增加'><i data-lucide='plus' class='h-4 w-4'></i></button>
+                                    </div>
+                                    <div class='text-right'>
+                                        <div class='text-lg font-bold text-[var(--brand-primary)]'>¥1,100</div>
+                                        <div class='text-xs text-[var(--brand-ink-3)]'>单价 ¥1,100</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type='button' aria-label='删除' class='self-start rounded-md p-2 text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]'>
+                                <i data-lucide='trash-2' class='h-5 w-5'></i>
+                            </button>
+                        </div>
+
+                        <div class='cart-item-inner flex gap-4 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4'>
+                            <input type='checkbox' checked class='mt-1 h-4 w-4 shrink-0' style='accent-color: var(--brand-primary);' />
+                            <div class='cart-thumb h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-[var(--brand-surface-2)]'>
+                                <img src='../assets/product-ram-ddr5.jpg' alt='芝奇 DDR5 32GB' class='h-full w-full object-cover' />
+                            </div>
+                            <div class='min-w-0 flex-1'>
+                                <div>
+                                    <h3 class='font-medium text-[var(--brand-ink)]'>芝奇 DDR5 6000 32GB(16×2) 套装</h3>
+                                    <p class='mt-1 text-xs text-[var(--brand-ink-3)]'>规格：6000MHz C30 · 99新 · EXPO/XMP 双平台</p>
+                                </div>
+                                <div class='mt-4 flex flex-wrap items-center justify-between gap-3'>
+                                    <div class='flex items-center'>
+                                        <button type='button' class='qty-btn' aria-label='减少'><i data-lucide='minus' class='h-4 w-4'></i></button>
+                                        <input type='number' value='1' min='1' class='qty-input' />
+                                        <button type='button' class='qty-btn' aria-label='增加'><i data-lucide='plus' class='h-4 w-4'></i></button>
+                                    </div>
+                                    <div class='text-right'>
+                                        <div class='text-lg font-bold text-[var(--brand-primary)]'>¥599</div>
+                                        <div class='text-xs text-[var(--brand-ink-3)]'>单价 ¥599</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type='button' aria-label='删除' class='self-start rounded-md p-2 text-[var(--brand-ink-3)] transition-colors hover:bg-[var(--brand-state-error-subtle)] hover:text-[var(--brand-state-error)]'>
+                                <i data-lucide='trash-2' class='h-5 w-5'></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class='shrink-0 space-y-4 lg:w-[360px]'>
+                        <div class='rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-5'>
+                            <div class='mb-3 flex items-center justify-between'>
+                                <h2 class='flex items-center gap-2 text-base font-semibold text-[var(--brand-ink)]'>
+                                    <i data-lucide='map-pin' class='h-4 w-4 text-[var(--brand-primary)]'></i>
+                                    收货地址
+                                </h2>
+                                <button type='button' class='text-sm text-[var(--brand-primary)] hover:underline'>切换</button>
+                            </div>
+                            <div class='text-sm text-[var(--brand-ink-2)]'>
+                                <p class='font-medium text-[var(--brand-ink)]'>小叶 <span class='ml-2 text-[var(--brand-ink-3)]'>138****1234</span></p>
+                                <p class='mt-1'>上海市 浦东新区 张江高科技园区 科苑路 88 号 1 号楼 1201 室</p>
+                            </div>
+                            <button type='button' class='mt-3 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] px-3 py-2 text-sm text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]'>
+                                + 新增地址
+                            </button>
+                        </div>
+
+                        <div class='rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-5'>
+                            <h2 class='mb-4 text-base font-semibold text-[var(--brand-ink)]'>订单摘要</h2>
+                            <div class='space-y-3'>
+                                <div class='summary-row text-[var(--brand-ink-2)]'>
+                                    <span>商品总额</span>
+                                    <span class='font-mono text-[var(--brand-ink)]'>¥4,899</span>
+                                </div>
+                                <div class='summary-row text-[var(--brand-ink-2)]'>
+                                    <span>运费</span>
+                                    <span class='font-mono text-[var(--brand-ink)]'>¥0</span>
+                                </div>
+                                <div class='summary-row text-[var(--brand-ink-2)]'>
+                                    <span>优惠</span>
+                                    <span class='font-mono text-[var(--brand-state-error)]'>-¥50</span>
+                                </div>
+                                <div class='border-t border-[var(--brand-line)] pt-3'>
+                                    <div class='flex items-baseline justify-between'>
+                                        <span class='text-[var(--brand-ink)]'>应付合计</span>
+                                        <span class='text-2xl font-bold text-[var(--brand-primary)]'>¥4,849</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-5'>
+                            <h2 class='mb-3 text-base font-semibold text-[var(--brand-ink)]'>支付方式</h2>
+                            <div class='space-y-2'>
+                                <label class='pay-option'>
+                                    <div class='flex items-center gap-3'>
+                                        <i data-lucide='wallet' class='h-5 w-5 text-[var(--brand-primary)]'></i>
+                                        <span class='text-sm text-[var(--brand-ink)]'>余额支付</span>
+                                    </div>
+                                    <input type='radio' name='payment' value='wallet' checked style='accent-color: var(--brand-primary);' />
+                                </label>
+                                <label class='pay-option'>
+                                    <div class='flex items-center gap-3'>
+                                        <i data-lucide='message-circle' class='h-5 w-5 text-[var(--brand-state-success)]'></i>
+                                        <span class='text-sm text-[var(--brand-ink)]'>微信支付</span>
+                                    </div>
+                                    <input type='radio' name='payment' value='wechat' style='accent-color: var(--brand-primary);' />
+                                </label>
+                                <label class='pay-option'>
+                                    <div class='flex items-center gap-3'>
+                                        <i data-lucide='credit-card' class='h-5 w-5 text-[var(--brand-state-info)]'></i>
+                                        <span class='text-sm text-[var(--brand-ink)]'>支付宝</span>
+                                    </div>
+                                    <input type='radio' name='payment' value='alipay' style='accent-color: var(--brand-primary);' />
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type='button' class='flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand-primary)] px-6 text-base font-semibold text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]'>
+                            提交订单
+                            <i data-lucide='arrow-right' class='h-5 w-5'></i>
+                        </button>
+                    </aside>
+                </div>
+            </div>
+        </div>
+
+        <footer class='border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12'>
+            <div class='mx-auto max-w-7xl px-4 md:px-6'>
+                <div class='grid gap-8 md:grid-cols-4'>
+                    <div>
+                        <a href='index.html' class='flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]' data-dom-id='footer-home'>
+                            <i data-lucide='cpu' class='h-6 w-6'></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class='mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]'>专业可信的电脑配件二手交易平台，让闲置硬件继续发光。</p>
+                    </div>
+                    <div>
+                        <h4 class='font-medium text-[var(--brand-ink)]'>平台服务</h4>
+                        <ul class='mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]'>
+                            <li><a href='browse.html' class='transition-colors hover:text-[var(--brand-primary)]'>逛硬件</a></li>
+                            <li><a href='sell.html' class='transition-colors hover:text-[var(--brand-primary)]'>发布闲置</a></li>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>担保交易</a></li>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>验机服务</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class='font-medium text-[var(--brand-ink)]'>帮助中心</h4>
+                        <ul class='mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]'>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>交易规则</a></li>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>防骗指南</a></li>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>常见问题</a></li>
+                            <li><a href='#' class='transition-colors hover:text-[var(--brand-primary)]'>联系客服</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class='font-medium text-[var(--brand-ink)]'>关注我们</h4>
+                        <div class='mt-3 flex gap-3'>
+                            <a href='#' class='inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]' aria-label='微信'>
+                                <i data-lucide='message-circle' class='h-4 w-4'></i>
+                            </a>
+                            <a href='#' class='inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]' aria-label='微博'>
+                                <i data-lucide='at-sign' class='h-4 w-4'></i>
+                            </a>
+                            <a href='#' class='inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]' aria-label='Bilibili'>
+                                <i data-lucide='play-circle' class='h-4 w-4'></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class='mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row'>
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class='flex gap-4'>
+                        <a href='#' class='transition-colors hover:text-[var(--brand-ink-2)]'>用户协议</a>
+                        <a href='#' class='transition-colors hover:text-[var(--brand-ink-2)]'>隐私政策</a>
+                        <a href='#' class='transition-colors hover:text-[var(--brand-ink-2)]'>沪ICP备XXXXXXXX号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

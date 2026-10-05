@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>收支明细 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .tx-shell { padding-top: 64px; }
+            @media (max-width: 768px) { .tx-shell { padding-top: 56px; } }
+            .tx-card {
+                border-radius: var(--brand-radius-lg);
+                background: var(--brand-surface);
+                border: 1px solid var(--brand-line);
+                transition: border-color .2s, box-shadow .2s;
+            }
+            .tx-card:hover { border-color: var(--brand-primary); box-shadow: var(--brand-shadow-2); }
+            .tx-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                height: 34px;
+                padding: 0 14px;
+                border-radius: var(--brand-radius-pill);
+                font-size: 13px;
+                font-weight: 500;
+                white-space: nowrap;
+                transition: color .2s, background .2s, border-color .2s;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
+            .tx-pill.active {
+                background: var(--brand-primary-subtle);
+                color: var(--brand-primary);
+                border-color: rgba(0, 212, 170, 0.25);
+            }
+            .tx-pill:not(.active) {
+                background: var(--brand-surface-2);
+                color: var(--brand-ink-2);
+                border-color: var(--brand-line);
+            }
+            .tx-pill:not(.active):hover {
+                background: var(--brand-surface-3);
+                color: var(--brand-ink);
+            }
+            .tx-row {
+                cursor: pointer;
+                transition: background .2s;
+            }
+            .tx-row:hover { background: var(--brand-surface-2); }
+            .tx-detail {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows .25s ease-out;
+            }
+            .tx-detail.open { grid-template-rows: 1fr; }
+            .tx-detail-inner { overflow: hidden; }
+            .tx-chevron { transition: transform .2s; }
+            .tx-row[aria-expanded="true"] .tx-chevron { transform: rotate(180deg); }
+            .tx-page-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 36px;
+                height: 36px;
+                border-radius: var(--brand-radius-md);
+                border: 1px solid var(--brand-line);
+                background: var(--brand-surface);
+                color: var(--brand-ink-2);
+                font-size: 14px;
+                transition: color .2s, background .2s, border-color .2s;
+            }
+            .tx-page-link:hover,
+            .tx-page-link.active {
+                background: var(--brand-primary);
+                color: var(--brand-primary-ink);
+                border-color: var(--brand-primary);
+            }
+            .tx-icon-wrap {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: var(--brand-radius-md);
+                background: var(--brand-surface-2);
+                color: var(--brand-primary);
+                flex-shrink: 0;
+            }
+            .tx-icon-wrap.expense { color: var(--brand-state-error); }
+            .tx-icon-wrap.refund { color: var(--brand-state-info); }
+            .tx-icon-wrap.deposit { color: var(--brand-state-success); }
+            .tx-icon-wrap.withdraw { color: var(--brand-state-warning); }
+        </style>
+
+        <a href="#transactions-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground">跳到主要内容</a>
+
+        <!-- 顶部固定导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <!-- 主体内容 -->
+        <div id="transactions-content" class="tx-shell mx-auto max-w-7xl px-4 pb-24 pt-6 md:px-6 md:pt-8">
+            <!-- 页面标题 -->
+            <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <h1 class="text-2xl font-bold text-[var(--brand-ink)]">收支明细</h1>
+                <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]">
+                    <i data-lucide="download" class="h-4 w-4"></i>
+                    导出账单
+                </button>
+            </div>
+
+            <!-- 汇总卡片 -->
+            <section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="tx-card p-5">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]">
+                            <i data-lucide="arrow-down-left" class="h-5 w-5"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm text-[var(--brand-ink-2)]">本月收入</p>
+                            <p class="mt-0.5 font-mono text-2xl font-bold text-[var(--brand-state-success)]">+¥5,420.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tx-card p-5">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--brand-state-error-subtle)] text-[var(--brand-state-error)]">
+                            <i data-lucide="arrow-up-right" class="h-5 w-5"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm text-[var(--brand-ink-2)]">本月支出</p>
+                            <p class="mt-0.5 font-mono text-2xl font-bold text-[var(--brand-state-error)]">-¥1,240.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tx-card p-5">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]">
+                            <i data-lucide="wallet" class="h-5 w-5"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm text-[var(--brand-ink-2)]">累计收入</p>
+                            <p class="mt-0.5 font-mono text-2xl font-bold text-[var(--brand-ink)]">¥42,680.00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 筛选栏 -->
+            <section class="mb-5 space-y-4 rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4 md:p-5">
+                <!-- 交易类型 -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" role="tablist" aria-label="交易类型筛选">
+                    <button type="button" class="tx-pill active" data-type="all" onclick="setTxType('all')">全部</button>
+                    <button type="button" class="tx-pill" data-type="income" onclick="setTxType('income')">收入</button>
+                    <button type="button" class="tx-pill" data-type="expense" onclick="setTxType('expense')">支出</button>
+                    <button type="button" class="tx-pill" data-type="refund" onclick="setTxType('refund')">退款</button>
+                    <button type="button" class="tx-pill" data-type="deposit" onclick="setTxType('deposit')">充值</button>
+                    <button type="button" class="tx-pill" data-type="withdraw" onclick="setTxType('withdraw')">提现</button>
+                </div>
+                <!-- 时间与搜索 -->
+                <div class="flex flex-col gap-3 md:flex-row md:items-center">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--brand-ink-3)]"></i>
+                        <input type="search" placeholder="搜索交易名称、订单号..." class="h-10 w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] pl-10 pr-4 text-sm text-[var(--brand-ink)] placeholder:text-[var(--brand-ink-3)] outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20" />
+                    </div>
+                    <div class="flex gap-3">
+                        <select class="h-10 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] px-3 text-sm text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)]">
+                            <option>近 7 天</option>
+                            <option>近 30 天</option>
+                            <option>自定义</option>
+                        </select>
+                        <select class="h-10 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] px-3 text-sm text-[var(--brand-ink)] outline-none focus:border-[var(--brand-primary)]">
+                            <option>按时间倒序</option>
+                            <option>按金额排序</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 交易列表 -->
+            <section id="tx-list" class="space-y-3">
+                <!-- 记录 1: 收入 -->
+                <article class="tx-card overflow-hidden" data-type="income">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap">
+                            <i data-lucide="arrow-down-left" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">售出：七彩虹 RTX 4070 战斧豪华版</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">ORD20260828001</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-success)]">+¥3,680.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥12,580.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-28 10:23</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-success)]">成功</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">销售收入</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">买家</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">显卡发烧友</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">订单号</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">ORD20260828001</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易时间</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">2026-08-28 10:23:17</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易金额</p>
+                                        <p class="mt-1 font-mono text-sm font-semibold text-[var(--brand-state-success)]">+¥3,680.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">手续费</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">-¥36.80</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 记录 2: 支出 -->
+                <article class="tx-card overflow-hidden" data-type="expense">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap expense">
+                            <i data-lucide="arrow-up-right" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">购买：Intel Core i5-13600K 盒装</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">ORD20260827002</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-error)]">-¥1,250.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥8,900.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-27 18:45</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-success)]">成功</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">购买支出</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">卖家</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">极客阿杰</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">订单号</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">ORD20260827002</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易时间</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">2026-08-27 18:45:09</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易金额</p>
+                                        <p class="mt-1 font-mono text-sm font-semibold text-[var(--brand-state-error)]">-¥1,250.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">支付方式</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">余额支付</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 记录 3: 退款 -->
+                <article class="tx-card overflow-hidden" data-type="refund">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap refund">
+                            <i data-lucide="rotate-ccw" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">退款：猫头鹰 NH-D15 双塔散热器</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">ORD20260818005</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-info)]">+¥480.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥10,150.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-26 14:10</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-success)]">成功</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">售后退款</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">关联售后单</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">AFT20260826012</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">订单号</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">ORD20260818005</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 记录 4: 充值 -->
+                <article class="tx-card overflow-hidden" data-type="deposit">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap deposit">
+                            <i data-lucide="plus" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">账户充值</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">TXN20260825088</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-success)]">+¥2,000.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥10,150.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-25 09:00</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-success-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-success)]">成功</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">账户充值</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">充值渠道</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">支付宝</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">流水号</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">TXN20260825088</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 记录 5: 提现 处理中 -->
+                <article class="tx-card overflow-hidden" data-type="withdraw">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap withdraw">
+                            <i data-lucide="banknote" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">提现至银行卡</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">TXN20260824036</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-error)]">-¥1,500.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥8,150.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-24 16:20</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-warning-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-warning)]">处理中</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">余额提现</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">到账账户</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">建设银行（尾号 6688）</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">预计到账</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">2026-08-25 23:59 前</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 记录 6: 失败 -->
+                <article class="tx-card overflow-hidden" data-type="withdraw">
+                    <div class="tx-row flex items-center gap-4 p-4 md:p-5" onclick="toggleTx(this)" aria-expanded="false" role="button" tabindex="0">
+                        <div class="tx-icon-wrap withdraw">
+                            <i data-lucide="banknote" class="h-5 w-5"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">提现至银行卡</h3>
+                                    <p class="mt-0.5 text-sm text-[var(--brand-ink-3)] font-mono">TXN20260820011</p>
+                                </div>
+                                <div class="flex items-center gap-4 md:text-right">
+                                    <div>
+                                        <p class="font-mono text-lg font-bold text-[var(--brand-state-error)]">-¥3,000.00</p>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">余额 ¥9,650.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--brand-ink-2)]">
+                                <span>2026-08-20 11:05</span>
+                                <span class="inline-flex items-center rounded-full bg-[var(--brand-state-error-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--brand-state-error)]">失败</span>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" class="tx-chevron h-5 w-5 shrink-0 text-[var(--brand-ink-3)]"></i>
+                    </div>
+                    <div class="tx-detail">
+                        <div class="tx-detail-inner">
+                            <div class="border-t border-[var(--brand-line)] bg-[var(--brand-surface-2)] p-4 md:p-5">
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">交易类型</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-ink)]">余额提现</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">失败原因</p>
+                                        <p class="mt-1 text-sm text-[var(--brand-state-error)]">银行卡信息有误</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[var(--brand-ink-3)]">流水号</p>
+                                        <p class="mt-1 font-mono text-sm text-[var(--brand-ink)]">TXN20260820011</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- 空状态 -->
+            <div id="tx-empty" class="hidden flex-col items-center justify-center rounded-2xl border border-[var(--brand-line)] bg-[var(--brand-surface)] py-16 text-center">
+                <i data-lucide="receipt" class="h-16 w-16 text-[var(--brand-ink-3)]"></i>
+                <h3 class="mt-4 text-lg font-medium text-[var(--brand-ink)]">暂无交易记录</h3>
+                <p class="mt-1 text-sm text-[var(--brand-ink-2)]">当前筛选条件下没有资金流水，换个条件试试</p>
+                <button type="button" class="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-[var(--brand-primary-ink)] transition-colors hover:bg-[var(--brand-primary-hover)]" onclick="resetTxFilter()">
+                    <i data-lucide="rotate-ccw" class="h-4 w-4"></i>
+                    重置筛选
+                </button>
+            </div>
+
+            <!-- 分页与统计 -->
+            <div class="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
+                <p class="text-sm text-[var(--brand-ink-2)]">共 <span class="font-mono font-semibold text-[var(--brand-ink)]" id="tx-count">6</span> 笔交易</p>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="tx-page-link" aria-label="上一页">
+                        <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                    </button>
+                    <button type="button" class="tx-page-link active">1</button>
+                    <button type="button" class="tx-page-link">2</button>
+                    <button type="button" class="tx-page-link">3</button>
+                    <span class="px-1 text-[var(--brand-ink-3)]">...</span>
+                    <button type="button" class="tx-page-link">8</button>
+                    <button type="button" class="tx-page-link" aria-label="下一页">
+                        <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+            <div class="mx-auto max-w-7xl px-4 md:px-6">
+                <div class="grid gap-8 md:grid-cols-4">
+                    <div>
+                        <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+                            <i data-lucide="cpu" class="h-6 w-6"></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">验机服务</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">帮助中心</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">交易规则</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">防骗指南</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">常见问题</a></li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">联系客服</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">关注我们</h4>
+                        <div class="mt-3 flex gap-3">
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微信">
+                                <i data-lucide="message-circle" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="微博">
+                                <i data-lucide="at-sign" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)] transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]" aria-label="Bilibili">
+                                <i data-lucide="play-circle" class="h-4 w-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪 ICP 备 XXXXXXXX 号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            function toggleTx(row) {
+                const expanded = row.getAttribute('aria-expanded') === 'true';
+                row.setAttribute('aria-expanded', String(!expanded));
+                const detail = row.nextElementSibling;
+                if (detail && detail.classList.contains('tx-detail')) {
+                    detail.classList.toggle('open', !expanded);
+                }
+            }
+            document.querySelectorAll('.tx-row').forEach(function(row) {
+                row.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleTx(row);
+                    }
+                });
+            });
+            function setTxType(type) {
+                document.querySelectorAll('.tx-pill').forEach(function(pill) {
+                    pill.classList.toggle('active', pill.dataset.type === type);
+                });
+                const rows = document.querySelectorAll('#tx-list > article');
+                let visible = 0;
+                rows.forEach(function(row) {
+                    const show = type === 'all' || row.dataset.type === type;
+                    row.classList.toggle('hidden', !show);
+                    if (show) visible++;
+                });
+                const empty = document.getElementById('tx-empty');
+                empty.classList.toggle('hidden', visible > 0);
+                empty.classList.toggle('flex', visible === 0);
+                document.getElementById('tx-count').textContent = visible;
+            }
+            function resetTxFilter() {
+                setTxType('all');
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

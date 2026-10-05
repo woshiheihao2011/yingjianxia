@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .help-shell { min-height: 100vh; display: flex; flex-direction: column; }
+            .help-frame { flex: 1 1 auto; }
+            .nav-shell { height: 64px; position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--brand-bg); border-bottom: 1px solid var(--brand-line); }
+            .nav-spacer { height: 64px; }
+            .nav-link { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: var(--brand-radius-md); color: var(--brand-ink-2); font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+            .nav-link:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .nav-link.active { color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .search-input { width: 100%; height: 48px; padding-left: 48px; padding-right: 16px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); outline: none; transition: border-color .2s, box-shadow .2s; }
+            .search-input::placeholder { color: var(--brand-ink-3); }
+            .search-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 2px var(--brand-primary-subtle); }
+            .category-card { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 16px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); transition: transform .2s, border-color .2s; }
+            .category-card:hover { transform: translateY(-4px); border-color: var(--brand-primary); }
+            .category-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .category-card i { width: 32px; height: 32px; color: var(--brand-primary); }
+            .category-card span { color: var(--brand-ink); font-weight: 500; }
+            .faq-details { border: 1px solid var(--brand-line); border-radius: var(--brand-radius-md); background: var(--brand-card); overflow: hidden; }
+            .faq-details > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; color: var(--brand-ink); font-weight: 500; }
+            .faq-details > summary::-webkit-details-marker { display: none; }
+            .faq-details[open] > summary { border-bottom: 1px solid var(--brand-line); }
+            .faq-details[open] > summary .faq-chevron { transform: rotate(180deg); }
+            .faq-answer { padding: 16px 20px; color: var(--brand-ink-2); line-height: 1.7; }
+            .quick-link { display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: var(--brand-radius-md); background: var(--brand-card); border: 1px solid var(--brand-line); transition: border-color .2s, transform .2s; }
+            .quick-link:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+            .quick-link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .quick-link i { width: 24px; height: 24px; color: var(--brand-primary); }
+        </style>
+
+        <div class="help-shell">
+            <!-- 顶部导航 -->
+                <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+            <div class="nav-spacer"></div>
+
+            <!-- 帮助中心标题 + 搜索 -->
+            <section class="bg-background border-b border-border">
+                <div class="max-w-7xl mx-auto px-4 py-12 md:py-16 text-center">
+                    <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-4">帮助中心</h1>
+                    <p class="text-muted-foreground mb-8">常见问题、平台规则与操作指南</p>
+                    <form class="relative max-w-2xl mx-auto" role="search" aria-label="帮助中心搜索">
+                        <input data-dom-id="help-search" type="search" placeholder="搜索问题、规则、操作指南..." class="search-input">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"></i>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 问题分类卡片网格 -->
+            <section class="help-frame py-12 md:py-16 bg-background">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl md:text-2xl font-bold text-foreground mb-8">问题分类</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <a href="#faq" class="category-card" data-dom-id="category-beginner">
+                            <i data-lucide="book-open"></i>
+                            <span>新手入门</span>
+                        </a>
+                        <a href="#faq" class="category-card" data-dom-id="category-trading">
+                            <i data-lucide="repeat"></i>
+                            <span>买卖流程</span>
+                        </a>
+                        <a href="#faq" class="category-card" data-dom-id="category-payment">
+                            <i data-lucide="wallet"></i>
+                            <span>支付与提现</span>
+                        </a>
+                        <a href="#faq" class="category-card" data-dom-id="category-logistics">
+                            <i data-lucide="truck"></i>
+                            <span>物流与售后</span>
+                        </a>
+                        <a href="#faq" class="category-card" data-dom-id="category-security">
+                            <i data-lucide="shield"></i>
+                            <span>账号安全</span>
+                        </a>
+                        <a href="#faq" class="category-card" data-dom-id="category-rules">
+                            <i data-lucide="scale"></i>
+                            <span>平台规则</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 热门问题列表 -->
+            <section id="faq" class="py-12 md:py-16 bg-background border-t border-border">
+                <div class="max-w-3xl mx-auto px-4">
+                    <h2 class="text-xl md:text-2xl font-bold text-foreground mb-8">热门问题</h2>
+                    <div class="space-y-4">
+                        <details class="faq-details">
+                            <summary>
+                                <span>如何注册并完善账号信息？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>点击顶部导航「我的」进入注册/登录页面，支持手机号与常用第三方账号登录。登录后建议在「个人中心」完成实名认证、绑定收款账号并上传头像，可提升交易信任度与发布权限。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>买家如何下单并付款？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>在商品详情页点击「立即购买」或「加入购物车」后进入结算页，确认收货地址与商品信息无误后提交订单。平台采用担保交易，货款将托管在硬件侠账户，卖家发货后买家确认收货，货款才会结算给卖家。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>卖家发布商品需要哪些信息？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>进入「发布」页面后，填写商品分类、品牌型号、成色、价格、所在地、标题与详细描述，并上传清晰实物照片。建议补充 SN 码、购买凭证与测试截图，有助于买家快速决策。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>如何申请提现？多久到账？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>在「个人中心」-「我的钱包」中绑定银行卡或支付宝账号后发起提现。工作日 9:00-18:00 提交的申请通常 2 小时内到账，非工作时间及节假日顺延至下一个工作日处理。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>商品与描述不符怎么办？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>收到商品后请在 7 天内仔细验机。如发现成色、功能或配件与描述不符，可在订单详情页申请售后并上传证据。平台客服会在 24 小时内介入处理，确认属实后支持退换或部分退款。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>平台禁止发布哪些商品？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>禁止发布来路不明、赃物、假冒伪劣、无法正常使用或侵犯知识产权的硬件；禁止发布个人信息、虚拟货币、充值卡等非实物类商品；禁止在商品信息中出现站外联系方式或诱导线下交易的内容。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>如何保护账号安全？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>请开启登录保护并定期更换密码，不要在任何第三方页面输入硬件侠账号密码。平台客服不会通过私信索要验证码、支付密码或银行卡信息，如遇可疑情况请立即联系官方客服核实。</p>
+                            </div>
+                        </details>
+
+                        <details class="faq-details">
+                            <summary>
+                                <span>物流费用由谁承担？</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-muted-foreground faq-chevron transition-transform"></i>
+                            </summary>
+                            <div class="faq-answer">
+                                <p>默认由卖家承担发货运费并在商品中体现，买家可与卖家协商到付或包邮方案。建议在下单前通过私聊确认运费、包装方式及保价金额，避免后续争议。</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 快速入口区 -->
+            <section class="py-12 md:py-16 bg-background border-t border-border">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-xl md:text-2xl font-bold text-foreground mb-8">快速入口</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                        <a href="messages.html" class="quick-link" data-dom-id="quick-service">
+                            <i data-lucide="headset"></i>
+                            <span class="font-medium text-foreground">联系客服</span>
+                        </a>
+                        <a href="#" class="quick-link" data-dom-id="quick-feedback">
+                            <i data-lucide="message-square"></i>
+                            <span class="font-medium text-foreground">意见反馈</span>
+                        </a>
+                        <a href="trust.html" class="quick-link" data-dom-id="quick-trust">
+                            <i data-lucide="shield-check"></i>
+                            <span class="font-medium text-foreground">平台信任中心</span>
+                        </a>
+                        <a href="#" class="quick-link" data-dom-id="quick-agreement">
+                            <i data-lucide="file-text"></i>
+                            <span class="font-medium text-foreground">用户协议</span>
+                        </a>
+                        <a href="#" class="quick-link" data-dom-id="quick-privacy">
+                            <i data-lucide="eye-off"></i>
+                            <span class="font-medium text-foreground">隐私政策</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 页脚 -->
+            <footer class="py-14 bg-background border-t border-border mt-auto">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-foreground">
+                            <span class="w-6 h-6 rounded-sm bg-primary"></span>
+                            <span class="text-lg font-bold">硬件侠</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">发烧友信得过的电脑配件二手交易平台，让每一块硬件都物尽其用。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">关于硬件侠</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">关于我们</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">平台规则</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">加入我们</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">买家保障</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">验机标准</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">担保交易说明</a></li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">退换政策</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-foreground mb-4">联系我们</h4>
+                        <ul class="space-y-2 text-sm text-muted-foreground">
+                            <li>客服邮箱：support@yingjianxia.com</li>
+                            <li>工作时间：周一至周日 9:00-21:00</li>
+                            <li><a href="#" class="hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring rounded">意见反馈</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+                    © 2026 硬件侠. All rights reserved.
+                </div>
+            </footer>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

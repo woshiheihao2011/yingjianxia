@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>营销活动 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+.text-brand-info { color: var(--brand-state-info); }
+.text-brand-warning { color: var(--brand-state-warning); }
+.text-brand-success { color: var(--brand-state-success); }
+.text-brand-error { color: var(--brand-state-error); }
+
+.bg-brand-info { background-color: var(--brand-state-info); }
+.bg-brand-warning { background-color: var(--brand-state-warning); }
+.bg-brand-success { background-color: var(--brand-state-success); }
+.bg-brand-error { background-color: var(--brand-state-error); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .page-root { padding-top: 64px; }
+            @media (max-width: 768px) { .page-root { padding-top: 56px; } }
+            .promo-tab { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: var(--brand-radius-md); font-size: 14px; font-weight: 500; transition: color .2s, background .2s, border-color .2s; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+            .promo-tab.active { background: var(--brand-primary); color: var(--brand-primary-ink); }
+            .promo-tab:not(.active) { background: var(--brand-surface-2); color: var(--brand-ink-2); border-color: var(--brand-line); }
+            .promo-tab:not(.active):hover { background: var(--brand-surface-3); color: var(--brand-ink); }
+            .section-card { border-radius: var(--brand-radius-lg); background: var(--brand-surface); border: 1px solid var(--brand-line); }
+            .form-card { border-radius: var(--brand-radius-lg); background: var(--brand-surface); border: 1px solid var(--brand-line); transition: border-color .2s, box-shadow .2s; }
+            .form-card:focus-within { border-color: var(--brand-primary); box-shadow: var(--brand-shadow-2); }
+            .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 18px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-size: 14px; font-weight: 600; transition: background .2s; }
+            .btn-primary:hover { background: var(--brand-primary-hover); }
+            .btn-sm-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-size: 13px; font-weight: 600; transition: background .2s; }
+            .btn-sm-primary:hover { background: var(--brand-primary-hover); }
+            .btn-sm-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: var(--brand-radius-md); background: transparent; color: var(--brand-ink); border: 1px solid var(--brand-line); font-size: 13px; font-weight: 500; transition: background .2s, border-color .2s; }
+            .btn-sm-secondary:hover { background: var(--brand-surface-2); border-color: var(--brand-line); }
+            .btn-icon { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 6px 10px; border-radius: var(--brand-radius-md); border: 1px solid var(--brand-line); background-color: var(--brand-surface-2); color: var(--brand-ink-2); font-size: 12px; font-weight: 500; transition: background-color .15s, color .15s, border-color .15s; }
+            .btn-icon:hover { background-color: var(--brand-surface-3); color: var(--brand-ink); }
+            .btn-icon.danger:hover { background-color: var(--brand-state-error-subtle); color: var(--brand-state-error); border-color: var(--brand-state-error); }
+            .promo-row { transition: background-color .15s; }
+            .promo-row:hover { background-color: var(--brand-surface-2); }
+            .metric-card { border-radius: var(--brand-radius-lg); background: var(--brand-surface); border: 1px solid var(--brand-line); }
+            .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--brand-radius-pill); font-size: 12px; font-weight: 500; }
+            .status-active { background: var(--brand-state-success-subtle); color: var(--brand-state-success); }
+            .status-upcoming { background: var(--brand-state-info-subtle); color: var(--brand-state-info); }
+            .status-ended { background: var(--brand-surface-3); color: var(--brand-ink-3); }
+            .form-input { height: 40px; width: 100%; border-radius: var(--brand-radius-md); border: 1px solid var(--brand-line); background: var(--brand-bg); padding: 0 12px; color: var(--brand-ink); font-size: 14px; outline: none; transition: border-color .2s, box-shadow .2s; }
+            .form-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-primary-subtle); }
+            .form-input::placeholder { color: var(--brand-ink-3); }
+            .form-select { height: 40px; width: 100%; border-radius: var(--brand-radius-md); border: 1px solid var(--brand-line); background: var(--brand-bg); padding: 0 32px 0 12px; color: var(--brand-ink); font-size: 14px; outline: none; appearance: none; transition: border-color .2s, box-shadow .2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+            .form-select:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-primary-subtle); }
+            .form-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--brand-ink-2); }
+        </style>
+
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">跳到主要内容</a>
+
+        <!-- 顶部固定导航 -->
+            <header class="nav-shell">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+            <a href="index.html" class="flex items-center gap-2 shrink-0 text-foreground" data-dom-id="nav-logo">
+                <span class="text-xl font-bold tracking-tight text-[var(--brand-primary)]">硬件侠</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+                <a href="browse.html" class="nav-link" data-dom-id="nav-browse">逛硬件</a>
+                <a href="sell.html" class="nav-link" data-dom-id="nav-sell">发布</a>
+                <a href="messages.html" class="nav-link" data-dom-id="nav-messages">消息</a>
+                <a href="profile.html" class="nav-link" data-dom-id="nav-profile">我的</a>
+            </nav>
+            <div class="flex items-center gap-1">
+                <a href="search.html" class="nav-link" aria-label="搜索" data-dom-id="nav-search"><i data-lucide="search" class="w-5 h-5"></i></a>
+                <button type="button" class="md:hidden nav-link" id="mobile-menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="mobile-menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+    </header>
+    <div class="nav-spacer"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" aria-hidden="true">
+        <div class="absolute inset-0 bg-black/60" id="mobile-menu-backdrop"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-72 bg-[var(--brand-surface)] border-l border-[var(--brand-line)] p-4 flex flex-col gap-2 transform translate-x-full transition-transform duration-200" id="mobile-menu-panel">
+            <div class="flex justify-end mb-2">
+                <button type="button" class="nav-link" id="mobile-menu-close" aria-label="关闭"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <a href="browse.html" class="nav-link justify-start" data-dom-id="mobile-nav-browse">逛硬件</a>
+            <a href="sell.html" class="nav-link justify-start" data-dom-id="mobile-nav-sell">发布</a>
+            <a href="messages.html" class="nav-link justify-start" data-dom-id="mobile-nav-messages">消息</a>
+            <a href="profile.html" class="nav-link justify-start" data-dom-id="mobile-nav-profile">我的</a>
+            <div class="border-t border-[var(--brand-line)] my-2"></div>
+            <a href="search.html" class="nav-link justify-start" data-dom-id="mobile-nav-search"><i data-lucide="search" class="w-4 h-4 mr-2"></i>搜索</a>
+            <a href="help.html" class="nav-link justify-start" data-dom-id="mobile-nav-help"><i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>帮助</a>
+        </div>
+    </div>
+
+        <!-- 主体内容 -->
+        <div id="main-content" class="page-root">
+            <!-- 页面标题 -->
+            <section class="mx-auto max-w-7xl px-4 pt-6 md:px-6 md:pt-8">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-[var(--brand-ink)]" data-dom-id="page-title">营销活动</h1>
+                        <p class="mt-1 text-sm text-[var(--brand-ink-2)]">创建优惠券、限时折扣等营销活动，提升商品曝光与转化</p>
+                    </div>
+                    <button type="button" class="btn-primary" onclick="scrollToCreate()" data-dom-id="btn-create-promo">
+                        <i data-lucide="plus" class="h-4 w-4"></i>
+                        创建活动
+                    </button>
+                </div>
+            </section>
+
+            <!-- 活动效果数据 -->
+            <section class="mx-auto max-w-7xl px-4 pt-6 md:px-6" aria-labelledby="metrics-heading">
+                <h2 id="metrics-heading" class="sr-only">活动效果数据</h2>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="metric-card p-5">
+                        <div class="flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]">
+                                <i data-lucide="eye" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[var(--brand-ink-3)]">曝光量</p>
+                                <p class="font-mono text-xl font-bold text-[var(--brand-ink)]">12,458</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-[var(--brand-state-success)]">+18.2% 较上周</p>
+                    </div>
+                    <div class="metric-card p-5">
+                        <div class="flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-info-subtle)] text-[var(--brand-state-info)]">
+                                <i data-lucide="ticket" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[var(--brand-ink-3)]">领取量</p>
+                                <p class="font-mono text-xl font-bold text-[var(--brand-ink)]">3,206</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-[var(--brand-state-success)]">+12.5% 较上周</p>
+                    </div>
+                    <div class="metric-card p-5">
+                        <div class="flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-success-subtle)] text-[var(--brand-state-success)]">
+                                <i data-lucide="check-circle" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[var(--brand-ink-3)]">使用量</p>
+                                <p class="font-mono text-xl font-bold text-[var(--brand-ink)]">892</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-[var(--brand-state-success)]">+8.7% 较上周</p>
+                    </div>
+                    <div class="metric-card p-5">
+                        <div class="flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-warning-subtle)] text-[var(--brand-state-warning)]">
+                                <i data-lucide="trending-up" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[var(--brand-ink-3)]">带动成交额</p>
+                                <p class="font-mono text-xl font-bold text-[var(--brand-primary)]">¥86,420</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-[var(--brand-state-success)]">+24.3% 较上周</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 活动类型标签 -->
+            <section class="mx-auto max-w-7xl px-4 pt-6 md:px-6" aria-label="活动类型筛选">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar border-b border-[var(--brand-line)] pb-3" role="tablist">
+                    <button type="button" role="tab" aria-selected="true" class="promo-tab active" data-promo-type="all" onclick="setPromoTab('all')">
+                        <i data-lucide="layers" class="h-4 w-4"></i>
+                        全部
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="promo-tab" data-promo-type="coupon" onclick="setPromoTab('coupon')">
+                        <i data-lucide="ticket" class="h-4 w-4"></i>
+                        优惠券
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="promo-tab" data-promo-type="flash" onclick="setPromoTab('flash')">
+                        <i data-lucide="zap" class="h-4 w-4"></i>
+                        限时折扣
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="promo-tab" data-promo-type="threshold" onclick="setPromoTab('threshold')">
+                        <i data-lucide="minus-circle" class="h-4 w-4"></i>
+                        满减
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="promo-tab" data-promo-type="shipping" onclick="setPromoTab('shipping')">
+                        <i data-lucide="truck" class="h-4 w-4"></i>
+                        包邮
+                    </button>
+                </div>
+            </section>
+
+            <!-- 创建活动区域 -->
+            <section id="create-section" class="mx-auto max-w-7xl px-4 pt-6 md:px-6" aria-labelledby="create-heading">
+                <h2 id="create-heading" class="text-lg font-semibold text-[var(--brand-ink)] mb-4">创建新活动</h2>
+                <div class="grid gap-5 lg:grid-cols-2">
+                    <!-- 创建优惠券 -->
+                    <div class="form-card p-5 md:p-6">
+                        <div class="mb-5 flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-primary-subtle)] text-[var(--brand-primary)]">
+                                <i data-lucide="ticket" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-[var(--brand-ink)]">创建优惠券</h3>
+                                <p class="text-xs text-[var(--brand-ink-3)]">吸引买家领取，提升下单转化</p>
+                            </div>
+                        </div>
+                        <form onsubmit="event.preventDefault(); createCoupon(this);" class="space-y-4">
+                            <div>
+                                <label class="form-label">券名称</label>
+                                <input type="text" name="name" placeholder="如：显卡品类满减券" class="form-input" required />
+                            </div>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="form-label">面额（元）</label>
+                                    <input type="number" name="amount" placeholder="50" min="1" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label class="form-label">使用门槛（元）</label>
+                                    <input type="number" name="threshold" placeholder="满多少可用，0 为无门槛" min="0" class="form-input" required />
+                                </div>
+                            </div>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="form-label">发放总量</label>
+                                    <input type="number" name="total" placeholder="1000" min="1" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label class="form-label">每人限领</label>
+                                    <input type="number" name="limit" placeholder="1" min="1" class="form-input" required />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">适用商品</label>
+                                <select name="scope" class="form-select">
+                                    <option>全场通用</option>
+                                    <option>指定品类</option>
+                                    <option>指定商品</option>
+                                </select>
+                            </div>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="form-label">开始时间</label>
+                                    <input type="datetime-local" name="start" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label class="form-label">结束时间</label>
+                                    <input type="datetime-local" name="end" class="form-input" required />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-sm-primary w-full">
+                                <i data-lucide="plus" class="h-4 w-4"></i>
+                                创建优惠券
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- 创建限时折扣 -->
+                    <div class="form-card p-5 md:p-6">
+                        <div class="mb-5 flex items-center gap-3">
+                            <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-state-warning-subtle)] text-[var(--brand-state-warning)]">
+                                <i data-lucide="zap" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-[var(--brand-ink)]">创建限时折扣</h3>
+                                <p class="text-xs text-[var(--brand-ink-3)]">营造紧迫感，快速清库存</p>
+                            </div>
+                        </div>
+                        <form onsubmit="event.preventDefault(); createFlash(this);" class="space-y-4">
+                            <div>
+                                <label class="form-label">选择商品</label>
+                                <select name="product" class="form-select">
+                                    <option>影驰 RTX 4070 星曜 OC</option>
+                                    <option>芝奇幻锋戟 DDR5 32GB 6000MHz</option>
+                                    <option>Intel i5-13600K 散片</option>
+                                    <option>华硕 TUF GAMING B760M 主板</option>
+                                    <option>三星 980 Pro 1TB NVMe</option>
+                                    <option>猫头鹰 NH-D15 双塔散热器</option>
+                                </select>
+                            </div>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="form-label">折扣率</label>
+                                    <select name="discount" class="form-select">
+                                        <option>9 折</option>
+                                        <option>8.5 折</option>
+                                        <option>8 折</option>
+                                        <option>7.5 折</option>
+                                        <option>7 折</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">活动库存</label>
+                                    <input type="number" name="stock" placeholder="参与活动库存数量" min="1" class="form-input" required />
+                                </div>
+                            </div>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="form-label">开始时间</label>
+                                    <input type="datetime-local" name="start" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label class="form-label">结束时间</label>
+                                    <input type="datetime-local" name="end" class="form-input" required />
+                                </div>
+                            </div>
+                            <div class="rounded-lg border border-[var(--brand-line)] bg-[var(--brand-bg)] p-4">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-[var(--brand-ink-2)]">原价</span>
+                                    <span class="font-mono text-[var(--brand-ink)]">¥3,299</span>
+                                </div>
+                                <div class="mt-2 flex items-center justify-between text-sm">
+                                    <span class="text-[var(--brand-ink-2)]">折后价</span>
+                                    <span class="font-mono text-lg font-bold text-[var(--brand-primary)]">¥2,969</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-sm-primary w-full">
+                                <i data-lucide="plus" class="h-4 w-4"></i>
+                                创建限时折扣
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 活动列表 -->
+            <section class="mx-auto max-w-7xl px-4 py-6 md:px-6" aria-labelledby="list-heading">
+                <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <h2 id="list-heading" class="text-lg font-semibold text-[var(--brand-ink)]">活动列表</h2>
+                    <div class="relative max-w-xs">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--brand-ink-3)]"></i>
+                        <input type="search" placeholder="搜索活动名称..." class="form-input pl-10" oninput="filterPromoList(this.value)" />
+                    </div>
+                </div>
+
+                <div class="section-card overflow-hidden">
+                    <!-- 桌面表格 -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-[var(--brand-surface-2)] text-[var(--brand-ink-2)]">
+                                <tr>
+                                    <th class="px-5 py-3 font-medium">活动名称</th>
+                                    <th class="px-5 py-3 font-medium">类型</th>
+                                    <th class="px-5 py-3 font-medium">有效期</th>
+                                    <th class="px-5 py-3 font-medium">状态</th>
+                                    <th class="px-5 py-3 font-medium">数据</th>
+                                    <th class="px-5 py-3 font-medium text-right">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[var(--brand-line)]" id="promo-table-body">
+                                <tr class="promo-row" data-promo-type="coupon" data-promo-name="显卡满 2000 减 150">
+                                    <td class="px-5 py-4">
+                                        <div class="font-medium text-[var(--brand-ink)]">显卡满 2000 减 150</div>
+                                        <div class="text-xs text-[var(--brand-ink-3)]">创建于 2026-08-20</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-primary-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-primary)]">
+                                            <i data-lucide="ticket" class="h-3 w-3"></i>优惠券
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4 text-[var(--brand-ink-2)]">2026-08-25 至 2026-09-10</td>
+                                    <td class="px-5 py-4"><span class="status-badge status-active"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>进行中</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="text-xs text-[var(--brand-ink-2)]">领取 1,248 / 使用 356</div>
+                                        <div class="text-xs text-[var(--brand-primary)]">带动 ¥42,380</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button type="button" class="btn-icon" title="编辑"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                            <button type="button" class="btn-icon" title="暂停" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                            <button type="button" class="btn-icon" title="查看数据"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                            <button type="button" class="btn-icon danger" title="删除" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="promo-row" data-promo-type="flash" data-promo-name="RTX 4070 限时 9 折">
+                                    <td class="px-5 py-4">
+                                        <div class="font-medium text-[var(--brand-ink)]">RTX 4070 限时 9 折</div>
+                                        <div class="text-xs text-[var(--brand-ink-3)]">创建于 2026-08-22</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-warning-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-warning)]">
+                                            <i data-lucide="zap" class="h-3 w-3"></i>限时折扣
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4 text-[var(--brand-ink-2)]">2026-08-28 至 2026-08-30</td>
+                                    <td class="px-5 py-4"><span class="status-badge status-active"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>进行中</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="text-xs text-[var(--brand-ink-2)]">曝光 5,632 / 成交 28 单</div>
+                                        <div class="text-xs text-[var(--brand-primary)]">带动 ¥28,910</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button type="button" class="btn-icon" title="编辑"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                            <button type="button" class="btn-icon" title="暂停" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                            <button type="button" class="btn-icon" title="查看数据"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                            <button type="button" class="btn-icon danger" title="删除" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="promo-row" data-promo-type="threshold" data-promo-name="全场满 500 减 50">
+                                    <td class="px-5 py-4">
+                                        <div class="font-medium text-[var(--brand-ink)]">全场满 500 减 50</div>
+                                        <div class="text-xs text-[var(--brand-ink-3)]">创建于 2026-08-15</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-info-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-info)]">
+                                            <i data-lucide="minus-circle" class="h-3 w-3"></i>满减
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4 text-[var(--brand-ink-2)]">2026-09-01 至 2026-09-07</td>
+                                    <td class="px-5 py-4"><span class="status-badge status-upcoming"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>未开始</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="text-xs text-[var(--brand-ink-2)]">领取 0 / 使用 0</div>
+                                        <div class="text-xs text-[var(--brand-ink-3)]">预计带动 -</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button type="button" class="btn-icon" title="编辑"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                            <button type="button" class="btn-icon" title="暂停" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                            <button type="button" class="btn-icon" title="查看数据"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                            <button type="button" class="btn-icon danger" title="删除" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="promo-row" data-promo-type="shipping" data-promo-name="主板品类包邮">
+                                    <td class="px-5 py-4">
+                                        <div class="font-medium text-[var(--brand-ink)]">主板品类包邮</div>
+                                        <div class="text-xs text-[var(--brand-ink-3)]">创建于 2026-07-28</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-success-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-success)]">
+                                            <i data-lucide="truck" class="h-3 w-3"></i>包邮
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-4 text-[var(--brand-ink-2)]">2026-08-01 至 2026-08-15</td>
+                                    <td class="px-5 py-4"><span class="status-badge status-ended"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>已结束</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="text-xs text-[var(--brand-ink-2)]">领取 892 / 使用 412</div>
+                                        <div class="text-xs text-[var(--brand-primary)]">带动 ¥15,130</div>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button type="button" class="btn-icon" title="查看数据"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                            <button type="button" class="btn-icon" title="复制" onclick="clonePromo(this)"><i data-lucide="copy" class="h-3.5 w-3.5"></i>复制</button>
+                                            <button type="button" class="btn-icon danger" title="删除" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 移动端卡片 -->
+                    <div class="md:hidden divide-y divide-[var(--brand-line)]" id="promo-mobile-list">
+                        <article class="promo-row p-4" data-promo-type="coupon" data-promo-name="显卡满 2000 减 150">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">显卡满 2000 减 150</h3>
+                                    <p class="mt-1 text-xs text-[var(--brand-ink-3)]">2026-08-25 至 2026-09-10</p>
+                                </div>
+                                <span class="status-badge status-active flex-shrink-0"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>进行中</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-primary-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-primary)]"><i data-lucide="ticket" class="h-3 w-3"></i>优惠券</span>
+                            </div>
+                            <div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">领取</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">1,248</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">使用</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">356</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">成交</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-primary)]">¥42k</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button type="button" class="btn-icon"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                <button type="button" class="btn-icon" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                <button type="button" class="btn-icon"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                <button type="button" class="btn-icon danger" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                            </div>
+                        </article>
+
+                        <article class="promo-row p-4" data-promo-type="flash" data-promo-name="RTX 4070 限时 9 折">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">RTX 4070 限时 9 折</h3>
+                                    <p class="mt-1 text-xs text-[var(--brand-ink-3)]">2026-08-28 至 2026-08-30</p>
+                                </div>
+                                <span class="status-badge status-active flex-shrink-0"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>进行中</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-warning-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-warning)]"><i data-lucide="zap" class="h-3 w-3"></i>限时折扣</span>
+                            </div>
+                            <div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">曝光</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">5,632</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">成交</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">28</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">成交</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-primary)]">¥28k</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button type="button" class="btn-icon"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                <button type="button" class="btn-icon" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                <button type="button" class="btn-icon"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                <button type="button" class="btn-icon danger" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                            </div>
+                        </article>
+
+                        <article class="promo-row p-4" data-promo-type="threshold" data-promo-name="全场满 500 减 50">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">全场满 500 减 50</h3>
+                                    <p class="mt-1 text-xs text-[var(--brand-ink-3)]">2026-09-01 至 2026-09-07</p>
+                                </div>
+                                <span class="status-badge status-upcoming flex-shrink-0"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>未开始</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-info-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-info)]"><i data-lucide="minus-circle" class="h-3 w-3"></i>满减</span>
+                            </div>
+                            <div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">领取</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">0</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">使用</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">0</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">成交</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink-3)]">-</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button type="button" class="btn-icon"><i data-lucide="pencil" class="h-3.5 w-3.5"></i>编辑</button>
+                                <button type="button" class="btn-icon" onclick="togglePause(this)"><i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停</button>
+                                <button type="button" class="btn-icon"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                <button type="button" class="btn-icon danger" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                            </div>
+                        </article>
+
+                        <article class="promo-row p-4" data-promo-type="shipping" data-promo-name="主板品类包邮">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="font-medium text-[var(--brand-ink)]">主板品类包邮</h3>
+                                    <p class="mt-1 text-xs text-[var(--brand-ink-3)]">2026-08-01 至 2026-08-15</p>
+                                </div>
+                                <span class="status-badge status-ended flex-shrink-0"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>已结束</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 rounded-md bg-[var(--brand-state-success-subtle)] px-2 py-1 text-xs font-medium text-[var(--brand-state-success)]"><i data-lucide="truck" class="h-3 w-3"></i>包邮</span>
+                            </div>
+                            <div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">领取</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">892</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">使用</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-ink)]">412</p>
+                                </div>
+                                <div class="rounded-md bg-[var(--brand-bg)] py-2">
+                                    <p class="text-[var(--brand-ink-3)]">成交</p>
+                                    <p class="mt-1 font-mono font-semibold text-[var(--brand-primary)]">¥15k</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button type="button" class="btn-icon"><i data-lucide="bar-chart-2" class="h-3.5 w-3.5"></i>数据</button>
+                                <button type="button" class="btn-icon" onclick="clonePromo(this)"><i data-lucide="copy" class="h-3.5 w-3.5"></i>复制</button>
+                                <button type="button" class="btn-icon danger" onclick="deletePromo(this)"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i>删除</button>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- 空状态 -->
+                    <div id="promo-empty" class="hidden flex-col items-center justify-center py-16 text-center">
+                        <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-[var(--brand-surface-2)] text-[var(--brand-ink-3)]">
+                            <i data-lucide="megaphone-off" class="h-8 w-8"></i>
+                        </div>
+                        <h3 class="mt-4 text-lg font-medium text-[var(--brand-ink)]">暂无营销活动</h3>
+                        <p class="mt-1 text-sm text-[var(--brand-ink-2)]">创建优惠券或限时折扣，开始提升商品销量</p>
+                        <button type="button" class="btn-sm-primary mt-5" onclick="scrollToCreate()">
+                            <i data-lucide="plus" class="h-4 w-4"></i>
+                            创建活动
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-[var(--brand-line)] bg-[var(--brand-surface)] py-12">
+            <div class="mx-auto max-w-7xl px-4 md:px-6">
+                <div class="grid gap-8 md:grid-cols-4">
+                    <div>
+                        <a href="index.html" class="flex items-center gap-2 text-lg font-semibold text-[var(--brand-primary)]">
+                            <i data-lucide="cpu" class="h-6 w-6"></i>
+                            <span>硬件侠</span>
+                        </a>
+                        <p class="mt-3 text-sm leading-relaxed text-[var(--brand-ink-2)]">专业可信的电脑配件二手交易平台，让闲置硬件流动起来。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">平台服务</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="browse.html" class="transition-colors hover:text-[var(--brand-primary)]">逛硬件</a></li>
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布闲置</a></li>
+                            <li><a href="trust.html" class="transition-colors hover:text-[var(--brand-primary)]">担保交易</a></li>
+                            <li><a href="help.html" class="transition-colors hover:text-[var(--brand-primary)]">帮助中心</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">卖家中心</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li><a href="sell.html" class="transition-colors hover:text-[var(--brand-primary)]">发布商品</a></li>
+                            <li><a href="listings.html" class="transition-colors hover:text-[var(--brand-primary)]">我的发布</a></li>
+                            <li><a href="orders.html" class="transition-colors hover:text-[var(--brand-primary)]">订单管理</a></li>
+                            <li><a href="promotions.html" class="transition-colors hover:text-[var(--brand-primary)]">营销活动</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-[var(--brand-ink)]">联系我们</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-[var(--brand-ink-2)]">
+                            <li>客服邮箱：support@yingjianxia.com</li>
+                            <li>工作时间：周一至周日 9:00-21:00</li>
+                            <li><a href="#" class="transition-colors hover:text-[var(--brand-primary)]">意见反馈</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-[var(--brand-line)] pt-6 text-xs text-[var(--brand-ink-3)] md:flex-row">
+                    <p>© 2026 硬件侠. 保留所有权利。</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">用户协议</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">隐私政策</a>
+                        <a href="#" class="transition-colors hover:text-[var(--brand-ink-2)]">沪ICP备XXXXXXXX号</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            function scrollToCreate() {
+                document.getElementById('create-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function setPromoTab(type) {
+                document.querySelectorAll('.promo-tab').forEach(function(tab) {
+                    var active = tab.dataset.promoType === type;
+                    tab.classList.toggle('active', active);
+                    tab.setAttribute('aria-selected', active ? 'true' : 'false');
+                });
+                filterPromoRows(type);
+            }
+
+            function filterPromoRows(type) {
+                var rows = document.querySelectorAll('.promo-row');
+                var visibleCount = 0;
+                rows.forEach(function(row) {
+                    var show = type === 'all' || row.dataset.promoType === type;
+                    row.classList.toggle('hidden', !show);
+                    if (show) visibleCount++;
+                });
+                var empty = document.getElementById('promo-empty');
+                if (visibleCount === 0) {
+                    empty.classList.remove('hidden');
+                    empty.classList.add('flex');
+                } else {
+                    empty.classList.add('hidden');
+                    empty.classList.remove('flex');
+                }
+            }
+
+            function filterPromoList(value) {
+                var term = value.trim().toLowerCase();
+                var rows = document.querySelectorAll('.promo-row');
+                var visibleCount = 0;
+                rows.forEach(function(row) {
+                    var name = (row.dataset.promoName || '').toLowerCase();
+                    var show = name.indexOf(term) !== -1;
+                    row.classList.toggle('hidden', !show);
+                    if (show) visibleCount++;
+                });
+                var empty = document.getElementById('promo-empty');
+                if (visibleCount === 0) {
+                    empty.classList.remove('hidden');
+                    empty.classList.add('flex');
+                } else {
+                    empty.classList.add('hidden');
+                    empty.classList.remove('flex');
+                }
+            }
+
+            function togglePause(btn) {
+                var isPaused = btn.getAttribute('data-paused') === 'true';
+                btn.setAttribute('data-paused', isPaused ? 'false' : 'true');
+                btn.innerHTML = isPaused
+                    ? '<i data-lucide="pause" class="h-3.5 w-3.5"></i>暂停'
+                    : '<i data-lucide="play" class="h-3.5 w-3.5"></i>继续';
+                lucide.createIcons();
+            }
+
+            function deletePromo(btn) {
+                var row = btn.closest('.promo-row');
+                if (row && confirm('确定要删除该活动吗？')) {
+                    row.remove();
+                    filterPromoRows(document.querySelector('.promo-tab.active').dataset.promoType);
+                }
+            }
+
+            function clonePromo(btn) {
+                var row = btn.closest('.promo-row');
+                if (row) {
+                    var clone = row.cloneNode(true);
+                    var container = row.parentNode;
+                    container.insertBefore(clone, row.nextSibling);
+                    lucide.createIcons();
+                }
+            }
+
+            function createCoupon(form) {
+                var name = form.querySelector('[name="name"]').value;
+                alert('优惠券「' + name + '」已创建（演示）');
+                form.reset();
+            }
+
+            function createFlash(form) {
+                var product = form.querySelector('[name="product"]').value;
+                alert('限时折扣活动「' + product + '」已创建（演示）');
+                form.reset();
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+    <script>
+        (function() {
+            const page = location.pathname.split('/').pop() || 'index.html';
+            document.querySelectorAll('.nav-link[href]').forEach(function(a) {
+                if (a.getAttribute('href') === page) a.classList.add('active');
+            });
+            const menu = document.getElementById('mobile-menu');
+            const panel = document.getElementById('mobile-menu-panel');
+            const toggle = document.getElementById('mobile-menu-toggle');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.setAttribute('aria-hidden', 'false');
+                if (toggle) { toggle.setAttribute('aria-expanded', 'true'); }
+                requestAnimationFrame(function() { panel.classList.remove('translate-x-full'); });
+            }
+            function closeMenu() {
+                panel.classList.add('translate-x-full');
+                setTimeout(function() {
+                    menu.classList.add('hidden');
+                    menu.setAttribute('aria-hidden', 'true');
+                    if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+                }, 200);
+            }
+            if (toggle) toggle.addEventListener('click', openMenu);
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            if (backdrop) backdrop.addEventListener('click', closeMenu);
+        })();
+    </script>
+</body>
+</html>

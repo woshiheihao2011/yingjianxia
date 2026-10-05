@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 / 注册 - 硬件侠</title>
+    <style id="theme-vars">
+/* 硬件侠 Design Tokens - 深色科技风 */
+
+:root {
+  /* Base primitives */
+  --brand-bg: #0B0C10;
+  --brand-surface: #15161A;
+  --brand-surface-2: #1E2026;
+  --brand-surface-3: #252830;
+
+  --brand-ink: #F0F1F5;
+  --brand-ink-2: #9CA3AF;
+  --brand-ink-3: #6B7280;
+
+  --brand-line: #2A2D35;
+  --brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --brand-primary: #00D4AA;
+  --brand-primary-hover: #00B894;
+  --brand-primary-subtle: rgba(0, 212, 170, 0.12);
+
+  --brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --brand-state-success: #10B981;
+  --brand-state-success-subtle: rgba(16, 185, 129, 0.12);
+  --brand-state-warning: #F59E0B;
+  --brand-state-warning-subtle: rgba(245, 158, 11, 0.12);
+  --brand-state-error: #EF4444;
+  --brand-state-error-subtle: rgba(239, 68, 68, 0.12);
+  --brand-state-info: #3B82F6;
+  --brand-state-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Radius */
+  --brand-radius-xs: 2px;
+  --brand-radius-sm: 4px;
+  --brand-radius-md: 8px;
+  --brand-radius-lg: 16px;
+  --brand-radius-pill: 999px;
+
+  /* Shadow - reserved for floating layers */
+  --brand-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --brand-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --brand-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --brand-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --brand-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-5: 24px;
+  --brand-space-6: 32px;
+  --brand-space-7: 48px;
+  --brand-space-8: 80px;
+  --brand-space-9: 120px;
+}
+
+/* Semantic aliases for apply-html-head-contract */
+:root {
+  --brand-background: var(--brand-bg);
+  --brand-foreground: var(--brand-ink);
+
+  --brand-card: var(--brand-surface);
+  --brand-card-foreground: var(--brand-ink);
+
+  --brand-popover: var(--brand-surface-2);
+  --brand-popover-foreground: var(--brand-ink);
+
+  --brand-primary: var(--brand-primary);
+  --brand-primary-foreground: var(--brand-primary-ink);
+
+  --brand-muted: var(--brand-surface-2);
+  --brand-muted-foreground: var(--brand-ink-2);
+
+  --brand-border: var(--brand-line);
+  --brand-input: var(--brand-line);
+  --brand-ring: var(--brand-primary);
+
+  --brand-radius-md: var(--brand-radius-md);
+}
+
+/* Page-level base styles */
+html.brand-light,
+html.brand-dark {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+}
+
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--brand-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility helpers consumed by pages */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.border-brand { border-color: var(--brand-primary); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--brand-background);
+    --color-foreground: var(--brand-foreground);
+    --color-card: var(--brand-card);
+    --color-card-foreground: var(--brand-card-foreground);
+    --color-popover: var(--brand-popover);
+    --color-popover-foreground: var(--brand-popover-foreground);
+    --color-primary: var(--brand-primary);
+    --color-primary-foreground: var(--brand-primary-foreground);
+    --color-muted: var(--brand-muted);
+    --color-muted-foreground: var(--brand-muted-foreground);
+    --color-border: var(--brand-border);
+    --color-input: var(--brand-input);
+    --color-ring: var(--brand-ring);
+    --radius-sm: var(--brand-radius-sm);
+    --radius-md: var(--brand-radius-md);
+    --radius-lg: var(--brand-radius-lg);
+  }
+  @layer base {
+    body { background: var(--brand-background); color: var(--brand-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--brand-background); }
+      .text-background { color: var(--brand-background); }
+      .border-background { border-color: var(--brand-background); }
+      .ring-background { --tw-ring-color: var(--brand-background); }
+      .bg-foreground { background-color: var(--brand-foreground); }
+      .text-foreground { color: var(--brand-foreground); }
+      .border-foreground { border-color: var(--brand-foreground); }
+      .ring-foreground { --tw-ring-color: var(--brand-foreground); }
+      .bg-card { background-color: var(--brand-card); }
+      .text-card { color: var(--brand-card); }
+      .border-card { border-color: var(--brand-card); }
+      .ring-card { --tw-ring-color: var(--brand-card); }
+      .bg-card-foreground { background-color: var(--brand-card-foreground); }
+      .text-card-foreground { color: var(--brand-card-foreground); }
+      .border-card-foreground { border-color: var(--brand-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--brand-card-foreground); }
+      .bg-popover { background-color: var(--brand-popover); }
+      .text-popover { color: var(--brand-popover); }
+      .border-popover { border-color: var(--brand-popover); }
+      .ring-popover { --tw-ring-color: var(--brand-popover); }
+      .bg-popover-foreground { background-color: var(--brand-popover-foreground); }
+      .text-popover-foreground { color: var(--brand-popover-foreground); }
+      .border-popover-foreground { border-color: var(--brand-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--brand-popover-foreground); }
+      .bg-primary { background-color: var(--brand-primary); }
+      .text-primary { color: var(--brand-primary); }
+      .border-primary { border-color: var(--brand-primary); }
+      .ring-primary { --tw-ring-color: var(--brand-primary); }
+      .bg-primary-foreground { background-color: var(--brand-primary-foreground); }
+      .text-primary-foreground { color: var(--brand-primary-foreground); }
+      .border-primary-foreground { border-color: var(--brand-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--brand-primary-foreground); }
+      .bg-muted { background-color: var(--brand-muted); }
+      .text-muted { color: var(--brand-muted); }
+      .border-muted { border-color: var(--brand-muted); }
+      .ring-muted { --tw-ring-color: var(--brand-muted); }
+      .bg-muted-foreground { background-color: var(--brand-muted-foreground); }
+      .text-muted-foreground { color: var(--brand-muted-foreground); }
+      .border-muted-foreground { border-color: var(--brand-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--brand-muted-foreground); }
+      .bg-border { background-color: var(--brand-border); }
+      .text-border { color: var(--brand-border); }
+      .border-border { border-color: var(--brand-border); }
+      .ring-border { --tw-ring-color: var(--brand-border); }
+      .bg-input { background-color: var(--brand-input); }
+      .text-input { color: var(--brand-input); }
+      .border-input { border-color: var(--brand-input); }
+      .ring-input { --tw-ring-color: var(--brand-input); }
+      .bg-ring { background-color: var(--brand-ring); }
+      .text-ring { color: var(--brand-ring); }
+      .border-ring { border-color: var(--brand-ring); }
+      .ring-ring { --tw-ring-color: var(--brand-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <style>
+            .auth-shell { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--brand-space-5) var(--brand-space-4); }
+            .auth-card { width: 100%; max-width: 420px; background: var(--brand-card); border: 1px solid var(--brand-line); border-radius: var(--brand-radius-lg); padding: var(--brand-space-6); box-shadow: var(--brand-shadow-2); }
+            .auth-logo { display: flex; align-items: center; justify-content: center; gap: var(--brand-space-3); margin-bottom: var(--brand-space-6); }
+            .auth-logo-mark { width: 40px; height: 40px; border-radius: var(--brand-radius-md); background: var(--brand-primary); }
+            .auth-tabs { display: flex; gap: var(--brand-space-1); padding: var(--brand-space-1); background: var(--brand-muted); border-radius: var(--brand-radius-md); margin-bottom: var(--brand-space-5); }
+            .auth-tab { flex: 1 1 0%; height: 40px; border-radius: var(--brand-radius-sm); font-size: 14px; font-weight: 600; color: var(--brand-ink-2); background: transparent; border: none; cursor: pointer; transition: color .2s, background .2s, box-shadow .2s; }
+            .auth-tab:hover { color: var(--brand-ink); background: var(--brand-surface-2); }
+            .auth-tab.active { color: var(--brand-ink); background: var(--brand-card); box-shadow: var(--brand-shadow-1); }
+            .auth-tab:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-ring); }
+            .auth-input-wrap { position: relative; }
+            .auth-input { width: 100%; height: 48px; padding-left: 44px; padding-right: 16px; border-radius: var(--brand-radius-md); background: var(--brand-bg); border: 1px solid var(--brand-line); color: var(--brand-ink); font-size: 14px; outline: none; transition: border-color .2s, box-shadow .2s; }
+            .auth-input::placeholder { color: var(--brand-ink-3); }
+            .auth-input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-primary-subtle); }
+            .auth-input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--brand-ink-2); pointer-events: none; }
+            .auth-label { display: block; margin-bottom: var(--brand-space-2); font-size: 14px; font-weight: 500; color: var(--brand-ink); }
+            .auth-btn { width: 100%; height: 48px; border-radius: var(--brand-radius-md); background: var(--brand-primary); color: var(--brand-primary-ink); font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: background .2s, transform .15s; }
+            .auth-btn:hover { background: var(--brand-primary-hover); }
+            .auth-btn:active { transform: translateY(1px); }
+            .auth-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand-bg), 0 0 0 4px var(--brand-ring); }
+            .auth-btn-secondary { height: 40px; padding: 0 16px; border-radius: var(--brand-radius-md); background: var(--brand-surface-2); color: var(--brand-ink); font-size: 13px; font-weight: 500; border: 1px solid var(--brand-line); cursor: pointer; transition: background .2s, border-color .2s; }
+            .auth-btn-secondary:hover { background: var(--brand-surface-3); border-color: var(--brand-primary); }
+            .auth-btn-secondary:disabled { opacity: .6; cursor: not-allowed; }
+            .auth-divider { display: flex; align-items: center; gap: var(--brand-space-3); color: var(--brand-ink-3); font-size: 13px; margin: var(--brand-space-5) 0; }
+            .auth-divider::before, .auth-divider::after { content: ""; flex: 1 1 0%; height: 1px; background: var(--brand-line); }
+            .auth-social-btn { width: 44px; height: 44px; border-radius: 999px; background: var(--brand-muted); border: 1px solid var(--brand-line); color: var(--brand-ink-2); display: inline-flex; align-items: center; justify-content: center; transition: border-color .2s, color .2s, background .2s; }
+            .auth-social-btn:hover { border-color: var(--brand-primary); color: var(--brand-primary); background: var(--brand-primary-subtle); }
+            .auth-checkbox { appearance: none; width: 18px; height: 18px; border-radius: var(--brand-radius-sm); border: 1px solid var(--brand-line); background: var(--brand-bg); cursor: pointer; display: grid; place-items: center; transition: border-color .2s, background .2s; }
+            .auth-checkbox:checked { background: var(--brand-primary); border-color: var(--brand-primary); }
+            .auth-checkbox:checked::after { content: ""; width: 8px; height: 5px; border-left: 2px solid var(--brand-primary-ink); border-bottom: 2px solid var(--brand-primary-ink); transform: rotate(-45deg) translate(1px, -1px); }
+            .auth-link { color: var(--brand-primary); font-size: 13px; font-weight: 500; text-decoration: none; }
+            .auth-link:hover { text-decoration: underline; }
+            .auth-footer { margin-top: var(--brand-space-5); text-align: center; font-size: 13px; color: var(--brand-ink-2); }
+            .auth-footer a { color: var(--brand-ink-2); text-decoration: none; }
+            .auth-footer a:hover { color: var(--brand-ink); }
+            .form-section { display: none; }
+            .form-section.active { display: block; }
+            @media (max-width: 480px) { .auth-card { padding: var(--brand-space-5); border-radius: var(--brand-radius-md); } }
+        </style>
+
+        <div class="auth-shell">
+            <div class="auth-logo" data-dom-id="auth-logo">
+                <span class="auth-logo-mark"></span>
+                <span class="text-2xl font-bold text-foreground tracking-tight">硬件侠</span>
+            </div>
+
+            <div class="auth-card">
+                <div class="auth-tabs" role="tablist" aria-label="账号操作">
+                    <button id="tab-login" class="auth-tab active" type="button" role="tab" aria-selected="true" aria-controls="form-login" onclick="switchAuthTab('login')">登录</button>
+                    <button id="tab-register" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="form-register" onclick="switchAuthTab('register')">注册</button>
+                    <button id="tab-recover" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="form-recover" onclick="switchAuthTab('recover')">找回密码</button>
+                </div>
+
+                <!-- 登录 -->
+                <section id="form-login" class="form-section active" role="tabpanel" aria-labelledby="tab-login">
+                    <form class="space-y-5" onsubmit="event.preventDefault();">
+                        <div>
+                            <label class="auth-label" for="login-account">手机号 / 邮箱</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="user" class="auth-input-icon"></i>
+                                <input id="login-account" type="text" inputmode="email" autocomplete="username" placeholder="请输入手机号或邮箱" class="auth-input" data-dom-id="login-account">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="login-password">密码</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="lock" class="auth-input-icon"></i>
+                                <input id="login-password" type="password" autocomplete="current-password" placeholder="请输入密码" class="auth-input" data-dom-id="login-password">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="auth-checkbox" data-dom-id="login-remember">
+                                <span class="text-sm text-muted-foreground">记住我</span>
+                            </label>
+                            <button type="button" class="auth-link" onclick="switchAuthTab('recover')">忘记密码？</button>
+                        </div>
+                        <button type="submit" class="auth-btn" data-dom-id="login-submit">登录</button>
+                    </form>
+
+                    <div class="auth-divider">其他登录方式</div>
+                    <div class="flex items-center justify-center gap-4">
+                        <button type="button" class="auth-social-btn" aria-label="微信登录" title="微信登录">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </button>
+                        <button type="button" class="auth-social-btn" aria-label="QQ 登录" title="QQ 登录">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </button>
+                        <button type="button" class="auth-social-btn" aria-label="支付宝登录" title="支付宝登录">
+                            <i data-lucide="credit-card" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 注册 -->
+                <section id="form-register" class="form-section" role="tabpanel" aria-labelledby="tab-register">
+                    <form class="space-y-5" onsubmit="event.preventDefault();">
+                        <div>
+                            <label class="auth-label" for="register-account">手机号 / 邮箱</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="user" class="auth-input-icon"></i>
+                                <input id="register-account" type="text" inputmode="email" autocomplete="username" placeholder="请输入手机号或邮箱" class="auth-input" data-dom-id="register-account">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="register-code">验证码</label>
+                            <div class="flex gap-3">
+                                <div class="auth-input-wrap flex-1">
+                                    <i data-lucide="shield-check" class="auth-input-icon"></i>
+                                    <input id="register-code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="请输入验证码" class="auth-input" data-dom-id="register-code">
+                                </div>
+                                <button type="button" class="auth-btn-secondary whitespace-nowrap" data-dom-id="register-send-code" onclick="startCountdown(this)">获取验证码</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="register-password">设置密码</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="lock" class="auth-input-icon"></i>
+                                <input id="register-password" type="password" autocomplete="new-password" placeholder="请设置 8-20 位密码" class="auth-input" data-dom-id="register-password">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="register-password-confirm">确认密码</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="lock" class="auth-input-icon"></i>
+                                <input id="register-password-confirm" type="password" autocomplete="new-password" placeholder="请再次输入密码" class="auth-input" data-dom-id="register-password-confirm">
+                            </div>
+                        </div>
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <input type="checkbox" class="auth-checkbox mt-0.5" data-dom-id="register-agree">
+                            <span class="text-sm text-muted-foreground leading-relaxed">我已阅读并同意 <a href="#" class="auth-link">《用户协议》</a> 与 <a href="#" class="auth-link">《隐私政策》</a></span>
+                        </label>
+                        <button type="submit" class="auth-btn" data-dom-id="register-submit">注册</button>
+                    </form>
+                </section>
+
+                <!-- 找回密码 -->
+                <section id="form-recover" class="form-section" role="tabpanel" aria-labelledby="tab-recover">
+                    <form class="space-y-5" onsubmit="event.preventDefault();">
+                        <div>
+                            <label class="auth-label" for="recover-account">手机号 / 邮箱</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="user" class="auth-input-icon"></i>
+                                <input id="recover-account" type="text" inputmode="email" autocomplete="username" placeholder="请输入手机号或邮箱" class="auth-input" data-dom-id="recover-account">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="recover-code">验证码</label>
+                            <div class="flex gap-3">
+                                <div class="auth-input-wrap flex-1">
+                                    <i data-lucide="shield-check" class="auth-input-icon"></i>
+                                    <input id="recover-code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="请输入验证码" class="auth-input" data-dom-id="recover-code">
+                                </div>
+                                <button type="button" class="auth-btn-secondary whitespace-nowrap" data-dom-id="recover-send-code" onclick="startCountdown(this)">获取验证码</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="recover-password">新密码</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="lock" class="auth-input-icon"></i>
+                                <input id="recover-password" type="password" autocomplete="new-password" placeholder="请设置新密码" class="auth-input" data-dom-id="recover-password">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="auth-label" for="recover-password-confirm">确认新密码</label>
+                            <div class="auth-input-wrap">
+                                <i data-lucide="lock" class="auth-input-icon"></i>
+                                <input id="recover-password-confirm" type="password" autocomplete="new-password" placeholder="请再次输入新密码" class="auth-input" data-dom-id="recover-password-confirm">
+                            </div>
+                        </div>
+                        <button type="submit" class="auth-btn" data-dom-id="recover-submit">重置密码</button>
+                    </form>
+                </section>
+            </div>
+
+            <div class="auth-footer flex items-center justify-center gap-6">
+                <a href="index.html" data-dom-id="auth-back-home">返回首页</a>
+                <span class="text-border">|</span>
+                <a href="#" data-dom-id="auth-contact-service">联系客服</a>
+            </div>
+        </div>
+
+        <script>
+            function switchAuthTab(target) {
+                const sections = ['login', 'register', 'recover'];
+                sections.forEach(function(id) {
+                    const section = document.getElementById('form-' + id);
+                    const tab = document.getElementById('tab-' + id);
+                    if (id === target) {
+                        section.classList.add('active');
+                        tab.classList.add('active');
+                        tab.setAttribute('aria-selected', 'true');
+                    } else {
+                        section.classList.remove('active');
+                        tab.classList.remove('active');
+                        tab.setAttribute('aria-selected', 'false');
+                    }
+                });
+            }
+            function startCountdown(btn) {
+                if (btn.disabled) return;
+                var seconds = 60;
+                btn.disabled = true;
+                btn.textContent = seconds + 's';
+                var timer = setInterval(function() {
+                    seconds--;
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        btn.disabled = false;
+                        btn.textContent = '获取验证码';
+                    } else {
+                        btn.textContent = seconds + 's';
+                    }
+                }, 1000);
+            }
+        </script>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

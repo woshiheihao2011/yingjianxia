@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>硬件侠 - 测试用例文档</title>
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #131826;
+  --bg-card: #1a2033;
+  --bg-hover: #232b42;
+  --border: #2a3454;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #06b6d4;
+  --purple: #8b5cf6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+.hero { background: linear-gradient(135deg, #0a0e1a 0%, #131826 50%, #1a2033 100%); border-bottom: 1px solid var(--border); padding: 40px 0 30px; text-align: center; }
+.hero h1 { font-size: 1.8rem; font-weight: 700; color: var(--accent-light); }
+.hero .subtitle { color: var(--text-secondary); margin-top: 8px; font-size: 0.9rem; }
+.hero .meta { display: flex; gap: 16px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.hero .meta span { background: var(--bg-card); border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; color: var(--text-secondary); }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px 20px 48px; }
+.toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 32px; columns: 2; column-gap: 32px; }
+.toc-title { column-span: all; color: var(--accent-light); font-weight: 600; margin-bottom: 12px; font-size: 1rem; }
+.toc a { color: var(--text-secondary); text-decoration: none; display: block; padding: 3px 0; font-size: 0.85rem; }
+.toc a:hover { color: var(--accent-light); }
+section { margin-bottom: 36px; }
+.module-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.module-header h2 { font-size: 1.2rem; color: var(--accent-light); }
+.module-header .module-tag { background: var(--accent); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; }
+.module-header .count { color: var(--text-muted); font-size: 0.85rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th { background: var(--bg-hover); color: var(--accent-light); padding: 10px 10px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); position: sticky; top: 0; white-space: nowrap; }
+td { padding: 10px 10px; border-bottom: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+tr:hover td { background: var(--bg-hover); }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 500; white-space: nowrap; }
+.b-p0 { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+.b-p1 { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
+.b-p2 { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+.b-func { background: rgba(6,182,212,0.15); color: var(--info); border: 1px solid rgba(6,182,212,0.3); }
+.b-bound { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+.b-excp { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+.b-e2e { background: rgba(59,130,246,0.15); color: var(--accent-light); border: 1px solid rgba(59,130,246,0.3); }
+.b-nfr { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+.b-sec { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+.tc-id { font-family: 'Courier New', monospace; color: var(--accent-light); font-weight: 600; white-space: nowrap; }
+.steps { counter-reset: step; }
+.steps ol { padding-left: 18px; margin: 0; }
+.steps li { margin-bottom: 3px; }
+.pre { color: var(--text-muted); font-size: 0.8rem; }
+.expect { color: var(--success); }
+.req { color: var(--text-muted); font-size: 0.78rem; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+.filter-bar { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.filter-bar input, .filter-bar select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; }
+.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--accent); }
+@media (max-width: 768px) { .toc { columns: 1; } table { font-size: 0.75rem; } }
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>硬件侠 — 测试用例文档</h1>
+  <div class="subtitle">Hardware Hero Test Cases v1.0</div>
+  <div class="meta">
+    <span>用例总数：170</span>
+    <span>P0：90</span>
+    <span>P1：50</span>
+    <span>P2：30</span>
+    <span>覆盖：15个微服务域</span>
+  </div>
+</div>
+<div class="container">
+
+<div class="toc">
+  <div class="toc-title">目录 — 按微服务域分组</div>
+  <a href="#m1">1. 用户认证模块 (TC-USER) ×20</a>
+  <a href="#m2">2. 店铺管理模块 (TC-SHOP) ×5</a>
+  <a href="#m3">3. 商品管理模块 (TC-PROD) ×15</a>
+  <a href="#m4">4. 验机服务模块 (TC-INSP) ×9</a>
+  <a href="#m5">5. 订单管理模块 (TC-ORD) ×20</a>
+  <a href="#m6">6. 担保交易模块 (TC-ESC) ×15</a>
+  <a href="#m7">7. 支付与钱包模块 (TC-PAY) ×15</a>
+  <a href="#m8">8. 物流服务模块 (TC-LOGI) ×9</a>
+  <a href="#m9">9. 售后服务模块 (TC-AFT) ×17</a>
+  <a href="#m10">10. 消息服务模块 (TC-MSG) ×9</a>
+  <a href="#m11">11. 社区服务模块 (TC-COMM) ×9</a>
+  <a href="#m12">12. 营销服务模块 (TC-MKT) ×10</a>
+  <a href="#m13">13. 评价服务模块 (TC-REV) ×7</a>
+  <a href="#m14">14. 客服服务模块 (TC-SUP) ×8</a>
+  <a href="#m15">15. 审核服务模块 (TC-MOD) ×5</a>
+  <a href="#m16">16. 风控服务模块 (TC-RISK) ×4</a>
+  <a href="#m17">17. 端到端测试 (TC-E2E) ×8</a>
+  <a href="#m18">18. 非功能测试 (TC-NFR) ×10</a>
+</div>
+
+<!-- ========== MODULE 1: USER AUTH ========== -->
+<section id="m1">
+<div class="module-header">
+  <span class="module-tag">01</span>
+  <h2>用户认证模块</h2>
+  <span class="count">20 条用例 | 核心域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-USER-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>手机号注册-正常流程</td>
+<td class="pre">未注册手机号；Mock短信平台可用</td>
+<td class="steps"><ol><li>输入手机号 13800138000</li><li>点击「获取验证码」</li><li>输入收到的6位验证码</li><li>设置密码 Abc123456</li><li>勾选用户协议</li><li>点击「注册」</li></ol></td>
+<td class="expect">注册成功，返回 JWT Token（Access 2h + Refresh 7d）和用户信息；密码 BCrypt 哈希存储；验证码 Redis 中删除</td>
+<td class="req">PRD 4.2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>手机号注册-已注册手机号</td>
+<td class="pre">手机号 13800138000 已注册</td>
+<td class="steps"><ol><li>输入已注册手机号 13800138000</li><li>获取验证码并输入</li><li>设置密码并勾选协议</li><li>点击「注册」</li></ol></td>
+<td class="expect">返回错误码 20003「手机号已注册」；注册失败</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>验证码错误-输入错误验证码</td>
+<td class="pre">手机号未注册，验证码已发送</td>
+<td class="steps"><ol><li>输入正确手机号获取验证码</li><li>输入错误验证码（如 000000）</li><li>点击注册</li></ol></td>
+<td class="expect">返回错误码「验证码错误」；注册失败</td>
+<td class="req">PRD 4.2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-bound">边界</span></td>
+<td>短信验证码-60秒内重复发送</td>
+<td class="pre">验证码已发送，60秒倒计时中</td>
+<td class="steps"><ol><li>第一次发送验证码</li><li>在60秒内再次点击「获取验证码」</li></ol></td>
+<td class="expect">返回错误码 20010「60秒内不可重复发送」；按钮显示倒计时；不发送新验证码</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-005</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>短信验证码-同手机号日超10条</td>
+<td class="pre">同一手机号当日已发送10条验证码</td>
+<td class="steps"><ol><li>同手机号当日第11次请求发送验证码</li></ol></td>
+<td class="expect">返回错误码 20011「当日发送次数已达上限」；拒绝发送</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>验证码爆破防护-错误5次锁定</td>
+<td class="pre">验证码已发送</td>
+<td class="steps"><ol><li>连续5次输入错误验证码</li><li>第6次尝试</li></ol></td>
+<td class="expect">第6次返回错误码「手机号已锁定1小时」；1小时内该手机号不可再请求验证码</td>
+<td class="req">LLD 防坑</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>密码登录-正常</td>
+<td class="pre">用户已注册</td>
+<td class="steps"><ol><li>输入已注册手机号和正确密码</li><li>点击「登录」</li></ol></td>
+<td class="expect">登录成功，返回 JWT Token；Access Token 有效期2h，Refresh Token 7d</td>
+<td class="req">PRD 4.2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>密码登录-连续错误5次锁定</td>
+<td class="pre">用户已注册</td>
+<td class="steps"><ol><li>连续5次输入错误密码</li><li>第6次尝试登录</li></ol></td>
+<td class="expect">第6次返回错误码 20005「账号已锁定30分钟」；30分钟内不可登录</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-009</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>验证码登录-正常</td>
+<td class="pre">用户已注册</td>
+<td class="steps"><ol><li>输入手机号获取验证码</li><li>输入正确验证码</li><li>点击「验证码登录」</li></ol></td>
+<td class="expect">登录成功，返回 JWT Token</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>微信OAuth登录-新用户首次登录</td>
+<td class="pre">微信账号未绑定平台用户</td>
+<td class="steps"><ol><li>点击「微信登录」</li><li>微信授权返回 code</li><li>服务端用 code 换取 access_token + open_id</li><li>查询 user_auth 表无记录</li><li>查询手机号也未注册</li></ol></td>
+<td class="expect">返回 need_bind_phone 状态；前端跳转绑定手机号页面</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-011</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>微信OAuth登录-已绑定用户</td>
+<td class="pre">微信账号已绑定平台用户</td>
+<td class="steps"><ol><li>点击「微信登录」</li><li>微信授权返回 code</li><li>服务端用 code 换取 open_id</li><li>查询 user_auth 表已有记录</li></ol></td>
+<td class="expect">直接返回 JWT Token 和用户信息，无需绑定</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-012</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>OAuth绑定手机号-已有用户</td>
+<td class="pre">微信返回 need_bind_phone；手机号已注册</td>
+<td class="steps"><ol><li>在绑定页面输入已注册手机号</li><li>获取并输入验证码</li><li>点击「绑定」</li></ol></td>
+<td class="expect">绑定成功，将 open_id 写入 user_auth 表；返回 JWT Token</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-013</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>Token刷新-Access过期</td>
+<td class="pre">Access Token 已过期，Refresh Token 有效</td>
+<td class="steps"><ol><li>携带过期的 Access Token 请求接口，返回 401</li><li>使用 Refresh Token 调用 /refresh-token</li><li>使用新 Token 请求接口</li></ol></td>
+<td class="expect">刷新成功，返回新的 Access Token 和 Refresh Token；旧 Refresh Token 失效</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-014</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>登出后Token加入黑名单</td>
+<td class="pre">用户已登录，持有有效 Token</td>
+<td class="steps"><ol><li>调用登出接口</li><li>使用原 Token 请求需要认证的接口</li></ol></td>
+<td class="expect">登出成功；原 Token 在 Redis 黑名单中，请求返回 401</td>
+<td class="req">LLD 防坑</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-015</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>实名认证-正常流程</td>
+<td class="pre">用户已登录，未实名</td>
+<td class="steps"><ol><li>输入真实姓名「张三」</li><li>输入身份证号「110101199001011234」</li><li>点击「提交认证」</li><li>Mock 公安 API 返回匹配</li></ol></td>
+<td class="expect">认证成功，status 更新为已认证；可发布商品</td>
+<td class="req">PRD 4.2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-016</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>实名认证-姓名身份证不匹配</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>输入姓名「张三」</li><li>输入不匹配的身份证号</li><li>提交认证</li><li>Mock 公安 API 返回不匹配</li></ol></td>
+<td class="expect">返回错误码 20020「实名认证失败」；认证状态不变</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-017</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>实名认证-超3次/天限制</td>
+<td class="pre">当日已失败3次实名认证</td>
+<td class="steps"><ol><li>第4次提交实名认证</li></ol></td>
+<td class="expect">返回错误码「今日认证次数已达上限」；拒绝提交</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-018</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>密码找回-正常流程</td>
+<td class="pre">用户已注册</td>
+<td class="steps"><ol><li>输入注册手机号</li><li>获取验证码</li><li>输入验证码</li><li>设置新密码</li><li>点击「重置密码」</li></ol></td>
+<td class="expect">密码重置成功；旧密码失效；旧 Token 加入黑名单</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-019</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-sec">安全</span></td>
+<td>密码找回-未注册手机号静默成功</td>
+<td class="pre">输入未注册手机号</td>
+<td class="steps"><ol><li>输入未注册的手机号</li><li>点击「重置密码」</li></ol></td>
+<td class="expect">统一返回「如已注册将收到短信」，防止手机号枚举攻击</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-USER-020</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>信用分计算-多维度加权</td>
+<td class="pre">用户有交易记录和评价</td>
+<td class="steps"><ol><li>查询用户信用分</li><li>验证计算公式：MIN(5.0, 3.0 + 交易量×0.3 + 好评率×0.4 - 纠纷率×2.0 + 实名0.3 + 在售时长×0.2)</li><li>验证等级映射：≥4.5优秀 / ≥3.5良好 / ≥2.5一般 / <2.5较低</li></ol></td>
+<td class="expect">信用分计算正确，等级映射正确；信用分缓存到 Redis</td>
+<td class="req">LLD 模块1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 2: SHOP ========== -->
+<section id="m2">
+<div class="module-header">
+  <span class="module-tag">02</span>
+  <h2>店铺管理模块</h2>
+  <span class="count">5 条用例 | 用户域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-SHOP-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>一键开店-实名认证后自动创建</td>
+<td class="pre">用户已完成实名认证</td>
+<td class="steps"><ol><li>调用 POST /api/v1/shop/open</li><li>验证是否自动创建默认店铺</li></ol></td>
+<td class="expect">创建成功，返回默认店铺信息（名称=昵称+的店铺，默认设置）</td>
+<td class="req">LLD 模块1.1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SHOP-002</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>店铺设置-全字段更新</td>
+<td class="pre">店铺已创建</td>
+<td class="steps"><ol><li>更新店铺名称、简介、头像、封面</li><li>设置客服电话、营业时间</li><li>设置退货地址、默认快递</li><li>开启砍价/面交开关</li><li>设置发货时效承诺(48h)</li></ol></td>
+<td class="expect">设置实时同步到左侧预览卡片；所有字段持久化到 shop_settings 表</td>
+<td class="req">PRD 4.9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SHOP-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>优质卖家自动认证-满足条件</td>
+<td class="pre">卖家成交量49，好评率95%，纠纷率2%</td>
+<td class="steps"><ol><li>完成第50笔订单</li><li>验证是否自动触发优质卖家判定</li><li>检查是否标记优质卖家标签</li></ol></td>
+<td class="expect">成交量≥50 + 好评率≥95% + 纠纷率≤2% → 自动标记优质卖家；标签展示在个人中心</td>
+<td class="req">LLD 模块1.1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SHOP-004</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家数据中心-6项指标展示</td>
+<td class="pre">卖家有交易数据</td>
+<td class="steps"><ol><li>选择时间范围(7天/30天/90天)</li><li>查询数据中心</li><li>验证6张指标卡(成交额/订单数/浏览量/访客数/转化率/退款率)</li><li>验证同比涨跌显示(绿色上升/红色下降)</li></ol></td>
+<td class="expect">6项指标正确展示；同比涨跌正确；数据从 ClickHouse 查询</td>
+<td class="req">PRD 4.9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SHOP-005</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>数据趋势图-折线图渲染</td>
+<td class="pre">卖家有交易数据</td>
+<td class="steps"><ol><li>调用 GET /api/v1/shop/data-center/trend</li><li>验证返回收入+订单趋势数据</li><li>验证 SVG 折线图渲染</li></ol></td>
+<td class="expect">趋势数据正确返回；折线图正确渲染；时间范围切换数据更新</td>
+<td class="req">LLD 模块1.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 3: PRODUCT ========== -->
+<section id="m3">
+<div class="module-header">
+  <span class="module-tag">03</span>
+  <h2>商品管理模块</h2>
+  <span class="count">15 条用例 | 核心域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-PROD-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品发布-正常流程</td>
+<td class="pre">卖家已实名认证</td>
+<td class="steps"><ol><li>上传3张商品图片(JPG, 各5MB)</li><li>输入标题「RTX 4070 8G 显卡」(15字)</li><li>选择分类「显卡」</li><li>设置价格 3680，成色 99新</li><li>填写原价 4799，购买渠道「京东」</li><li>勾选验机同意</li><li>提交发布</li></ol></td>
+<td class="expect">商品创建成功 status=草稿；提交后 status=审核中；推送审核服务</td>
+<td class="req">PRD 4.8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>商品发布-未实名认证</td>
+<td class="pre">卖家未完成实名认证</td>
+<td class="steps"><ol><li>尝试提交商品发布</li></ol></td>
+<td class="expect">返回错误码 30001「请先完成实名认证」；发布被拒绝</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>商品发布-1小时超10件触发风控</td>
+<td class="pre">卖家1小时内已发布10件商品</td>
+<td class="steps"><ol><li>第11次提交商品发布</li></ol></td>
+<td class="expect">返回错误码 30002「发布频率过高，需人工审核」；商品进入人工审核队列</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-004</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>商品发布-图片超9张</td>
+<td class="pre">卖家已实名</td>
+<td class="steps"><ol><li>上传10张商品图片</li><li>尝试提交发布</li></ol></td>
+<td class="expect">前端限制只显示前9张；后端校验返回「最多上传9张图片」</td>
+<td class="req">PRD 4.8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-005</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>商品发布-标题超30字</td>
+<td class="pre">卖家已实名</td>
+<td class="steps"><ol><li>输入31字的商品标题</li><li>尝试提交</li></ol></td>
+<td class="expect">返回「标题长度2-30字」；提交失败</td>
+<td class="req">PRD 4.8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>商品发布-未勾选验机同意</td>
+<td class="pre">卖家已实名</td>
+<td class="steps"><ol><li>填写完整商品信息</li><li>不勾选验机报告同意项</li><li>尝试提交发布</li></ol></td>
+<td class="expect">返回「请勾选验机报告同意项」；发布被拒绝</td>
+<td class="req">PRD 4.8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品编辑-在售状态修改后需重审</td>
+<td class="pre">商品 status=在售</td>
+<td class="steps"><ol><li>修改在售商品的价格</li><li>提交编辑</li></ol></td>
+<td class="expect">商品 status 变为审核中；重新走审核流程；ES 索引暂时下线</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>商品下架-有进行中订单</td>
+<td class="pre">商品有待发货/待收货订单</td>
+<td class="steps"><ol><li>尝试下架该商品</li></ol></td>
+<td class="expect">返回错误码 30003「有进行中的订单，无法下架」；下架被拒绝</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-009</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品搜索-关键词+多条件筛选</td>
+<td class="pre">ES 索引有数据</td>
+<td class="steps"><ol><li>输入关键词「RTX 4070」</li><li>筛选分类=显卡，成色=99新</li><li>价格区间 3000-5000</li><li>所在地=北京</li><li>按价格升序排序</li></ol></td>
+<td class="expect">返回符合所有筛选条件的商品列表；排序正确；响应≤800ms；分页正常</td>
+<td class="req">PRD 4.3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-010</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品搜索-空结果展示</td>
+<td class="pre">ES 索引有数据</td>
+<td class="steps"><ol><li>输入不存在的关键词</li><li>设置筛选条件</li></ol></td>
+<td class="expect">显示空状态页面，提供「清除筛选」按钮</td>
+<td class="req">PRD 4.3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-011</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品收藏/取消收藏-幂等</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>收藏商品A</li><li>再次收藏商品A</li><li>取消收藏商品A</li><li>再次取消收藏商品A</li></ol></td>
+<td class="expect">重复收藏幂等处理不报错；重复取消收藏幂等处理不报错</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-012</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>库存预警-紧张/缺货标记</td>
+<td class="pre">商品库存分别为 3(阈值5) 和 0</td>
+<td class="steps"><ol><li>查看库存预警页面</li><li>验证库存3的商品标记「紧张」(黄色)</li><li>验证库存0的商品标记「缺货」(红色)</li><li>验证建议补货量 = 5×1.5-3 = 4(向下取整)</li></ol></td>
+<td class="expect">紧张/缺货标记正确；建议补货量计算正确</td>
+<td class="req">PRD 4.9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-013</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>库存扣减-Redis Lua原子预扣</td>
+<td class="pre">商品库存 Redis 中为 10</td>
+<td class="steps"><ol><li>并发3个请求各购买5件</li><li>验证 Redis Lua 脚本原子执行 GET→比较→DECRBY</li></ol></td>
+<td class="expect">只有2个请求预扣成功（10件）；第3个请求返回库存不足；Redis 库存准确为0</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-014</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>库存扣减-MySQL乐观锁冲突重试</td>
+<td class="pre">并发更新同一商品库存</td>
+<td class="steps"><ol><li>并发请求扣减库存</li><li>模拟 MySQL 乐观锁 version 冲突</li><li>验证重试3次机制</li></ol></td>
+<td class="expect">乐观锁冲突时自动重试最多3次；3次仍失败则回滚 Redis 并返回错误码 30004</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PROD-015</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>ES不可用-降级MySQL查询</td>
+<td class="pre">ES 集群不可用</td>
+<td class="steps"><ol><li>模拟 ES 连接超时</li><li>用户执行商品搜索</li></ol></td>
+<td class="expect">自动降级到 MySQL 模糊查询；返回结果（可能排序精度下降）；不抛出系统错误</td>
+<td class="req">LLD 模块2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 4: INSPECTION ========== -->
+<section id="m4">
+<div class="module-header">
+  <span class="module-tag">04</span>
+  <h2>验机服务模块</h2>
+  <span class="count">9 条用例 | 核心域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-INSP-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>创建检测任务-正常</td>
+<td class="pre">商品已审核通过，待验机</td>
+<td class="steps"><ol><li>商品服务 Feign 调用 POST /api/v1/inspections</li><li>验证检测任务创建</li><li>验证 status=待检测</li></ol></td>
+<td class="expect">检测任务创建成功；status=待检测(0)；关联 productId</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>重复创建检测任务-幂等返回</td>
+<td class="pre">商品已有进行中的检测任务</td>
+<td class="steps"><ol><li>再次为同一商品创建检测任务</li></ol></td>
+<td class="expect">幂等返回已有任务 ID；不创建新任务；不报错</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>检测结果录入-逐条录入12项</td>
+<td class="pre">检测任务 status=检测中，检测员已收货</td>
+<td class="steps"><ol><li>检测员调用 PUT /api/v1/inspections/{id}/items/{itemNo}</li><li>逐条录入12项检测结果(外观/风扇/GPU/显存等)</li><li>每项设置 result + isPassed</li></ol></td>
+<td class="expect">12项检测结果逐一保存；每项记录检测时间和检测员</td>
+<td class="req">PRD 9.1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>12项未全部录入-拒绝完成</td>
+<td class="pre">只录入了10项检测结果</td>
+<td class="steps"><ol><li>调用 POST /api/v1/inspections/{id}/complete</li><li>验证是否拒绝</li></ol></td>
+<td class="expect">返回「还有2项检测未完成」；拒绝生成报告</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>报告生成与SHA-256数字签名</td>
+<td class="pre">12项检测全部录入完成</td>
+<td class="steps"><ol><li>调用 POST /api/v1/inspections/{id}/complete</li><li>验证报告生成</li><li>验证 SHA-256 签名计算：拼接 productId|grade|overallResult|inspectorId|items[升序]|completedAt + 盐值</li><li>验证签名值存储</li></ol></td>
+<td class="expect">报告生成成功；SHA-256 签名正确计算并存储；评级自动计算(优/良/合格/不合格)</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>报告查询-签名验证通过</td>
+<td class="pre">报告已生成且签名正确</td>
+<td class="steps"><ol><li>调用 GET /api/v1/inspections/{productId}/report</li><li>前端验证签名值匹配</li></ol></td>
+<td class="expect">报告正常展示；签名验证通过；显示评级和检测清单</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>报告篡改检测-签名不匹配</td>
+<td class="pre">报告数据被篡改（模拟数据库直接修改）</td>
+<td class="steps"><ol><li>直接修改数据库中报告的某项检测结果</li><li>查询报告</li><li>验证签名不匹配</li></ol></td>
+<td class="expect">前端显示「报告数据异常」；触发告警日志；签名验证失败</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-008</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>PDF生成失败-降级返回JSON</td>
+<td class="pre">OSS 或 PDF 生成服务不可用</td>
+<td class="steps"><ol><li>模拟 PDF 生成服务超时</li><li>查询报告 PDF 接口</li></ol></td>
+<td class="expect">降级返回 JSON 格式报告；PDF 异步重试生成；用户仍可查看报告内容</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-INSP-009</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>收货后48小时未完成-预警</td>
+<td class="pre">检测中心收货已超过48小时，检测未完成</td>
+<td class="steps"><ol><li>模拟收货时间+48h</li><li>验证是否触发预警通知</li></ol></td>
+<td class="expect">向检测主管发送预警通知；不影响业务流程</td>
+<td class="req">LLD 模块3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 5: ORDER ========== -->
+<section id="m5">
+<div class="module-header">
+  <span class="module-tag">05</span>
+  <h2>订单管理模块</h2>
+  <span class="count">20 条用例 | 核心域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-ORD-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>加入购物车-正常</td>
+<td class="pre">用户已登录，商品在售</td>
+<td class="steps"><ol><li>调用 POST /api/v1/cart 传 product_id + quantity=1</li><li>验证购物车更新</li></ol></td>
+<td class="expect">加入成功；Redis + DB 双写；购物车列表可见</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-002</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>修改购物车数量-增减</td>
+<td class="pre">购物车有商品</td>
+<td class="steps"><ol><li>修改数量为3</li><li>修改数量为1</li><li>取消选中</li></ol></td>
+<td class="expect">数量实时更新；选中状态更新；结算金额联动变化</td>
+<td class="req">PRD 4.4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-003</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>删除购物车项</td>
+<td class="pre">购物车有多个商品</td>
+<td class="steps"><ol><li>删除单个商品</li><li>全选后批量删除</li></ol></td>
+<td class="expect">删除成功；购物车列表更新；空状态展示</td>
+<td class="req">PRD 4.4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>创建订单-正常TCC Try</td>
+<td class="pre">用户已登录，商品在售，库存充足</td>
+<td class="steps"><ol><li>选择购物车商品</li><li>选择收货地址</li><li>选择优惠券(可选)</li><li>提交订单 POST /api/v1/orders</li><li>验证 TCC Try 流程：商品预扣库存 + 担保冻结资金</li><li>验证订单创建 status=待付款</li><li>验证商品快照保存</li></ol></td>
+<td class="expect">订单创建成功；Redis 预扣库存；担保资金冻结；商品快照写入 order_items；推送 OrderCreatedEvent</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>创建订单-商品已下架</td>
+<td class="pre">商品在提交订单前被下架</td>
+<td class="steps"><ol><li>选择已下架商品</li><li>提交订单</li></ol></td>
+<td class="expect">返回错误码 40001「商品已下架」；订单不创建</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>创建订单-库存不足</td>
+<td class="pre">商品库存为1</td>
+<td class="steps"><ol><li>购买数量2</li><li>提交订单</li></ol></td>
+<td class="expect">返回错误码 40002「库存不足」；订单不创建；不扣减库存</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-007</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>创建订单-优惠券不满足条件</td>
+<td class="pre">优惠券门槛500元，订单金额300元</td>
+<td class="steps"><ol><li>选择不满足门槛的优惠券</li><li>提交订单</li></ol></td>
+<td class="expect">返回错误码 40003 提示「优惠券不满足使用条件」；用户可确认后无券下单</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>支付成功-TCC Confirm流程</td>
+<td class="pre">订单 status=待付款</td>
+<td class="steps"><ol><li>Mock支付成功推送 PaymentSuccessEvent</li><li>订单服务消费事件(orderId幂等)</li><li>验证 TCC Confirm：担保确认冻结 + 商品实扣库存(MySQL乐观锁)</li><li>验证订单 status=待发货</li><li>验证推送 OrderPaidEvent</li></ol></td>
+<td class="expect">订单状态变为待发货；担保资金确认冻结；MySQL库存实扣；卖家收到待发货通知</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-009</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>订单超时未支付-TCC Cancel</td>
+<td class="pre">订单 status=待付款，auto_cancel_deadline 已过</td>
+<td class="steps"><ol><li>XXL-Job 每分钟扫描超时订单</li><li>Redis SETNX 加锁</li><li>执行 TCC Cancel：释放库存 + 解冻资金</li><li>验证订单 status=已取消</li></ol></td>
+<td class="expect">Redis库存回补；担保资金解冻；订单状态=已取消；分布式锁防止重复处理</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>买家取消订单-待付款状态</td>
+<td class="pre">订单 status=待付款</td>
+<td class="steps"><ol><li>买家点击「取消订单」</li><li>选择取消原因</li><li>确认取消</li></ol></td>
+<td class="expect">执行 TCC Cancel；释放库存；解冻资金；订单 status=已取消</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-011</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>已支付订单取消-需走售后</td>
+<td class="pre">订单 status=待发货</td>
+<td class="steps"><ol><li>买家尝试取消已支付订单</li></ol></td>
+<td class="expect">返回错误码 40005「已支付订单请走售后退款流程」；不直接取消</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-012</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>确认收货-正常流程</td>
+<td class="pre">订单 status=待收货</td>
+<td class="steps"><ol><li>买家点击「确认收货」</li><li>二次确认弹窗</li><li>确认收货</li><li>验证触发担保放款</li></ol></td>
+<td class="expect">订单 status=已完成；担保资金放款给卖家(扣手续费)；推送 EscrowReleasedEvent</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-013</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>超时自动确认收货</td>
+<td class="pre">订单 status=待收货，auto_confirm_deadline 已过(7天)</td>
+<td class="steps"><ol><li>XXL-Job 每小时扫描超时未确认订单</li><li>模拟自动确认收货</li><li>验证触发担保放款</li></ol></td>
+<td class="expect">订单 status=已完成；自动执行担保放款；与手动确认效果一致</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-014</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>确认收货-非待收货状态</td>
+<td class="pre">订单 status=待发货</td>
+<td class="steps"><ol><li>尝试确认收货</li></ol></td>
+<td class="expect">返回错误码 40004「当前状态不可确认收货」；状态机校验拦截</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-015</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>支付回调-幂等处理</td>
+<td class="pre">支付回调已处理一次</td>
+<td class="steps"><ol><li>第三方重复推送同一支付回调(order_id + channel_tx_no)</li><li>验证幂等去重</li></ol></td>
+<td class="expect">第二次回调直接返回成功；不重复处理；不重复扣库存</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-016</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>订单状态机-非法转换拦截</td>
+<td class="pre">订单 status=已取消</td>
+<td class="steps"><ol><li>尝试从已取消状态转为待发货</li><li>尝试从已完成直接转为已取消</li></ol></td>
+<td class="expect">状态机校验拒绝非法转换；抛出异常；状态变更写入日志表</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-017</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品快照-防止信息变更影响</td>
+<td class="pre">订单创建时商品价格为3680</td>
+<td class="steps"><ol><li>订单创建后修改商品价格至4000</li><li>查看订单详情</li></ol></td>
+<td class="expect">订单中显示原始价格3680(商品快照)；不受商品价格修改影响</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-018</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家订单列表-待发货筛选</td>
+<td class="pre">卖家有待发货订单</td>
+<td class="steps"><ol><li>切换到「我是卖家」</li><li>筛选「待发货」状态</li></ol></td>
+<td class="expect">显示待发货订单列表；含商品图片、买家名称、操作按钮(去发货)</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-019</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>买家订单列表-角色切换</td>
+<td class="pre">用户既有买家订单也有卖家订单</td>
+<td class="steps"><ol><li>默认显示买家订单</li><li>切换「我是卖家」</li><li>切换回「我是买家」</li></ol></td>
+<td class="expect">角色切换后订单列表刷新；状态筛选Tab保持</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ORD-020</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券锁定-解锁闭环</td>
+<td class="pre">用户有优惠券</td>
+<td class="steps"><ol><li>下单时锁定优惠券(status=已锁定, lock_order_id)</li><li>支付成功后核销(status=已使用)</li><li>另一下单取消时解锁(status=未使用, lock_order_id=null)</li></ol></td>
+<td class="expect">优惠券锁定/核销/解锁闭环正确；状态流转无遗漏</td>
+<td class="req">LLD 模块11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 6: ESCROW ========== -->
+<section id="m6">
+<div class="module-header">
+  <span class="module-tag">06</span>
+  <h2>担保交易模块</h2>
+  <span class="count">15 条用例 | 资金域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-ESC-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>TCC Try-冻结资金正常</td>
+<td class="pre">买家钱包可用余额 5000</td>
+<td class="steps"><ol><li>调用 POST /api/v1/escrow/try 金额=3680</li><li>验证买家钱包：可用 -3680, 冻结 +3680</li><li>验证 escrow_records status=待冻结</li></ol></td>
+<td class="expect">资金冻结成功；钱包余额正确变更；担保记录创建</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>TCC Try-余额不足</td>
+<td class="pre">买家钱包可用余额 1000</td>
+<td class="steps"><ol><li>调用 escrow/try 金额=3680</li></ol></td>
+<td class="expect">返回失败「余额不足」；订单回滚；不创建担保记录</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>TCC Confirm-确认冻结</td>
+<td class="pre">担保记录 status=待冻结</td>
+<td class="steps"><ol><li>调用 POST /api/v1/escrow/confirm</li><li>验证 escrow_records status=已冻结, frozen_at=now</li></ol></td>
+<td class="expect">担保记录确认为已冻结；不可逆操作</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>TCC Cancel-取消冻结</td>
+<td class="pre">担保记录 status=待冻结</td>
+<td class="steps"><ol><li>调用 POST /api/v1/escrow/cancel</li><li>验证买家钱包：可用 +3680, 冻结 -3680</li><li>验证 escrow_records status=已取消</li></ol></td>
+<td class="expect">资金解冻回买家；担保记录状态更新</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>确认收货放款-含手续费计算</td>
+<td class="pre">担保记录 status=已冻结, 金额=3680</td>
+<td class="steps"><ol><li>消费 OrderConfirmedEvent</li><li>验证 escrow_records status=已放款</li><li>验证手续费 = 3680 × 1% = 36.80</li><li>验证卖家可用余额 +3643.20</li><li>验证流水表写入：卖家收入 + 平台手续费</li><li>验证推送 EscrowReleasedEvent</li></ol></td>
+<td class="expect">放款成功；手续费1%计算正确；卖家余额增加；流水记录完整</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>放款-卖家账号被冻结</td>
+<td class="pre">卖家账号 status=冻结</td>
+<td class="steps"><ol><li>执行放款</li><li>验证资金去向</li></ol></td>
+<td class="expect">放款到卖家冻结余额(非可用余额)；卖家不可提现</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>售后退款-担保冻结中退款</td>
+<td class="pre">担保记录 status=已冻结</td>
+<td class="steps"><ol><li>售后触发退款</li><li>验证 escrow_records status=退款中 → 已退款</li><li>验证买家钱包退款入账</li><li>验证推送 RefundCompletedEvent</li></ol></td>
+<td class="expect">原路退款给买家；担保记录状态流转正确</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>售后退款-担保已放款</td>
+<td class="pre">担保记录 status=已放款</td>
+<td class="steps"><ol><li>售后触发退款</li><li>验证从卖家保证金扣款</li><li>验证原路退款给买家</li></ol></td>
+<td class="expect">从卖家保证金/余额扣款退款给买家；卖家余额减少</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-009</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>TCC悬挂-Cancel先于Try到达</td>
+<td class="pre">Cancel 已执行，Try 尚未到达</td>
+<td class="steps"><ol><li>模拟 Cancel 先到达并写标记</li><li>Try 延迟到达</li><li>验证 Try 检查到已 Cancel 标记</li></ol></td>
+<td class="expect">Try 检测到已 Cancel 标记后不执行冻结；避免悬挂</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>TCC空回滚-Confirm时Try不存在</td>
+<td class="pre">Try 记录不存在(未执行或超时删除)</td>
+<td class="steps"><ol><li>调用 Confirm</li><li>验证空回滚处理</li></ol></td>
+<td class="expect">幂等处理不报错；不执行确认操作；返回成功</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-011</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>Cancel时已Confirm-拒绝取消</td>
+<td class="pre">担保记录 status=已冻结</td>
+<td class="steps"><ol><li>调用 Cancel</li></ol></td>
+<td class="expect">拒绝 Cancel 操作；返回错误「已确认不可取消」</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-012</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>重复放款-幂等去重</td>
+<td class="pre">放款已执行一次</td>
+<td class="steps"><ol><li>重复消费 OrderConfirmedEvent</li><li>验证幂等键去重</li></ol></td>
+<td class="expect">第二次直接返回成功；不重复放款；卖家余额不变</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-013</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>每日对账-担保/钱包/流水三方</td>
+<td class="pre">有交易数据</td>
+<td class="steps"><ol><li>XXL-Job 每日凌晨执行对账</li><li>验证：担保金额总和 = 钱包冻结总和 = 流水总额</li></ol></td>
+<td class="expect">三方数据一致；不一致则触发告警；资金差错24h内人工介入</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-014</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>钱包乐观锁-并发更新重试</td>
+<td class="pre">并发更新同一钱包</td>
+<td class="steps"><ol><li>模拟并发3个钱包更新</li><li>验证乐观锁 version 冲突</li><li>验证自动重试3次</li><li>验证 balance_before/after 记录</li></ol></td>
+<td class="expect">乐观锁冲突时重试最多3次；流水记录 balance_before/after；最终余额正确</td>
+<td class="req">LLD 模块5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-ESC-015</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>担保状态查询</td>
+<td class="pre">有担保记录</td>
+<td class="steps"><ol><li>调用 GET /api/v1/escrow/{orderId}</li><li>验证返回担保状态</li></ol></td>
+<td class="expect">返回担保状态(待冻结/已冻结/已放款/已退款)；金额信息</td>
+<td class="req">LLD 模块5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 7: PAYMENT ========== -->
+<section id="m7">
+<div class="module-header">
+  <span class="module-tag">07</span>
+  <h2>支付与钱包模块</h2>
+  <span class="count">15 条用例 | 资金域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-PAY-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>发起支付-微信支付</td>
+<td class="pre">订单 status=待付款</td>
+<td class="steps"><ol><li>调用 POST /api/v1/payment/pay 选择微信</li><li>创建支付单 status=待支付</li><li>调用微信统一下单 API</li><li>返回支付参数</li></ol></td>
+<td class="expect">支付单创建成功；返回微信支付参数；支付单 status=待支付</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>支付回调-验签通过</td>
+<td class="pre">支付单 status=待支付</td>
+<td class="steps"><ol><li>Mock微信回调带正确签名</li><li>调用 POST /api/v1/payment/callback/wechat</li><li>验证验签成功</li><li>验证幂等校验(order_id + channel_tx_no)</li><li>验证推送 PaymentSuccessEvent</li></ol></td>
+<td class="expect">验签通过；支付单 status=成功；推送事件；不重复处理</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>支付回调-验签失败</td>
+<td class="pre">支付单 status=待支付</td>
+<td class="steps"><ol><li>Mock微信回调带错误签名</li><li>调用回调接口</li></ol></td>
+<td class="expect">验签失败；拒绝处理；返回错误；支付单状态不变</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>支付回调-重复推送幂等</td>
+<td class="pre">回调已处理成功一次</td>
+<td class="steps"><ol><li>微信重复推送同一回调</li><li>验证幂等去重</li></ol></td>
+<td class="expect">第二次直接返回成功；不重复处理事件</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>支付回调-订单已取消触发退款</td>
+<td class="pre">订单已超时取消，支付迟到</td>
+<td class="steps"><ol><li>支付回调到达但订单已取消</li><li>验证退款流程触发</li></ol></td>
+<td class="expect">触发退款流程；资金退回买家；记录异常工单</td>
+<td class="req">LLD 模块4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-006</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>充值-预设金额</td>
+<td class="pre">用户已绑定支付方式</td>
+<td class="steps"><ol><li>选择预设金额¥200</li><li>通过支付宝完成充值</li><li>验证钱包可用余额 +200</li><li>验证流水记录</li></ol></td>
+<td class="expect">充值成功；余额增加；写入充值流水</td>
+<td class="req">PRD 4.11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>提现-正常流程</td>
+<td class="pre">用户已实名，可用余额 10000</td>
+<td class="steps"><ol><li>输入提现金额 5000</li><li>选择银行卡</li><li>输入支付密码 + 短信验证码</li><li>提交提现</li></ol></td>
+<td class="expect">可用余额 -5000；提现记录 status=处理中；T+1到账</td>
+<td class="req">PRD 4.11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>提现-未实名认证</td>
+<td class="pre">用户未实名认证</td>
+<td class="steps"><ol><li>尝试提现</li></ol></td>
+<td class="expect">返回「请先完成实名认证」；拒绝提现</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-009</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-bound">边界</span></td>
+<td>提现-超单笔限额50000</td>
+<td class="pre">用户可用余额 100000</td>
+<td class="steps"><ol><li>输入提现金额 50001</li><li>提交</li></ol></td>
+<td class="expect">返回「单笔提现不可超过¥50,000」；拒绝提现</td>
+<td class="req">PRD 4.11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-bound">边界</span></td>
+<td>提现-超单日限额200000</td>
+<td class="pre">用户当日已提现 150000</td>
+<td class="steps"><ol><li>提现 60000</li><li>验证单日累计=210000 > 200000</li></ol></td>
+<td class="expect">返回「当日提现不可超过¥200,000」；拒绝提现</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-011</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>提现-超日次数3次限制</td>
+<td class="pre">当日已提现3次</td>
+<td class="steps"><ol><li>第4次提现</li></ol></td>
+<td class="expect">返回「当日提现次数已达上限」；拒绝提现</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-012</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>提现-新绑定账户24h限制</td>
+<td class="pre">提现账户刚绑定2小时</td>
+<td class="steps"><ol><li>尝试提现</li></ol></td>
+<td class="expect">返回「新绑定账户24小时内不可提现」；拒绝提现</td>
+<td class="req">LLD 模块6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-013</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>钱包余额查询</td>
+<td class="pre">用户有钱包数据</td>
+<td class="steps"><ol><li>调用 GET /api/v1/wallet</li><li>验证返回：总余额/冻结/可用</li><li>验证余额隐藏/显示功能</li></ol></td>
+<td class="expect">返回三项余额数据；眼睛图标切换隐藏/显示</td>
+<td class="req">PRD 4.11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-014</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>收支明细-类型筛选与展开</td>
+<td class="pre">有多类型交易记录</td>
+<td class="steps"><ol><li>筛选「收入」类型</li><li>点击单条记录展开</li><li>验证交易详情(类型/买卖家/订单号/手续费)</li></ol></td>
+<td class="expect">筛选正确；展开显示完整交易详情；包含手续费</td>
+<td class="req">PRD 4.11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-PAY-015</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>提现失败-退回余额</td>
+<td class="pre">提现记录 status=处理中</td>
+<td class="steps"><ol><li>第三方打款失败</li><li>验证退回余额</li><li>验证提现记录 status=失败</li></ol></td>
+<td class="expect">可用余额恢复；提现记录标记失败；通知用户</td>
+<td class="req">LLD 模块6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 8: LOGISTICS ========== -->
+<section id="m8">
+<div class="module-header">
+  <span class="module-tag">08</span>
+  <h2>物流服务模块</h2>
+  <span class="count">9 条用例 | 交易域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-LOGI-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>创建物流单-发货</td>
+<td class="pre">订单 status=待发货</td>
+<td class="steps"><ol><li>卖家选择快递公司(顺丰)</li><li>输入运单号 SF1234567890</li><li>选择发货商品</li><li>提交发货</li></ol></td>
+<td class="expect">物流单创建成功；订单 status=待收货；推送 OrderShippedEvent</td>
+<td class="req">PRD 4.10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-002</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>部分发货-多商品订单</td>
+<td class="pre">订单含3件商品</td>
+<td class="steps"><ol><li>选择其中2件商品发货</li><li>验证订单明细发货状态=部分发货</li><li>验证剩余1件可继续发货</li></ol></td>
+<td class="expect">order_items 支持部分发货状态(0未发货/1已发货)；全部发货后订单 status=待收货</td>
+<td class="req">LLD 模块7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>物流轨迹查询-时间线展示</td>
+<td class="pre">物流单已创建</td>
+<td class="steps"><ol><li>调用 GET /api/v1/logistics/{orderId}/track</li><li>验证垂直时间线(揽收→运输→分拣→派送→签收)</li><li>验证节点颜色(绿色完成/高亮当前/灰色未来)</li></ol></td>
+<td class="expect">时间线正确展示；节点含状态名/时间/地点</td>
+<td class="req">PRD 4.10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-004</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>物流轨迹回调-快递100推送</td>
+<td class="pre">已订阅物流轨迹</td>
+<td class="steps"><ol><li>Mock快递100推送轨迹变更</li><li>调用 POST /api/v1/logistics/callback</li><li>验证写入 logistics_tracks</li><li>验证推送 LogisticsUpdatedEvent</li></ol></td>
+<td class="expect">轨迹写入成功；事件推送；消息服务通知买家</td>
+<td class="req">LLD 模块7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-005</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>地址列表-增删改</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>新增地址(省市区+详细+手机号)</li><li>编辑地址</li><li>删除地址</li><li>查询地址列表</li></ol></td>
+<td class="expect">地址CRUD正常；默认地址标记可切换</td>
+<td class="req">LLD 模块7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-006</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>运费计算-按模板</td>
+<td class="pre">卖家已配置运费模板</td>
+<td class="steps"><ol><li>调用 POST /api/v1/logistics/freight/calc</li><li>传入商品+收货地址</li><li>验证运费计算</li></ol></td>
+<td class="expect">运费正确计算；显示在结算页订单摘要中</td>
+<td class="req">LLD 模块7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>买家地址脱敏-卖家视角</td>
+<td class="pre">卖家查看待发货订单</td>
+<td class="steps"><ol><li>卖家查看买家收货地址</li><li>验证手机号中间4位打码</li><li>发货后验证完整信息通过物流单号传递</li></ol></td>
+<td class="expect">卖家侧手机号显示为 138****8000；完整信息不暴露给卖家</td>
+<td class="req">LLD 模块7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>确认收货-二次确认弹窗</td>
+<td class="pre">订单 status=待收货</td>
+<td class="steps"><ol><li>买家点击「确认收货」</li><li>验证弹出二次确认弹窗</li><li>取消确认</li><li>再次点击并确认</li></ol></td>
+<td class="expect">首次点击弹出确认弹窗；取消则不确认；确认后执行收货流程</td>
+<td class="req">PRD 4.10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-LOGI-009</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>电子面单-打印预览</td>
+<td class="pre">物流单已创建</td>
+<td class="steps"><ol><li>点击「面单预览」</li><li>验证面单内容(收件人/发件人/运单号)</li><li>点击打印</li></ol></td>
+<td class="expect">面单预览正确渲染；打印功能正常</td>
+<td class="req">PRD 4.10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 9: AFTERSALES ========== -->
+<section id="m9">
+<div class="module-header">
+  <span class="module-tag">09</span>
+  <h2>售后服务模块</h2>
+  <span class="count">17 条用例 | 交易域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-AFT-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>售后申请-仅退款</td>
+<td class="pre">订单 status=已完成，7天内</td>
+<td class="steps"><ol><li>选择订单商品</li><li>售后类型=仅退款</li><li>选择原因=商品与描述不符</li><li>填写问题描述</li><li>上传3张凭证图片</li><li>退款金额=订单实付</li><li>提交</li></ol></td>
+<td class="expect">售后单创建 status=待卖家审核；推送 AfterSaleCreatedEvent</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>售后申请-退货退款</td>
+<td class="pre">订单 status=已完成，7天内</td>
+<td class="steps"><ol><li>售后类型=退货退款</li><li>选择原因=质量问题</li><li>填写描述+上传凭证</li><li>提交</li></ol></td>
+<td class="expect">售后单创建 status=待卖家审核</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>售后申请-换货</td>
+<td class="pre">订单 status=已完成，7天内</td>
+<td class="steps"><ol><li>售后类型=换货</li><li>选择原因=配件缺失</li><li>提交</li></ol></td>
+<td class="expect">售后单创建 status=待卖家审核</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>售后-超过7天期限</td>
+<td class="pre">订单完成已8天</td>
+<td class="steps"><ol><li>尝试提交售后申请</li></ol></td>
+<td class="expect">返回错误码 60002「超过7天售后期限」；拒绝申请</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>售后-已有进行中售后单</td>
+<td class="pre">订单已有待审核售后单</td>
+<td class="steps"><ol><li>再次为同一订单提交售后</li></ol></td>
+<td class="expect">返回错误码 60001「已有进行中的售后申请」；拒绝创建</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家同意售后-流转到待寄回</td>
+<td class="pre">售后单 status=待卖家审核</td>
+<td class="steps"><ol><li>卖家调用 POST /api/v1/aftersales/{id}/approve</li><li>验证 status=待买家寄回</li><li>验证推送 AfterSaleApprovedEvent</li></ol></td>
+<td class="expect">售后单流转正确；事件推送；买家可寄回</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>卖家拒绝售后-需提供理由</td>
+<td class="pre">售后单 status=待卖家审核</td>
+<td class="steps"><ol><li>卖家调用 POST /api/v1/aftersales/{id}/reject</li><li>填写拒绝理由</li><li>验证 status=已关闭</li></ol></td>
+<td class="expect">售后单关闭；买家可申请平台介入</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>买家寄回商品-复制退货地址</td>
+<td class="pre">售后单 status=待买家寄回</td>
+<td class="steps"><ol><li>买家复制退货地址</li><li>填写退回快递单号</li><li>调用 POST /api/v1/aftersales/{id}/ship</li><li>验证 status=待卖家确认收货</li></ol></td>
+<td class="expect">寄回信息保存；状态流转到待卖家确认</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-009</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家确认收货-触发退款</td>
+<td class="pre">售后单 status=待卖家确认收货</td>
+<td class="steps"><ol><li>卖家调用 POST /api/v1/aftersales/{id}/confirm</li><li>验证 status=退款中</li><li>验证推送 AfterSaleConfirmedEvent</li><li>验证担保退款执行</li></ol></td>
+<td class="expect">状态流转到退款中；担保交易执行退款；退款成功后 status=已退款</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>平台介入仲裁-判定支持退款</td>
+<td class="pre">卖家拒绝后买家申请平台介入</td>
+<td class="steps"><ol><li>买家调用 POST /api/v1/aftersales/{id}/intervene</li><li>平台审核证据</li><li>判定支持退款</li><li>验证 status=已退款</li></ol></td>
+<td class="expect">仲裁结果=支持退款；执行退款给买家</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-011</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>平台介入仲裁-判定支持卖家</td>
+<td class="pre">买家申请平台介入</td>
+<td class="steps"><ol><li>平台审核后判定支持卖家</li><li>验证 status=已关闭</li></ol></td>
+<td class="expect">仲裁结果=支持卖家；售后单关闭；不退款</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-012</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家48小时未处理-自动同意</td>
+<td class="pre">售后单 status=待卖家审核，48h已过</td>
+<td class="steps"><ol><li>模拟超时48h</li><li>验证自动同意售后</li><li>验证 status=待买家寄回</li></ol></td>
+<td class="expect">自动同意；状态流转正确；通知买家可寄回</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-013</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>买家7天未寄回-自动关闭</td>
+<td class="pre">售后单 status=待买家寄回，7天已过</td>
+<td class="steps"><ol><li>模拟超时7天</li><li>验证自动关闭售后</li></ol></td>
+<td class="expect">售后单 status=已关闭；通知买家</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-014</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家48小时未确认收货-自动确认</td>
+<td class="pre">售后单 status=待卖家确认收货，48h已过</td>
+<td class="steps"><ol><li>模拟超时48h</li><li>验证自动确认并触发退款</li></ol></td>
+<td class="expect">自动确认收货；触发退款流程</td>
+<td class="req">LLD 模块8</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-015</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>退款金额超订单实付</td>
+<td class="pre">订单实付 3680</td>
+<td class="steps"><ol><li>输入退款金额 4000</li><li>提交</li></ol></td>
+<td class="expect">返回「退款金额不可超过订单实付金额」；拒绝提交</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-016</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-bound">边界</span></td>
+<td>凭证图片-超6张或超10MB</td>
+<td class="pre">上传凭证</td>
+<td class="steps"><ol><li>上传7张图片</li><li>上传单张15MB图片</li></ol></td>
+<td class="expect">7张返回「最多6张」；15MB返回「单张最大10MB」</td>
+<td class="req">PRD 4.6</td>
+</tr>
+<tr>
+<td class="tc-id">TC-AFT-017</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>售后退款-幂等处理</td>
+<td class="pre">退款已执行一次</td>
+<td class="steps"><ol><li>重复消费 RefundCompletedEvent</li><li>验证 after_sale_id 幂等</li></ol></td>
+<td class="expect">幂等去重；不重复退款</td>
+<td class="req">LLD 模块8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 10: MESSAGE ========== -->
+<section id="m10">
+<div class="module-header">
+  <span class="module-tag">10</span>
+  <h2>消息服务模块</h2>
+  <span class="count">9 条用例 | 支撑域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-MSG-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>站内信推送-订单事件触发</td>
+<td class="pre">订单创建事件已推送</td>
+<td class="steps"><ol><li>消费 OrderCreatedEvent</li><li>验证站内信生成</li><li>验证消息列表可见</li><li>验证未读徽章计数+1</li></ol></td>
+<td class="expect">站内信正确生成；未读计数更新；消息列表显示</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>WebSocket实时推送-≤2秒延迟</td>
+<td class="pre">用户 WebSocket 连接正常</td>
+<td class="steps"><ol><li>触发消息推送事件</li><li>验证 WebSocket 推送延迟</li><li>验证客户端收到消息</li></ol></td>
+<td class="expect">推送延迟≤2秒；消息正确到达客户端</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>WebSocket断连-离线消息恢复</td>
+<td class="pre">用户 WebSocket 断开</td>
+<td class="steps"><ol><li>模拟 WebSocket 断开</li><li>期间推送3条消息</li><li>用户重新连接</li><li>验证离线消息从 Redis List 拉取</li></ol></td>
+<td class="expect">离线消息存入 Redis List；重连后拉取全部消息；不丢失</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-004</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>未读消息计数-实时更新</td>
+<td class="pre">有多条未读消息</td>
+<td class="steps"><ol><li>调用 GET /api/v1/messages/unread-count</li><li>标记1条已读</li><li>验证计数-1</li></ol></td>
+<td class="expect">未读计数正确；标记已读后计数更新</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-005</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>全部标记已读</td>
+<td class="pre">有5条未读消息</td>
+<td class="steps"><ol><li>调用 POST /api/v1/messages/read-all</li><li>验证全部消息标记已读</li><li>验证未读计数归零</li></ol></td>
+<td class="expect">所有消息标记已读；未读计数=0</td>
+<td class="req">PRD 4.2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-006</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>通知设置-修改推送偏好</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>调用 PUT /api/v1/messages/settings</li><li>关闭短信通知，保留站内信</li><li>触发消息事件</li></ol></td>
+<td class="expect">短信不发；站内信正常；APP推送不发</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-007</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>短信发送失败-重试3次</td>
+<td class="pre">短信平台不可用</td>
+<td class="steps"><ol><li>模拟短信发送失败</li><li>验证指数退避重试3次</li><li>验证仍失败后记录日志并告警</li></ol></td>
+<td class="expect">重试3次后仍失败；记录失败日志；触发告警；不影响主流程</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-008</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>消息合并-防骚扰机制</td>
+<td class="pre">同一用户短时间内收到大量消息</td>
+<td class="steps"><ol><li>1分钟内向同一用户推送10条同类型消息</li><li>验证合并推送(每分钟最多5条)</li></ol></td>
+<td class="expect">合并为5条以内推送；防骚扰机制生效</td>
+<td class="req">LLD 模块9</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MSG-009</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>消息路由-多渠道分发</td>
+<td class="pre">支付成功事件</td>
+<td class="steps"><ol><li>消费 PaymentSuccessEvent</li><li>验证站内信+短信+微信+APP推送多渠道</li></ol></td>
+<td class="expect">4个渠道均收到通知；各渠道内容一致</td>
+<td class="req">LLD 模块9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 11: COMMUNITY ========== -->
+<section id="m11">
+<div class="module-header">
+  <span class="module-tag">11</span>
+  <h2>社区服务模块</h2>
+  <span class="count">9 条用例 | 支撑域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-COMM-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>帖子发布-含图文</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>输入标题+选择分类(装机指南)</li><li>输入正文+拖拽上传3张图片</li><li>提交发布</li><li>验证机审流程</li></ol></td>
+<td class="expect">帖子创建；进入机审队列；审核通过后展示在列表</td>
+<td class="req">PRD 4.7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-002</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>帖子列表-最新/最热排序</td>
+<td class="pre">有多篇帖子</td>
+<td class="steps"><ol><li>选择「最新」排序</li><li>选择「最热」排序</li><li>验证排序结果</li></ol></td>
+<td class="expect">最新按发布时间倒序；最热按浏览/点赞/评论综合排序</td>
+<td class="req">PRD 4.7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-003</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>评论/回复-二级评论</td>
+<td class="pre">帖子已发布</td>
+<td class="steps"><ol><li>发表评论</li><li>回复评论</li><li>验证评论列表层级展示</li></ol></td>
+<td class="expect">评论和回复正常；层级展示正确</td>
+<td class="req">LLD 模块10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-004</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>点赞/取消点赞-幂等</td>
+<td class="pre">帖子已发布</td>
+<td class="steps"><ol><li>点赞帖子</li><li>再次点赞(取消)</li><li>验证点赞数变化</li></ol></td>
+<td class="expect">点赞→+1；取消→-1；幂等处理</td>
+<td class="req">LLD 模块10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-005</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>关注/取消关注</td>
+<td class="pre">已登录</td>
+<td class="steps"><ol><li>关注用户B</li><li>验证B粉丝数+1</li><li>取消关注</li><li>验证B粉丝数-1</li></ol></td>
+<td class="expect">关注/取消关注正常；粉丝数联动更新</td>
+<td class="req">LLD 模块10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-006</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>IM会话列表-按最后消息排序</td>
+<td class="pre">有多个会话</td>
+<td class="steps"><ol><li>调用 GET /api/v1/im/conversations</li><li>验证 Redis ZSet 按最后消息时间排序</li><li>验证未读徽章</li></ol></td>
+<td class="expect">会话按时间倒序；未读徽章正确</td>
+<td class="req">PRD 4.7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-007</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>IM消息发送-含图片和商品卡片</td>
+<td class="pre">WebSocket 连接正常</td>
+<td class="steps"><ol><li>发送文本消息</li><li>发送图片消息</li><li>发送商品卡片嵌入</li><li>验证对方收到</li></ol></td>
+<td class="expect">消息气泡区分左右(对方左/自己右)；图片和卡片正确渲染</td>
+<td class="req">PRD 4.7</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>IM违规消息-发送后审撤回</td>
+<td class="pre">用户发送违规内容</td>
+<td class="steps"><ol><li>发送含违规内容消息</li><li>机审判定违规</li><li>验证自动撤回</li><li>验证双方收到通知</li></ol></td>
+<td class="expect">违规消息自动撤回；双方收到「消息被撤回」通知</td>
+<td class="req">LLD 模块10</td>
+</tr>
+<tr>
+<td class="tc-id">TC-COMM-009</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-excp">异常</span></td>
+<td>WebSocket心跳与超时断连</td>
+<td class="pre">WebSocket 连接空闲</td>
+<td class="steps"><ol><li>不发送心跳90秒</li><li>验证服务端检测超时</li><li>验证清理僵尸连接</li></ol></td>
+<td class="expect">90秒无心跳后断开连接；资源释放</td>
+<td class="req">LLD 模块10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 12: MARKETING ========== -->
+<section id="m12">
+<div class="module-header">
+  <span class="module-tag">12</span>
+  <h2>营销服务模块</h2>
+  <span class="count">10 条用例 | 交易域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-MKT-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券创建-全字段</td>
+<td class="pre">卖家已开店</td>
+<td class="steps"><ol><li>创建优惠券：面额50，门槛500，总量100，每人限领1</li><li>适用商品范围=显卡</li><li>有效期7天</li><li>提交</li></ol></td>
+<td class="expect">优惠券创建成功；库存100写入Redis</td>
+<td class="req">PRD 4.12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-002</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券领取-正常</td>
+<td class="pre">优惠券库存>0</td>
+<td class="steps"><ol><li>调用 POST /api/v1/marketing/coupons/receive</li><li>验证 Redis DECR</li><li>验证 DB 乐观锁更新已领数量</li></ol></td>
+<td class="expect">领取成功；库存-1；coupon_record 创建</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>优惠券领取-已领完</td>
+<td class="pre">优惠券库存=0</td>
+<td class="steps"><ol><li>尝试领取</li></ol></td>
+<td class="expect">返回错误码 70001「优惠券已领完」；Redis DECR < 0 拒绝</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券锁定-下单时</td>
+<td class="pre">用户已领取优惠券</td>
+<td class="steps"><ol><li>下单时选择优惠券</li><li>验证 status=已锁定, lock_order_id</li><li>验证优惠金额计算</li></ol></td>
+<td class="expect">优惠券锁定；订单金额扣除优惠；防止重复使用</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券核销-支付成功</td>
+<td class="pre">优惠券 status=已锁定</td>
+<td class="steps"><ol><li>支付成功后核销</li><li>验证 status=已使用, used_at=now</li></ol></td>
+<td class="expect">优惠券核销；状态更新；不可再使用</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>优惠券解锁-订单取消</td>
+<td class="pre">优惠券 status=已锁定</td>
+<td class="steps"><ol><li>订单取消</li><li>验证优惠券解锁</li><li>验证 status=未使用, lock_order_id=null</li></ol></td>
+<td class="expect">优惠券退回可用；可再次使用</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-007</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>每日签到-积分获取</td>
+<td class="pre">今日未签到</td>
+<td class="steps"><ol><li>调用 POST /api/v1/points/signin</li><li>验证获得5积分</li><li>连续第二天签到验证递增</li><li>再次签到验证每日1次限制</li></ol></td>
+<td class="expect">签到成功；积分+5(连续递增)；重复签到拒绝</td>
+<td class="req">PRD 4.12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-008</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>积分获取-每日上限控制</td>
+<td class="pre">当日已发表5篇帖子</td>
+<td class="steps"><ol><li>第6篇帖子发布</li><li>验证不再发放积分(5次/天上限)</li></ol></td>
+<td class="expect">积分不发放；记录但受限</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-009</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>积分兑换-无门槛券</td>
+<td class="pre">积分余额 500</td>
+<td class="steps"><ol><li>兑换无门槛券(消耗100积分)</li><li>验证积分余额 -100</li><li>验证获得优惠券</li></ol></td>
+<td class="expect">积分扣除正确；优惠券发放成功；流水记录</td>
+<td class="req">PRD 4.12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MKT-010</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>限时折扣创建与管理</td>
+<td class="pre">卖家有在售商品</td>
+<td class="steps"><ol><li>选择商品设置8.5折</li><li>设置活动库存和有效期</li><li>创建后管理(暂停/查看数据)</li></ol></td>
+<td class="expect">折扣创建成功；商品价格显示折后价；暂停后恢复原价</td>
+<td class="req">PRD 4.12</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 13: REVIEW ========== -->
+<section id="m13">
+<div class="module-header">
+  <span class="module-tag">13</span>
+  <h2>评价服务模块</h2>
+  <span class="count">7 条用例 | 用户域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-REV-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>评价提交-5星+标签+图片</td>
+<td class="pre">订单 status=已完成</td>
+<td class="steps"><ol><li>选择5星</li><li>选择标签(物流快/成色好/沟通顺畅)</li><li>上传2张评价图片</li><li>提交评价</li></ol></td>
+<td class="expect">评价创建成功；推送 ReviewCreatedEvent；影响卖家信用分</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-002</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>追加评价</td>
+<td class="pre">已提交评价</td>
+<td class="steps"><ol><li>在已有评价基础上追加</li><li>填写追评内容</li><li>提交</li></ol></td>
+<td class="expect">追评成功；追加到原评价下方</td>
+<td class="req">PRD 4.5</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>卖家回复评价</td>
+<td class="pre">买家已评价</td>
+<td class="steps"><ol><li>卖家调用 POST /api/v1/reviews/{id}/reply</li><li>填写回复内容</li><li>提交</li></ol></td>
+<td class="expect">回复成功；显示在评价下方</td>
+<td class="req">LLD 模块12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-004</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-bound">边界</span></td>
+<td>评价时效-15天后关闭入口</td>
+<td class="pre">订单完成已16天</td>
+<td class="steps"><ol><li>尝试提交评价</li></ol></td>
+<td class="expect">评价入口已关闭；返回「评价时效已过」</td>
+<td class="req">LLD 模块12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-005</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-excp">异常</span></td>
+<td>同一商品重复评价</td>
+<td class="pre">已对该商品评价过</td>
+<td class="steps"><ol><li>再次提交评价</li></ol></td>
+<td class="expect">返回「同一商品只能评价一次」；拒绝提交</td>
+<td class="req">LLD 模块12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-006</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>逾期默认好评-15天未评价</td>
+<td class="pre">订单完成15天未评价</td>
+<td class="steps"><ol><li>模拟15天到期</li><li>验证系统自动生成默认好评(5星)</li></ol></td>
+<td class="expect">自动生成5星默认好评；标记为系统生成</td>
+<td class="req">LLD 模块12</td>
+</tr>
+<tr>
+<td class="tc-id">TC-REV-007</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-sec">安全</span></td>
+<td>评价刷评风控-IP/设备指纹</td>
+<td class="pre">同一IP对多商品发评价</td>
+<td class="steps"><ol><li>同一IP/设备对3个不同商品发5星好评</li><li>验证风控标记为待人工审核</li></ol></td>
+<td class="expect">疑似刷评标记为待人工审核；不直接展示</td>
+<td class="req">LLD 模块12</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 14: SUPPORT ========== -->
+<section id="m14">
+<div class="module-header">
+  <span class="module-tag">14</span>
+  <h2>客服服务模块</h2>
+  <span class="count">8 条用例 | 支撑域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-SUP-001</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>工单创建-关联订单号</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>填写工单标题+描述</li><li>关联订单号</li><li>选择分类(售后问题)</li><li>提交</li></ol></td>
+<td class="expect">工单创建 status=待分配；关联订单号</td>
+<td class="req">PRD 4.14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-002</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>工单分配-按技能标签和负载</td>
+<td class="pre">有待分配工单，有2名客服</td>
+<td class="steps"><ol><li>验证分配算法：同技能标签下工单最少的在线客服</li><li>验证分配后 status=处理中</li></ol></td>
+<td class="expect">分配给负载最低的客服；状态流转到处理中</td>
+<td class="req">LLD 模块13</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>工单流转-处理中→待回复→处理中</td>
+<td class="pre">工单 status=处理中</td>
+<td class="steps"><ol><li>客服回复 → status=待回复</li><li>用户补充材料 → status=处理中</li><li>客服再次回复 → status=待回复</li></ol></td>
+<td class="expect">状态流转正确；消息以气泡区分(客服/用户)</td>
+<td class="req">LLD 模块13</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-004</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>工单解决-客服关单</td>
+<td class="pre">工单 status=处理中</td>
+<td class="steps"><ol><li>客服点击关单</li><li>验证 status=已解决</li></ol></td>
+<td class="expect">工单标记已解决；用户收到通知</td>
+<td class="req">LLD 模块13</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-005</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>工单超时-7天无补充自动关闭</td>
+<td class="pre">工单 status=待回复，7天已过</td>
+<td class="steps"><ol><li>模拟7天超时</li><li>验证自动关闭</li><li>验证 status=已关闭</li></ol></td>
+<td class="expect">自动关闭；通知用户</td>
+<td class="req">LLD 模块13</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-006</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>已解决工单-用户重新打开</td>
+<td class="pre">工单 status=已解决</td>
+<td class="steps"><ol><li>用户点击重新打开</li><li>填写理由</li><li>验证 status=处理中</li></ol></td>
+<td class="expect">工单重新打开；回到处理中</td>
+<td class="req">LLD 模块13</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-007</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>FAQ查询-帮助中心</td>
+<td class="pre">FAQ 数据已配置</td>
+<td class="steps"><ol><li>调用 GET /api/v1/faq</li><li>验证6个分类卡片</li><li>点击展开可折叠FAQ</li></ol></td>
+<td class="expect">FAQ列表正确展示；可折叠展开</td>
+<td class="req">PRD 4.14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-SUP-008</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>投诉举报-含证据图片</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>选择举报对象(商品)</li><li>填写对象编号</li><li>选择举报原因(虚假交易)</li><li>上传3张证据图片</li><li>选择匿名举报</li><li>提交</li></ol></td>
+<td class="expect">举报记录创建 status=受理中；支持匿名</td>
+<td class="req">PRD 4.13</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 15: MODERATION ========== -->
+<section id="m15">
+<div class="module-header">
+  <span class="module-tag">15</span>
+  <h2>审核服务模块</h2>
+  <span class="count">5 条用例 | 支撑域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-MOD-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品审核-机审通过</td>
+<td class="pre">商品提交发布</td>
+<td class="steps"><ol><li>商品提交后推送审核服务</li><li>Mock阿里云内容安全返回通过</li><li>验证商品 status=在售</li><li>验证推送 ProductAuditPassedEvent</li></ol></td>
+<td class="expect">机审通过→自动上架；ES索引更新</td>
+<td class="req">LLD 模块14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MOD-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品审核-机审拒绝</td>
+<td class="pre">商品含违规内容</td>
+<td class="steps"><ol><li>商品含违规关键词</li><li>Mock机审返回拒绝</li><li>验证商品 status=审核拒绝</li><li>验证通知用户并记录违规</li></ol></td>
+<td class="expect">机审拒绝→自动拒绝；通知用户；记录违规</td>
+<td class="req">LLD 模块14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MOD-003</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-func">功能</span></td>
+<td>商品审核-中间区间走人工审核</td>
+<td class="pre">商品内容可疑</td>
+<td class="steps"><ol><li>Mock机审返回不确定</li><li>验证进入人工审核队列</li><li>审核员人工通过</li><li>验证商品 status=在售</li></ol></td>
+<td class="expect">进入人工审核队列；人工通过后上架</td>
+<td class="req">LLD 模块14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MOD-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-excp">异常</span></td>
+<td>机审不可用-降级全部人工审核</td>
+<td class="pre">阿里云内容安全 API 不可用</td>
+<td class="steps"><ol><li>模拟机审接口超时</li><li>提交商品审核</li><li>验证降级为全部人工审核</li><li>验证不直接放行</li></ol></td>
+<td class="expect">降级到全部人工审核；禁止直接放行</td>
+<td class="req">LLD 模块14</td>
+</tr>
+<tr>
+<td class="tc-id">TC-MOD-005</td><td><span class="badge b-p2">P2</span></td><td><span class="badge b-func">功能</span></td>
+<td>违规商品自动下架</td>
+<td class="pre">在售商品被举报违规</td>
+<td class="steps"><ol><li>举报审核确认违规</li><li>验证商品自动下架</li><li>验证通知卖家</li></ol></td>
+<td class="expect">商品自动下架 status=下架；ES索引移除</td>
+<td class="req">LLD 模块14</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 16: RISK CONTROL ========== -->
+<section id="m16">
+<div class="module-header">
+  <span class="module-tag">16</span>
+  <h2>风控服务模块</h2>
+  <span class="count">4 条用例 | 支撑域</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-RISK-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>批量发布检测-1小时超10件</td>
+<td class="pre">卖家1小时内已发布10件</td>
+<td class="steps"><ol><li>第11件商品提交发布</li><li>验证风控触发</li><li>验证标记需人工审核</li></ol></td>
+<td class="expect">触发风控告警；商品进入人工审核队列</td>
+<td class="req">LLD 模块2/风控</td>
+</tr>
+<tr>
+<td class="tc-id">TC-RISK-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>频繁退款检测-30天退款率>30%</td>
+<td class="pre">买家30天内退款率35%</td>
+<td class="steps"><ol><li>验证风控引擎标记高风险</li><li>验证后续退款申请加强审核</li></ol></td>
+<td class="expect">标记高风险买家；退款审核加严</td>
+<td class="req">LLD 风控</td>
+</tr>
+<tr>
+<td class="tc-id">TC-RISK-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>异常价格检测-低于市场均价50%</td>
+<td class="pre">显卡市场均价4000</td>
+<td class="steps"><ol><li>发布价格1500的显卡</li><li>验证价格 < 市场均价50%</li><li>验证触发审核</li></ol></td>
+<td class="expect">触发价格异常检测；强制人工审核</td>
+<td class="req">LLD 风控</td>
+</tr>
+<tr>
+<td class="tc-id">TC-RISK-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>新号交易限制-注册<24h大额交易</td>
+<td class="pre">用户注册12小时</td>
+<td class="steps"><ol><li>尝试购买金额50000商品</li><li>验证新号交易限制</li></ol></td>
+<td class="expect">限制大额交易；提示账号安全期；24h后自动解除</td>
+<td class="req">LLD 风控</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 17: E2E ========== -->
+<section id="m17">
+<div class="module-header">
+  <span class="module-tag">17</span>
+  <h2>端到端测试</h2>
+  <span class="count">8 条用例 | 全链路</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-E2E-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>核心交易全链路-浏览到收货</td>
+<td class="pre">买家和卖家账号就绪；商品在售</td>
+<td class="steps"><ol><li>买家浏览/搜索商品</li><li>查看验机报告(12项检测)</li><li>加入购物车→结算</li><li>选择地址+支付方式→下单</li><li>支付(担保冻结)</li><li>卖家发货(填写快递信息)</li><li>物流轨迹更新</li><li>买家确认收货</li><li>担保放款(扣1%手续费)</li><li>卖家钱包余额增加</li><li>买家评价</li></ol></td>
+<td class="expect">全链路无异常；订单状态正确流转；资金流转正确；消息推送及时</td>
+<td class="req">Flow 1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>商品发布验机全链路</td>
+<td class="pre">卖家已实名认证</td>
+<td class="steps"><ol><li>卖家填写商品信息+上传图片</li><li>勾选验机同意→提交发布</li><li>平台审核(机审通过)</li><li>寄送验机中心</li><li>12项检测录入</li><li>生成报告(SHA-256签名)</li><li>商品上架(status=在售)</li><li>ES索引更新</li><li>买家可搜索到</li></ol></td>
+<td class="expect">商品从发布到上架全流程正确；验机报告签名正确</td>
+<td class="req">Flow 2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>售后退款全链路-退货退款</td>
+<td class="pre">订单 status=已完成</td>
+<td class="steps"><ol><li>买家发起退货退款</li><li>选择原因+上传凭证</li><li>卖家同意</li><li>买家寄回商品</li><li>卖家确认收货</li><li>担保退款(原路退回)</li><li>买家钱包入账</li><li>订单 status=已退款</li></ol></td>
+<td class="expect">售后全链路正确；资金原路退回；状态流转正确</td>
+<td class="req">Flow 3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>售后仲裁全链路-卖家拒绝</td>
+<td class="pre">订单已完成，售后待审核</td>
+<td class="steps"><ol><li>买家发起退货退款</li><li>卖家拒绝(提供理由)</li><li>买家申请平台介入</li><li>平台审核证据</li><li>判定支持退款</li><li>执行退款</li></ol></td>
+<td class="expect">仲裁全链路正确；支持退款判定后执行退款</td>
+<td class="req">Flow 3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>资金托管全链路-付款到提现</td>
+<td class="pre">买卖双方账号就绪</td>
+<td class="steps"><ol><li>买家付款¥3680(余额支付)</li><li>担保账户冻结¥3680</li><li>卖家发货→买家确认收货</li><li>放款: 扣手续费¥36.80, 卖家得¥3643.20</li><li>卖家提现¥3643.20(银行卡)</li><li>验证T+1到账</li></ol></td>
+<td class="expect">资金全链路正确；手续费1%计算；提现T+1到账</td>
+<td class="req">Flow 4</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>优惠券全链路-领取到核销</td>
+<td class="pre">卖家已创建优惠券</td>
+<td class="steps"><ol><li>买家领取优惠券</li><li>下单时选择优惠券</li><li>优惠券锁定</li><li>支付成功</li><li>优惠券核销</li><li>验证优惠金额正确</li></ol></td>
+<td class="expect">优惠券全链路正确；锁定→核销闭环；金额计算正确</td>
+<td class="req">LLD 模块11</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>换货全链路</td>
+<td class="pre">订单已完成，7天内</td>
+<td class="steps"><ol><li>买家发起换货申请</li><li>卖家同意</li><li>买家寄回商品</li><li>卖家确认收货</li><li>卖家寄出换新商品(承担运费)</li><li>买家确认收货</li><li>换货完成</li></ol></td>
+<td class="expect">换货全链路正确；卖家承担运费；换新寄出</td>
+<td class="req">Flow 3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-E2E-008</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-e2e">E2E</span></td>
+<td>部分发货→确认收货</td>
+<td class="pre">多商品订单已支付</td>
+<td class="steps"><ol><li>卖家对3件商品中的2件发货</li><li>验证订单明细部分发货</li><li>对剩余1件发货</li><li>全部发货后订单 status=待收货</li><li>买家确认收货</li><li>担保放款</li></ol></td>
+<td class="expect">部分发货→全部发货→确认收货→放款全流程正确</td>
+<td class="req">LLD 模块7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ========== MODULE 18: NFR ========== -->
+<section id="m18">
+<div class="module-header">
+  <span class="module-tag">18</span>
+  <h2>非功能测试</h2>
+  <span class="count">10 条用例 | 非功能</span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th style="width:6%">用例ID</th><th style="width:5%">优先级</th><th style="width:6%">类型</th><th style="width:14%">测试标题</th><th style="width:14%">前置条件</th><th style="width:28%">测试步骤</th><th style="width:22%">预期结果</th><th style="width:5%">关联需求</th></tr></thead>
+<tbody>
+<tr>
+<td class="tc-id">TC-NFR-001</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-nfr">性能</span></td>
+<td>首屏加载-≤2秒(4G)</td>
+<td class="pre">模拟4G网络环境</td>
+<td class="steps"><ol><li>清空缓存访问首页</li><li>测量首屏渲染时间</li><li>验证图片懒加载+WebP+CDN</li></ol></td>
+<td class="expect">首屏加载≤2秒；图片懒加载生效；CDN缓存命中</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-002</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-nfr">性能</span></td>
+<td>搜索响应-≤800ms(含筛选)</td>
+<td class="pre">ES 索引有1000+商品</td>
+<td class="steps"><ol><li>输入关键词+多条件筛选</li><li>测量ES搜索响应时间</li><li>验证含筛选条件</li></ol></td>
+<td class="expect">搜索响应≤800ms；分页正常</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-003</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-nfr">性能</span></td>
+<td>消息推送延迟-≤2秒</td>
+<td class="pre">WebSocket 连接正常</td>
+<td class="steps"><ol><li>触发各类消息事件</li><li>测量推送延迟</li><li>验证≤2秒</li></ol></td>
+<td class="expect">WebSocket推送延迟≤2秒</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-004</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-nfr">性能</span></td>
+<td>并发下单-防超卖压测</td>
+<td class="pre">商品库存=10</td>
+<td class="steps"><ol><li>JMeter模拟100并发购买</li><li>验证Redis Lua原子预扣</li><li>验证MySQL乐观锁实扣</li><li>验证最终库存正确</li></ol></td>
+<td class="expect">仅10个成功下单；无超卖；库存最终为0</td>
+<td class="req">LLD 模块2</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-005</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>JWT Token安全-过期与黑名单</td>
+<td class="pre">用户已登录</td>
+<td class="steps"><ol><li>Access Token 过期后请求返回401</li><li>登出后Token加入Redis黑名单</li><li>使用黑名单Token请求返回401</li><li>修改密码后旧Token失效</li></ol></td>
+<td class="expect">过期/黑名单Token均被拒绝；安全机制生效</td>
+<td class="req">LLD 模块1</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-006</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>敏感信息脱敏-全链路验证</td>
+<td class="pre">用户有手机号和地址</td>
+<td class="steps"><ol><li>卖家视角查看买家地址</li><li>验证手机号 138****8000</li><li>验证地址详情不完整显示</li><li>验证数据库存储完整</li></ol></td>
+<td class="expect">所有展示层手机号脱敏；完整信息仅在物流传递</td>
+<td class="req">LLD 安全</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-007</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-sec">安全</span></td>
+<td>验机报告SHA-256签名-防篡改</td>
+<td class="pre">报告已生成</td>
+<td class="steps"><ol><li>查看报告签名值</li><li>直接修改DB中检测项结果</li><li>重新查看报告</li><li>验证签名不匹配告警</li></ol></td>
+<td class="expect">篡改后签名不匹配；前端显示异常；告警触发</td>
+<td class="req">LLD 模块3</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-008</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-nfr">兼容</span></td>
+<td>浏览器兼容性-多浏览器</td>
+<td class="pre">安装各浏览器</td>
+<td class="steps"><ol><li>Chrome 90+ 测试全功能</li><li>Firefox 88+ 测试全功能</li><li>Safari 14+ 测试全功能</li><li>Edge 90+ 测试全功能</li></ol></td>
+<td class="expect">4种浏览器功能正常；样式一致</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-009</td><td><span class="badge b-p1">P1</span></td><td><span class="badge b-nfr">兼容</span></td>
+<td>移动端响应式-3种断点</td>
+<td class="pre">使用不同分辨率设备</td>
+<td class="steps"><ol><li>桌面≥1024px 布局验证</li><li>平板768-1023px 布局验证</li><li>移动≤767px 布局验证</li><li>筛选折叠为手风琴</li></ol></td>
+<td class="expect">3种断点布局正确；筛选手风琴折叠；触控友好</td>
+<td class="req">PRD NFR</td>
+</tr>
+<tr>
+<td class="tc-id">TC-NFR-010</td><td><span class="badge b-p0">P0</span></td><td><span class="badge b-nfr">性能</span></td>
+<td>数据一致性-三方对账验证</td>
+<td class="pre">有交易数据</td>
+<td class="steps"><ol><li>模拟担保金额总和</li><li>模拟钱包冻结总和</li><li>模拟流水总额</li><li>验证三方一致</li><li>验证不一致时触发告警</li></ol></td>
+<td class="expect">三方数据一致；不一致触发告警；资金差错24h人工介入</td>
+<td class="req">LLD 模块5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</div>
+</body>
+</html>
