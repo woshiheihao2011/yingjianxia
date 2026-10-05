@@ -1,0 +1,137 @@
+# ============================================================
+# 硬件侠平台 - 中间件环境 Docker Compose
+# 包含: MySQL 8.0 / Redis 7 / Nacos 2.3 / RocketMQ 5 / Sentinel
+# 使用: docker-compose -f docker-compose-env.yml up -d
+# ============================================================
+
+version: '3.8'
+
+services:
+  # -------------------- MySQL 8.0 --------------------
+  mysql:
+    image: mysql:8.0
+    container_name: yjx-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PWD:-123456}
+      MYSQL_LOWER_CASE_TABLE_NAMES: 1
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=500 --innodb-buffer-pool-size=512M
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    networks:
+      - yjx-net
+
+  # -------------------- Redis 7 --------------------
+  redis:
+    image: redis:7-alpine
+    container_name: yjx-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - yjx-net
+
+  # -------------------- Nacos 2.3 --------------------
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: yjx-nacos
+    restart: unless-stopped
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      NACOS_AUTH_ENABLE: "true"
+      NACOS_AUTH_TOKEN: ${NACOS_AUTH_TOKEN:-YmFja3VwLnlvdXItc2VjcmV0LWtleS1mb3ItbmFjb3MtMjAyNg==}
+      NACOS_AUTH_IDENTITY_KEY: ${NACOS_IDENTITY_KEY:-nacos}
+      NACOS_AUTH_IDENTITY_VALUE: ${NACOS_IDENTITY_VALUE:-nacos}
+      JVM_XMS: 256m
+      JVM_XMX: 512m
+    volumes:
+      - nacos_data:/home/nacos/data
+      - nacos_logs:/home/nacos/logs
+    networks:
+      - yjx-net
+
+  # -------------------- RocketMQ NameServer --------------------
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.3.1
+    container_name: yjx-rocketmq-namesrv
+    restart: unless-stopped
+    ports:
+      - "9876:9876"
+    environment:
+      JAVA_OPT_EXT: "-Xms256m -Xmx256m -Xmn128m"
+    command: sh mqnamesrv
+    volumes:
+      - rmq_namesrv_logs:/home/rocketmq/logs
+    networks:
+      - yjx-net
+
+  # -------------------- RocketMQ Broker --------------------
+  rocketmq-broker:
+    image: apache/rocketmq:5.3.1
+    container_name: yjx-rocketmq-broker
+    restart: unless-stopped
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    environment:
+      JAVA_OPT_EXT: "-Xms256m -Xmx512m -Xmn128m"
+      NAMESRV_ADDR: "rocketmq-namesrv:9876"
+    command: sh mqbroker -c /home/rocketmq/rocketmq-5.3.1/conf/broker.conf
+    depends_on:
+      - rocketmq-namesrv
+    volumes:
+      - rmq_broker_logs:/home/rocketmq/logs
+      - rmq_broker_store:/home/rocketmq/store
+    networks:
+      - yjx-net
+
+  # -------------------- RocketMQ Dashboard --------------------
+  rocketmq-dashboard:
+    image: apacherocketmq/rocketmq-dashboard:1.0.0
+    container_name: yjx-rocketmq-dashboard
+    restart: unless-stopped
+    ports:
+      - "19876:8080"
+    environment:
+      JAVA_OPTS: "-Drocketmq.namesrv.addr=rocketmq-namesrv:9876 -Dcom.rocketmq.sendMessageWithHookChannel=false"
+    depends_on:
+      - rocketmq-namesrv
+    networks:
+      - yjx-net
+
+  # -------------------- Sentinel Dashboard --------------------
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.8
+    container_name: yjx-sentinel
+    restart: unless-stopped
+    ports:
+      - "8858:8858"
+    environment:
+      JAVA_OPTS: "-Dserver.port=8858 -Dcsp.sentinel.dashboard.server=localhost:8858 -Dproject.name=sentinel-dashboard"
+    networks:
+      - yjx-net
+
+volumes:
+  mysql_data:
+  redis_data:
+  nacos_data:
+  nacos_logs:
+  rmq_namesrv_logs:
+  rmq_broker_logs:
+  rmq_broker_store:
+
+networks:
+  yjx-net:
+    driver: bridge

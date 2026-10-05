@@ -1,0 +1,103 @@
+# ============================================================
+# 商品服务 product-service 引导配置
+# ============================================================
+spring:
+  application:
+    name: product-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+      config:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        file-extension: yaml
+    sentinel:
+      transport:
+        port: 8722
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/db_product?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PWD:123456}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 30
+      pool-name: ProductServiceHikariPool
+
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PWD:123456}
+      database: 1
+redisson:
+  single-server-config:
+    address: "redis://${REDIS_HOST:127.0.0.1}:${REDIS_PORT:6379}"
+    password: "${REDIS_PWD:123456}"
+    database: 1
+
+server:
+  port: 8082
+
+yingjianxia:
+  jwt:
+    secret: ${JWT_SECRET:yingjianxia-jwt-secret-please-change-in-production}
+  internal-secret: ${INTERNAL_SECRET:yjx-internal-secret-please-change-in-production}
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+xxl:
+  job:
+    admin:
+      addresses: http://${XXL_JOB_ADMIN:127.0.0.1:8080}/xxl-job-admin
+    executor:
+      appname: product-service-executor
+      port: 9992
+      logpath: ./logs/xxl-job/product-service
+      logretentiondays: 30
+    accessToken: default_token
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+  production: false
+
+logging:
+  level:
+    root: INFO
+    com.yingjianxia.product: DEBUG
+    com.baomidou.mybatisplus: DEBUG

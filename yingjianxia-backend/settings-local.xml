@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  硬件侠平台 - 本地 Maven Settings
+  用法: mvn -s settings-local.xml clean install -DskipTests
+  作用: 将本地仓库重定向到项目目录下，避免沙箱/权限问题
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0
+          https://maven.apache.org/xsd/settings-1.2.0.xsd">
+
+  <!-- 本地仓库路径（改为项目目录下）-->
+  <localRepository>C:/Users/DELL/Desktop/trae/maven-repo</localRepository>
+
+  <!-- 镜像配置：使用阿里云加速 -->
+  <mirrors>
+    <mirror>
+      <id>aliyun-central</id>
+      <mirrorOf>central</mirrorOf>
+      <name>Aliyun Central</name>
+      <url>https://maven.aliyun.com/repository/central</url>
+    </mirror>
+    <mirror>
+      <id>aliyun-public</id>
+      <mirrorOf>public</mirrorOf>
+      <name>Aliyun Public</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </mirror>
+    <mirror>
+      <id>aliyun-spring</id>
+      <mirrorOf>spring</mirrorOf>
+      <name>Aliyun Spring</name>
+      <url>https://maven.aliyun.com/repository/spring</url>
+    </mirror>
+    <mirror>
+      <id>aliyun-spring-plugin</id>
+      <mirrorOf>spring-plugin</mirrorOf>
+      <name>Aliyun Spring Plugin</name>
+      <url>https://maven.aliyun.com/repository/spring-plugin</url>
+    </mirror>
+  </mirrors>
+
+  <!-- 默认激活的 Profile -->
+  <profiles>
+    <profile>
+      <id>jdk17</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <jdk>17</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
+      </properties>
+    </profile>
+  </profiles>
+
+</settings>

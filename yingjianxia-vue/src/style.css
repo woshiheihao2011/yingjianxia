@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* 硬件侠 Design Tokens - 深色科技风 */
+@theme inline {
+  /* Brand primitives */
+  --color-brand-bg: #0B0C10;
+  --color-brand-surface: #15161A;
+  --color-brand-surface-2: #1E2026;
+  --color-brand-surface-3: #252830;
+
+  --color-brand-ink: #F0F1F5;
+  --color-brand-ink-2: #9CA3AF;
+  --color-brand-ink-3: #6B7280;
+
+  --color-brand-line: #2A2D35;
+  --color-brand-line-subtle: rgba(255, 255, 255, 0.06);
+
+  --color-brand-primary: #00D4AA;
+  --color-brand-primary-hover: #00B894;
+  --color-brand-primary-subtle: rgba(0, 212, 170, 0.12);
+  --color-brand-primary-ink: #0B0C10;
+
+  /* State colors */
+  --color-brand-success: #10B981;
+  --color-brand-success-subtle: rgba(16, 185, 129, 0.12);
+  --color-brand-warning: #F59E0B;
+  --color-brand-warning-subtle: rgba(245, 158, 11, 0.12);
+  --color-brand-error: #EF4444;
+  --color-brand-error-subtle: rgba(239, 68, 68, 0.12);
+  --color-brand-info: #3B82F6;
+  --color-brand-info-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Tailwind semantic aliases */
+  --color-background: var(--color-brand-bg);
+  --color-foreground: var(--color-brand-ink);
+  --color-card: var(--color-brand-surface);
+  --color-card-foreground: var(--color-brand-ink);
+  --color-popover: var(--color-brand-surface-2);
+  --color-popover-foreground: var(--color-brand-ink);
+  --color-primary: var(--color-brand-primary);
+  --color-primary-foreground: var(--color-brand-primary-ink);
+  --color-muted: var(--color-brand-surface-2);
+  --color-muted-foreground: var(--color-brand-ink-2);
+  --color-border: var(--color-brand-line);
+  --color-input: var(--color-brand-line);
+  --color-ring: var(--color-brand-primary);
+  --color-success: var(--color-brand-success);
+  --color-warning: var(--color-brand-warning);
+  --color-danger: var(--color-brand-error);
+  --color-info: var(--color-brand-info);
+
+  /* Additional aliases for @apply in scoped styles */
+  --color-surface: var(--color-brand-surface);
+  --color-surface-2: var(--color-brand-surface-2);
+  --color-surface-3: var(--color-brand-surface-3);
+  --color-ink: var(--color-brand-ink);
+  --color-ink-2: var(--color-brand-ink-2);
+  --color-ink-3: var(--color-brand-ink-3);
+  --color-line: var(--color-brand-line);
+  --color-line-subtle: var(--color-brand-line-subtle);
+  --color-primary-hover: var(--color-brand-primary-hover);
+  --color-primary-subtle: var(--color-brand-primary-subtle);
+  --color-success-subtle: var(--color-brand-success-subtle);
+  --color-warning-subtle: var(--color-brand-warning-subtle);
+  --color-error-subtle: var(--color-brand-error-subtle);
+  --color-info-subtle: var(--color-brand-info-subtle);
+
+  /* Radius */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Shadow tokens (floating layers only) */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+
+  /* Typography */
+  --font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+
+/* Page-level base styles */
+@layer base {
+  html, body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+
+  th { white-space: nowrap; }
+  td, th { word-break: auto-phrase; }
+
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-brand-line);
+    border-radius: var(--radius-pill);
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-surface-3);
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .container-app {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-app { padding: 0 1.5rem; }
+  }
+}

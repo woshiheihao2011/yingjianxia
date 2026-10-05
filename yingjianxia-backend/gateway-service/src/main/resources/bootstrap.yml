@@ -1,0 +1,212 @@
+# ============================================================
+# API 网关 gateway-service 引导配置
+# ============================================================
+spring:
+  application:
+    name: gateway-service
+  profiles:
+    active: dev
+
+  # ---------- Nacos ----------
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        metadata:
+          version: "1.0.0"
+      config:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        file-extension: yaml
+
+    # ---------- 自定义 LoadBalancer（灰度）----------
+    loadbalancer:
+      cache:
+        enabled: true
+        ttl: 30s
+
+    # ---------- Gateway 路由 ----------
+    gateway:
+      discovery:
+        locator:
+          enabled: false            # 不开启"按服务名自动路由"，统一显式定义
+          lower-case-service-id: true
+
+      # ============ 15 个微服务路由规则 ============
+      routes:
+        # Sprint 1 — 用户服务 / 评价服务
+        - id: user-service-route
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/auth/**,/api/v1/user/**,/api/v1/shop/**,/api/v1/file/**,/api/v1/admin/**,/uploads/**
+          filters:
+            - StripPrefix=0
+
+        - id: evaluation-service-route
+          uri: lb://evaluation-service
+          predicates:
+            - Path=/api/v1/evaluation/**
+          filters:
+            - StripPrefix=0
+
+        # Sprint 2 — 商品 / 验机 / 审核
+        - id: product-service-route
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/product/**,/api/v1/search/**,/api/v1/favorite/**,/api/v1/favorites/**,/api/v1/categories/**
+          filters:
+            - StripPrefix=0
+
+        - id: inspection-service-route
+          uri: lb://inspection-service
+          predicates:
+            - Path=/api/v1/inspection/**
+          filters:
+            - StripPrefix=0
+
+        - id: audit-service-route
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/v1/audit/**
+          filters:
+            - StripPrefix=0
+
+        # Sprint 3 — 订单 / 担保 / 支付 / 营销
+        - id: order-service-route
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/order/**,/api/v1/orders/**,/api/v1/cart/**
+          filters:
+            - StripPrefix=0
+
+        - id: escrow-service-route
+          uri: lb://escrow-service
+          predicates:
+            - Path=/api/v1/escrow/**,/api/v1/wallet/**,/api/v1/wallets/**
+          filters:
+            - StripPrefix=0
+
+        - id: payment-service-route
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/payment/**,/api/v1/payments/**,/api/v1/pay/**,/api/v1/recharge/**,/api/v1/withdraw/**
+          filters:
+            - StripPrefix=0
+
+        - id: marketing-service-route
+          uri: lb://marketing-service
+          predicates:
+            - Path=/api/v1/coupon/**,/api/v1/coupons/**,/api/v1/points/**,/api/v1/promo/**,/api/v1/promotions/**,/api/v1/banner/**,/api/v1/analytics/**,/api/v1/marketing/**
+          filters:
+            - StripPrefix=0
+
+        # Sprint 4 — 物流 / 售后 / 消息
+        - id: logistics-service-route
+          uri: lb://logistics-service
+          predicates:
+            - Path=/api/v1/logistics/**,/api/v1/express/**,/api/v1/shipments/**
+          filters:
+            - StripPrefix=0
+
+        - id: aftersales-service-route
+          uri: lb://aftersales-service
+          predicates:
+            - Path=/api/v1/aftersales/**,/api/v1/dispute/**
+          filters:
+            - StripPrefix=0
+
+        - id: message-service-route
+          uri: lb://message-service
+          predicates:
+            - Path=/api/v1/message/**,/api/v1/messages/**,/api/v1/im/**,/api/v1/notifications/**,/ws/**
+          filters:
+            - StripPrefix=0
+
+        # Sprint 5 — 社区 / 客服 / 风控
+        - id: community-service-route
+          uri: lb://community-service
+          predicates:
+            - Path=/api/v1/post/**,/api/v1/comment/**,/api/v1/community/**
+          filters:
+            - StripPrefix=0
+
+        - id: support-service-route
+          uri: lb://support-service
+          predicates:
+            - Path=/api/v1/ticket/**,/api/v1/tickets/**,/api/v1/cs/**,/api/v1/notice/**,/api/v1/announcements/**,/api/v1/faqs/**,/api/v1/quick-replies/**,/api/v1/reports/**
+          filters:
+            - StripPrefix=0
+
+        - id: risk-service-route
+          uri: lb://risk-service
+          predicates:
+            - Path=/api/v1/risk/**,/api/v1/trust/**
+          filters:
+            - StripPrefix=0
+
+      # 全局跨域：已在 GlobalCorsConfig 做 WebFlux CorsWebFilter，这里不重复
+      globalcors:
+        add-to-simple-url-handler-mapping: false
+
+# ---------- 端口 ----------
+server:
+  port: 8080
+
+# ---------- JWT 共享密钥（与各业务服务一致；生产放 Nacos + 加密）----------
+yingjianxia:
+  jwt:
+    secret: ${JWT_SECRET:yingjianxia-jwt-secret-please-change-in-production}
+  internal-secret: ${INTERNAL_SECRET:yjx-internal-secret-please-change-in-production}
+    access-expire: 7200000
+    refresh-expire: 604800000
+    issuer: yingjianxia-platform
+
+# ---------- Redis（JWT 黑名单等）----------
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PWD:123456}
+      database: 0
+redisson:
+  single-server-config:
+    address: "redis://${REDIS_HOST:127.0.0.1}:${REDIS_PORT:6379}"
+    password: "${REDIS_PWD:123456}"
+    database: 0
+
+# ---------- Sentinel ----------
+feign:
+  sentinel:
+    enabled: true
+csp:
+  sentinel:
+    transport:
+      dashboard: ${SENTINEL_DASHBOARD:127.0.0.1:8858}
+      port: 8721
+    eager: true
+    # 生产接入 Nacos 动态规则
+    datasource:
+      ds1:
+        nacos:
+          server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+          namespace: ${NACOS_NAMESPACE:public}
+          group-id: SENTINEL_GROUP
+          data-id: gateway-sentinel-flow-rules.json
+          rule-type: gw_flow
+
+# ---------- 日志 ----------
+logging:
+  level:
+    root: INFO
+    com.yingjianxia.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
+    reactor.netty.http: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{traceId}] %msg%n"

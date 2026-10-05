@@ -1,0 +1,93 @@
+# ============================================================
+# 支付服务 payment-service
+# ============================================================
+spring:
+  application:
+    name: payment-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+      config:
+        server-addr: ${NACOS_SERVER:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        group: YINGJIANXIA_GROUP
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+        file-extension: yaml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/db_escrow?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PWD:123456}
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 20
+      pool-name: PaymentHikariPool
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PWD:123456}
+      database: 5
+redisson:
+  single-server-config:
+    address: "redis://${REDIS_HOST:127.0.0.1}:${REDIS_PORT:6379}"
+    password: "${REDIS_PWD:123456}"
+    database: 5
+
+server:
+  port: 8086
+
+yingjianxia:
+  jwt:
+    secret: ${JWT_SECRET:yingjianxia-jwt-secret-please-change-in-production}
+  internal-secret: ${INTERNAL_SECRET:yjx-internal-secret-please-change-in-production}
+  payment:
+    wechat:
+      app-id: ${WX_APP_ID:wx_mock_appid}
+      mch-id: ${WX_MCH_ID:1900000000}
+      api-key: ${WX_API_KEY:yjx-wechat-api-key-mock-2026}
+      notify-url: ${WX_NOTIFY_URL:http://127.0.0.1:8086/api/v1/payment/wechat/notify}
+      unified-order-url: https://api.mch.weixin.qq.com/pay/unifiedorder
+    alipay:
+      app-id: ${ALI_APP_ID:2021000000000000}
+      private-key: ${ALI_PRIVATE_KEY:yjx-alipay-private-key-mock}
+      public-key: ${ALI_PUBLIC_KEY:yjx-alipay-public-key-mock}
+      notify-url: ${ALI_NOTIFY_URL:http://127.0.0.1:8086/api/v1/payment/alipay/notify}
+      gateway: https://openapi.alipay.com/gateway.do
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+  production: false
+
+logging:
+  level:
+    root: INFO
+    com.yingjianxia.payment: DEBUG

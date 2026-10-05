@@ -1,0 +1,52 @@
+# ============================================================
+# 硬件侠平台 - 精简中间件 (仅 Redis + Nacos)
+# 适用于: 本地已有 MySQL，只需 Redis 和 Nacos
+# 用法: docker-compose -f docker-compose-lite.yml up -d
+# ============================================================
+
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: yjx-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - yjx-net
+
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: yjx-nacos
+    restart: unless-stopped
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      NACOS_AUTH_ENABLE: "true"
+      NACOS_AUTH_TOKEN: "YmFja3VwLnlvdXItc2VjcmV0LWtleS1mb3ItbmFjb3MtMjAyNg=="
+      NACOS_AUTH_IDENTITY_KEY: nacos
+      NACOS_AUTH_IDENTITY_VALUE: nacos
+      JVM_XMS: 256m
+      JVM_XMX: 512m
+    volumes:
+      - nacos_data:/home/nacos/data
+      - nacos_logs:/home/nacos/logs
+    networks:
+      - yjx-net
+
+volumes:
+  redis_data:
+  nacos_data:
+  nacos_logs:
+
+networks:
+  yjx-net:
+    driver: bridge
